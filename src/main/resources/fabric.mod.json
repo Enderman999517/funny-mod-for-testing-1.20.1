@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "funnymodfortesting",
+	"version": "${version}",
+	"name": "Funny Mod For Testing",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/funnymodfortesting/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.enderman999517.funnymodfortesting.FunnyModForTesting"
+		],
+		"client": [
+			"net.enderman999517.funnymodfortesting.FunnyModForTestingClient"
+		],
+		"fabric-datagen": [
+			"net.enderman999517.funnymodfortesting.FunnyModForTestingDataGenerator"
+		]
+	},
+	"mixins": [
+		"funnymodfortesting.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
