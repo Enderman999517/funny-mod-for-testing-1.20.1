@@ -15,6 +15,7 @@ public class ModItems {
     public static final Item OVERPOWERED = registerItem("overpowered",
             new OverpoweredItem(new FabricItemSettings()));
 
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(FunnyModForTesting.MOD_ID, name), item);
     }

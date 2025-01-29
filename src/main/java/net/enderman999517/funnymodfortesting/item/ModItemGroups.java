@@ -12,9 +12,10 @@ import net.minecraft.util.Identifier;
 public class ModItemGroups {
     public static final ItemGroup FUNNY_ITEM_GROUP = Registry.register(Registries.ITEM_GROUP,
             new Identifier(FunnyModForTesting.MOD_ID, "funny"),
-            FabricItemGroup.builder().displayName(Text.translatable("itemgroup.funny"))
+            FabricItemGroup.builder().displayName(Text.translatable("itemgroup.funnymodfortesting"))
                     .icon(() -> new ItemStack(ModItems.OVERPOWERED)).entries((displayContext, entries) ->  {
 
+                        entries.add(ModItems.OVERPOWERED);
 
                     }).build());
 

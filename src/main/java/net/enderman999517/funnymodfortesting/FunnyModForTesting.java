@@ -1,6 +1,9 @@
 package net.enderman999517.funnymodfortesting;
 
 import net.enderman999517.funnymodfortesting.block.ModBlocks;
+import net.enderman999517.funnymodfortesting.block.entity.ModBlockEntities;
+import net.enderman999517.funnymodfortesting.entity.ModEntities;
+import net.enderman999517.funnymodfortesting.item.ModItemGroups;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -19,6 +22,9 @@ public class FunnyModForTesting implements ModInitializer {
 
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
+		ModItemGroups.registerItemGroups();
+		ModEntities.registerModEntities();
+		ModBlockEntities.registerBlockEntities();
 
 	}
 }
