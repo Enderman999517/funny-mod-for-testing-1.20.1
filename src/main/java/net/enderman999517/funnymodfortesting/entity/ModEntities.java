@@ -26,6 +26,6 @@ public class ModEntities {
     public static final EntityType<AmoghEntity> AMOGH = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(FunnyModForTesting.MOD_ID, "amogh"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, AmoghEntity::new)
-                    .dimensions(EntityDimensions.fixed(8f, 8f)).build());
+                    .dimensions(EntityDimensions.fixed(3f, 3f)).build());
 
 }

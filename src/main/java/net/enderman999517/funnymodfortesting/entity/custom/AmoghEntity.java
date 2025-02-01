@@ -70,7 +70,7 @@ public class AmoghEntity extends HostileEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(0, new AmoghAttackGoal(this, 1, false));
+        this.goalSelector.add(1, new AmoghAttackGoal(this, 1, false));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 100));
         this.goalSelector.add(3, new WanderAroundGoal(this, 1, 3));
     }

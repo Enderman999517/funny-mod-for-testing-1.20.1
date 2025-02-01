@@ -15,7 +15,11 @@ public class ModItemGroups {
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.funnymodfortesting"))
                     .icon(() -> new ItemStack(ModItems.OVERPOWERED)).entries((displayContext, entries) ->  {
 
+                        //custom
                         entries.add(ModItems.OVERPOWERED);
+
+                        //spawn eggs
+                        entries.add(ModItems.AMOGH_SPAWN_EGG);
 
                     }).build());
 

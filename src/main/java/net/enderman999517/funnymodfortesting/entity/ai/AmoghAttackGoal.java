@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.entity.ai;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -41,6 +42,7 @@ public class AmoghAttackGoal extends MeleeAttackGoal {
     }
 
     private boolean isEnemyWithinAttackDistance(LivingEntity pEnemy) {
+        FunnyModForTesting.LOGGER.info("test");
         return this.entity.distanceTo(pEnemy) <= 5f;
     }
 
