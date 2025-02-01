@@ -13,6 +13,7 @@ import net.minecraft.item.Items;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -109,16 +110,11 @@ public class OverpoweredItem extends Item {
 
 
         if (!world.isClient) {
-
-            for (int i = 0; i < 5; i++) {
-                ExplosiveProjectileEntity explosiveProjectileEntity = new ExplosiveProjectileEntity(user, world);
-                explosiveProjectileEntity.setItem(itemStack);
-                explosiveProjectileEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 50F, 0.0F);
-                //explosiveProjectileEntity.setNoGravity(true);
-                explosiveProjectileEntity.setGlowing(true);
-                world.spawnEntity(explosiveProjectileEntity);
-                //explosiveProjectileEntity.setVelocity(explosiveProjectileEntity.getPitch(), explosiveProjectileEntity.getYaw(), 0, explosiveProjectileEntity.speed, 0);
-            }
+            ExplosiveProjectileEntity explosiveProjectileEntity = new ExplosiveProjectileEntity(user, world);
+            explosiveProjectileEntity.setItem(itemStack);
+            explosiveProjectileEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 10F, 10000.0F);
+            explosiveProjectileEntity.setGlowing(true);
+            world.spawnEntity(explosiveProjectileEntity);
         }
 
         //user.incrementStat(Stats.USED.getOrCreateStat(this));
@@ -127,5 +123,11 @@ public class OverpoweredItem extends Item {
         //}
 
         return TypedActionResult.success(itemStack, world.isClient);
+    }
+
+    @Override
+    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+        entity.kill();
+        return ActionResult.SUCCESS;
     }
 }

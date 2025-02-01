@@ -1,6 +1,7 @@
 package net.enderman999517.funnymodfortesting.entity;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
+import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
 import net.enderman999517.funnymodfortesting.entity.custom.ExplosiveProjectileEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -19,5 +20,12 @@ public class ModEntities {
             new Identifier(FunnyModForTesting.MOD_ID, "explosive_projectile"),
             FabricEntityTypeBuilder.<ExplosiveProjectileEntity>create(SpawnGroup.MISC, ExplosiveProjectileEntity::new)
                     .dimensions(EntityDimensions.fixed(0.4f, 0.4f)).build());
+
+
+
+    public static final EntityType<AmoghEntity> AMOGH = Registry.register(Registries.ENTITY_TYPE,
+            new Identifier(FunnyModForTesting.MOD_ID, "amogh"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, AmoghEntity::new)
+                    .dimensions(EntityDimensions.fixed(8f, 8f)).build());
 
 }

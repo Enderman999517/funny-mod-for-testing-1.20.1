@@ -41,19 +41,19 @@ public class ExplosiveProjectileEntity extends ThrownItemEntity {
             this.getWorld().sendEntityStatus(this, (byte)3);
             this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 10, World.ExplosionSourceType.MOB);
         }
-
         this.discard();
         super.onBlockHit(blockHitResult);
     }
 
-    @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (!this.getWorld().isClient) {
-            this.getWorld().sendEntityStatus(this, (byte)3);
-            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 10, World.ExplosionSourceType.MOB);
-        }
-
-        this.discard();
-        super.onEntityHit(entityHitResult);
-    }
+    //@Override
+    //protected void onEntityHit(EntityHitResult entityHitResult) {
+    //    if (!this.getWorld().isClient) {
+    //        if (!entityHitResult.getEntity().isPlayer()) {
+    //            this.getWorld().sendEntityStatus(this, (byte)3);
+    //            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 10, World.ExplosionSourceType.MOB);
+    //        }
+    //    }
+    //    this.discard();
+    //    super.onEntityHit(entityHitResult);
+    //}
 }
