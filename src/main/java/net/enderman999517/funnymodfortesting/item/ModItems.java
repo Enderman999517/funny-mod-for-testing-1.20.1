@@ -4,6 +4,7 @@ import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.item.custom.OverpoweredItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -28,8 +29,12 @@ public class ModItems {
         return Registry.register(Registries.ITEM, new Identifier(FunnyModForTesting.MOD_ID, name), item);
     }
 
+    private static void addItemsToSpawnEggItemGroup(FabricItemGroupEntries entries) {
+        entries.add(AMOGH_SPAWN_EGG);
+    }
+
     public static void registerModItems() {
         FunnyModForTesting.LOGGER.info("Registering Mod Items for " + FunnyModForTesting.MOD_ID);
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS);
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(ModItems::addItemsToSpawnEggItemGroup);
     }
 }
