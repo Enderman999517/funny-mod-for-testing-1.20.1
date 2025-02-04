@@ -200,4 +200,6 @@ public class AmoghEntity extends CreeperEntity {
     protected @Nullable SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_PLAYER_DEATH;
     }
+
+
 }
