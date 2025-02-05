@@ -1,7 +1,9 @@
 package net.enderman999517.funnymodfortesting.entity.custom;
 
 import net.enderman999517.funnymodfortesting.entity.ai.AmoghAttackGoal;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;

@@ -16,21 +16,21 @@
               "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "max": 1,
-                "min": 0
+                "max": 3,
+                "min": 2
               },
               "function": "minecraft:set_count"
             },
             {
               "count": {
                 "type": "minecraft:uniform",
-                "max": 1,
-                "min": 0
+                "max": 2,
+                "min": 1
               },
               "function": "minecraft:looting_enchant"
             }
           ],
-          "name": "minecraft:blaze_rod"
+          "name": "funnymodfortesting:overpowered"
         }
       ],
       "rolls": 1

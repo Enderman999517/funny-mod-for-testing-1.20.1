@@ -2,23 +2,29 @@ package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.entity.custom.ExplosiveProjectileEntity;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.enderman999517.funnymodfortesting.FunnyModForTestingClient.KEY_BINDING;
 
 public class OverpoweredItem extends Item {
     public OverpoweredItem(Settings settings) {
@@ -127,7 +133,30 @@ public class OverpoweredItem extends Item {
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        entity.kill();
+        entity.discard();
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        onKeyPressed();
+    }
+
+    public void onKeyPressed() {
+        if (KEY_BINDING.wasPressed()) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            ClientPlayerEntity player = client.player;
+            List list = new ArrayList();
+            list.add("funnymodfortesting.text.isfg");
+
+            if (player != null && player.getWorld() != null) {
+                this.appendTooltip(new ItemStack(ModItems.OVERPOWERED), player.getWorld(), list, new TooltipContext.Default(true, true));
+            }
+        }
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
     }
 }
