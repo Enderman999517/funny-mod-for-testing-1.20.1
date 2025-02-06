@@ -17,11 +17,11 @@ import org.lwjgl.glfw.GLFW;
 
 public class FunnyModForTestingClient implements ClientModInitializer {
 
-    public static final KeyBinding KEY_BINDING = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-            "key.funnymodfortesting.showinfo",
-            GLFW.GLFW_KEY_LEFT_SHIFT,
-            "category.funnymodfortesting"
-    ));
+    //public static final KeyBinding KEY_BINDING = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    //        "key.funnymodfortesting.showinfo",
+    //        GLFW.GLFW_KEY_LEFT_SHIFT,
+    //        "category.funnymodfortesting"
+    //));
 
     @Override
     public void onInitializeClient() {

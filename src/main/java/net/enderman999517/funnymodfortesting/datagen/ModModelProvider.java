@@ -25,6 +25,10 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         //custom
         itemModelGenerator.register(ModItems.OVERPOWERED, Models.GENERATED);
+        itemModelGenerator.register(ModItems.AMOGH, Models.GENERATED);
+
+        //items
+        itemModelGenerator.register(ModItems.AMOGH_ESSENCE, Models.GENERATED);
 
         //spawn eggs
         itemModelGenerator.register(ModItems.AMOGH_SPAWN_EGG,

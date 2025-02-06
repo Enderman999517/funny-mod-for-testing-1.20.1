@@ -4,5 +4,11 @@
 
   "itemgroup.funnymodfortesting": "Funny Mod For Testing",
 
-  "entity.funnymodfortesting.amogh": "Amogh"
+  "entity.funnymodfortesting.amogh": "Amogh",
+
+  "tooltips.funnymodfortesting.overpowered.shift.l1": "Right click to throw",
+  "tooltips.funnymodfortesting.overpowered.shift.l2": "Right click on an entity to despawn it",
+  "tooltips.funnymodfortesting.overpowered.shift.l3": "Left click on an entity to kill it",
+
+  "tooltips.funnymodfortesting.overpowered": "Press Shift for more info"
 }

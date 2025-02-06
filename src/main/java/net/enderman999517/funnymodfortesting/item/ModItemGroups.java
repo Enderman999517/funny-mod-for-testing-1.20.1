@@ -17,6 +17,10 @@ public class ModItemGroups {
 
                         //custom
                         entries.add(ModItems.OVERPOWERED);
+                        entries.add(ModItems.AMOGH);
+
+                        //items
+                        entries.add(ModItems.AMOGH_ESSENCE);
 
                         //spawn eggs
                         entries.add(ModItems.AMOGH_SPAWN_EGG);

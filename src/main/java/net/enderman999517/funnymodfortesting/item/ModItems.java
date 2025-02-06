@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.item;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
+import net.enderman999517.funnymodfortesting.item.custom.AmoghItem;
 import net.enderman999517.funnymodfortesting.item.custom.OverpoweredItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
@@ -18,6 +19,12 @@ public class ModItems {
     //custom
     public static final Item OVERPOWERED = registerItem("overpowered",
             new OverpoweredItem(new FabricItemSettings()));
+    public static final Item AMOGH = registerItem("amogh",
+            new AmoghItem(new FabricItemSettings()));
+
+    //items
+    public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
+            new Item(new FabricItemSettings()));
 
 
     //spawn eggs

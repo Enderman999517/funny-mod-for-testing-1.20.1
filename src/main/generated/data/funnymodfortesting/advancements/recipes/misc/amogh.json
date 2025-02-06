@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_amogh": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "funnymodfortesting:amogh"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_amogh_essence": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "funnymodfortesting:amogh_essence"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:amogh"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_amogh_essence",
+      "has_amogh",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:amogh"
+    ]
+  },
+  "sends_telemetry_event": false
+}

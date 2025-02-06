@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "funnymodfortesting:amogh_essence"
+    },
+    "C": {
+      "item": "funnymodfortesting:overpowered"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "ACA",
+    "AAA"
+  ],
+  "result": {
+    "item": "funnymodfortesting:amogh"
+  },
+  "show_notification": true
+}
