@@ -21,6 +21,13 @@ public class ExplosiveProjectileEntity extends ThrownItemEntity {
         super(entityType, world);
     }
 
+    private float power;
+
+    public float setPower(float power) {
+        this.power = power;
+        return power;
+    }
+
     public ExplosiveProjectileEntity(LivingEntity livingEntity, World world) {
         super(ModEntities.EXPLOSIVE_PROJECTILE, livingEntity, world);
     }
@@ -39,7 +46,7 @@ public class ExplosiveProjectileEntity extends ThrownItemEntity {
     protected void onBlockHit(BlockHitResult blockHitResult) {
         if (!this.getWorld().isClient) {
             this.getWorld().sendEntityStatus(this, (byte)3);
-            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 10, World.ExplosionSourceType.MOB);
+            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), this.power, World.ExplosionSourceType.MOB);
         }
         this.discard();
         super.onBlockHit(blockHitResult);

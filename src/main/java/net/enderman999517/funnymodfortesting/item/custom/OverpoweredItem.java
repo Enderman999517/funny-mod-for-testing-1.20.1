@@ -111,6 +111,7 @@ public class OverpoweredItem extends Item {
         if (!world.isClient) {
             ExplosiveProjectileEntity explosiveProjectileEntity = new ExplosiveProjectileEntity(user, world);
             explosiveProjectileEntity.setItem(itemStack);
+            explosiveProjectileEntity.setPower(10);
             explosiveProjectileEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 10F, 0.0F);
             explosiveProjectileEntity.setGlowing(true);
             world.spawnEntity(explosiveProjectileEntity);

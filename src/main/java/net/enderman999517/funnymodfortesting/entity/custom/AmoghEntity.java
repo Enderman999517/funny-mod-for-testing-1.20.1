@@ -108,7 +108,6 @@ public class AmoghEntity extends CreeperEntity {
 
             int i = this.getFuseSpeed();
             if (i > 0 && this.currentFuseTime == 0) {
-                this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
                 this.emitGameEvent(GameEvent.PRIME_FUSE);
             }
 
@@ -153,6 +152,11 @@ public class AmoghEntity extends CreeperEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
+
+        if (player.getHandItems().equals(Items.PORKCHOP)) {
+            this.kill();
+        }
+
         if (itemStack.isIn(ItemTags.CREEPER_IGNITERS)) {
             SoundEvent soundEvent = itemStack.isOf(Items.FIRE_CHARGE) ? SoundEvents.ITEM_FIRECHARGE_USE : SoundEvents.ITEM_FLINTANDSTEEL_USE;
             this.getWorld().playSound(player, this.getX(), this.getY(), this.getZ(), soundEvent, this.getSoundCategory(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
