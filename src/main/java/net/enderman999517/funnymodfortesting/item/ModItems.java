@@ -26,6 +26,10 @@ public class ModItems {
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
             new Item(new FabricItemSettings()));
 
+    ////armor + hats
+    //public static final Item LTF_HAIR = registerItem("ltf_hair",
+    //        new ArmorItem(ModArmorMaterials.HAIR, ArmorItem.Type.HELMET, new FabricItemSettings()));
+
 
     //spawn eggs
     public static final Item AMOGH_SPAWN_EGG = registerItem("amogh_spawn_egg",

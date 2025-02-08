@@ -22,6 +22,9 @@ public class ModItemGroups {
                         //items
                         entries.add(ModItems.AMOGH_ESSENCE);
 
+                        ////armor
+                        //entries.add(ModItems.LTF_HAIR);
+
                         //spawn eggs
                         entries.add(ModItems.AMOGH_SPAWN_EGG);
 

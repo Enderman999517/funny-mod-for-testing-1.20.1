@@ -1,6 +1,11 @@
 {
   "item.funnymodfortesting.overpowered": "Overpowered",
   "item.funnymodfortesting.amogh_spawn_egg": "Amogh Spawn Egg",
+  "item.funnymodfortesting.amogh_essence": "Amogh Essence",
+  "item.funnymodfortesting.amogh": "Amogh",
+  "item.funnymodfortesting.ltf_hair": "Looooooooooooowwwwww Taperrrrrr fadeeeeeeee",
+
+  "block.funnymodfortesting.ltf_block": "Block of Low Taper Fade",
 
   "itemgroup.funnymodfortesting": "Funny Mod For Testing",
 
@@ -9,6 +14,7 @@
   "tooltips.funnymodfortesting.overpowered.shift.l1": "Right click to throw",
   "tooltips.funnymodfortesting.overpowered.shift.l2": "Right click on an entity to despawn it",
   "tooltips.funnymodfortesting.overpowered.shift.l3": "Left click on an entity to kill it",
+  "tooltips.funnymodfortesting.overpowered": "Press Shift for more info",
 
-  "tooltips.funnymodfortesting.overpowered": "Press Shift for more info"
+  "subtitles.funnymodfortesting.ltf_interact": "Imagine if Ninja got a low taper fade"
 }

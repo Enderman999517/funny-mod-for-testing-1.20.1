@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.datagen;
 
+import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -19,6 +20,8 @@ public class ModModelProvider extends FabricModelProvider {
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
 
+        //random
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LTF_BLOCK);
     }
 
     @Override
@@ -29,6 +32,9 @@ public class ModModelProvider extends FabricModelProvider {
 
         //items
         itemModelGenerator.register(ModItems.AMOGH_ESSENCE, Models.GENERATED);
+
+        ////armor
+        //itemModelGenerator.registerArmor(((ArmorItem) ModItems.LTF_HAIR));
 
         //spawn eggs
         itemModelGenerator.register(ModItems.AMOGH_SPAWN_EGG,

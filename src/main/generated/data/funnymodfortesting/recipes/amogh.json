@@ -5,13 +5,13 @@
     "A": {
       "item": "funnymodfortesting:amogh_essence"
     },
-    "C": {
-      "item": "funnymodfortesting:overpowered"
+    "G": {
+      "item": "minecraft:gunpowder"
     }
   },
   "pattern": [
     "AAA",
-    "ACA",
+    "AGA",
     "AAA"
   ],
   "result": {

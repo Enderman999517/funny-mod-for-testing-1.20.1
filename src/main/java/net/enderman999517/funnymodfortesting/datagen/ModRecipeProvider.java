@@ -21,12 +21,13 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     @Override
     public void generate(Consumer<RecipeJsonProvider> exporter) {
 
+        // RUN DATATGEN AFTER CHANGES!!!!!!!!!
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.AMOGH, 1)
                 .pattern("AAA")
-                .pattern("ACA")
+                .pattern("AGA")
                 .pattern("AAA")
                 .input('A', ModItems.AMOGH_ESSENCE)
-                .input('C', ModItems.OVERPOWERED)
+                .input('G', Items.GUNPOWDER)
                 .criterion(hasItem(ModItems.AMOGH_ESSENCE), conditionsFromItem(ModItems.AMOGH_ESSENCE))
                 .criterion(hasItem(ModItems.AMOGH), conditionsFromItem(ModItems.AMOGH))
                 .offerTo(exporter, new Identifier(getRecipeName(ModItems.AMOGH)));

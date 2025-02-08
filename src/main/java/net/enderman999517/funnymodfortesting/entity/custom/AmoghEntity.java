@@ -153,7 +153,7 @@ public class AmoghEntity extends CreeperEntity {
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
 
-        if (player.getHandItems().equals(Items.PORKCHOP)) {
+        if (player.getHandItems().equals(Items.ACACIA_PLANKS)) {
             this.kill();
         }
 
