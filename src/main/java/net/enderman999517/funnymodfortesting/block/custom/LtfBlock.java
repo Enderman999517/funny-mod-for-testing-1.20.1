@@ -7,7 +7,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -34,7 +33,7 @@ public class LtfBlock extends Block {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-        tooltip.add(Text.literal("Loooooooooooooooooooooowwww Taperrrrrrrrrrrr Faadeeeeeeeeee").formatted(Formatting.ITALIC));
+        tooltip.add(Text.literal("Loooooooooooooooooooooowwww Taperrrrrrrrrrrr Faadeeeeeeeeee").formatted(Formatting.BOLD));
         super.appendTooltip(stack, world, tooltip, options);
     }
 }

@@ -1,6 +1,7 @@
 package net.enderman999517.funnymodfortesting.item;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
+import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -21,6 +22,9 @@ public class ModItemGroups {
 
                         //items
                         entries.add(ModItems.AMOGH_ESSENCE);
+
+                        //blocks
+                        entries.add(ModBlocks.LTF_BLOCK);
 
                         ////armor
                         //entries.add(ModItems.LTF_HAIR);
