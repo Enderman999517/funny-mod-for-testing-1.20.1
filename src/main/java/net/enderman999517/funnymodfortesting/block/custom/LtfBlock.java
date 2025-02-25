@@ -1,12 +1,10 @@
 package net.enderman999517.funnymodfortesting.block.custom;
 
-import net.enderman999517.funnymodfortesting.sound.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -27,7 +25,7 @@ public class LtfBlock extends Block {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
                               PlayerEntity player, Hand hand, BlockHitResult hit) {
-        world.playSound(player, pos, ModSounds.LTF_INTERACT, SoundCategory.BLOCKS, 1f, 1f);
+        //world.playSound(player, pos, ModSounds.LTF_INTERACT, SoundCategory.BLOCKS, 1f, 1f);
         return ActionResult.SUCCESS;
     }
 

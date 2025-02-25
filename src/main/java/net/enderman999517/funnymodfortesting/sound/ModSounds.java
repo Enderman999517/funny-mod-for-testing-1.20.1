@@ -6,6 +6,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 
 public class ModSounds {
 
@@ -15,7 +16,7 @@ public class ModSounds {
     public static final SoundEvent LTF_BLOCK_HIT = registerSoundEvent("ltf_block_hit");
     public static final SoundEvent LTF_BLOCK_FALL = registerSoundEvent("ltf_block_fall");
 
-    public static final BlockSoundGroup LTF_BLOCK_SOUNDS = new BlockSoundGroup(1f, 1f,
+    public static final BlockSoundGroup LTF_BLOCK_SOUNDS = new BlockSoundGroup(1f, Random.create().nextFloat(),
             ModSounds.LTF_BLOCK_BREAK, ModSounds.LTF_BLOCK_STEP, ModSounds.LTF_BLOCK_PLACE,
             ModSounds.LTF_BLOCK_HIT, ModSounds.LTF_BLOCK_FALL);
 

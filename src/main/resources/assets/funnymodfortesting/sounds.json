@@ -1,8 +1,8 @@
 {
-  "ltf_interact": {
-    "subtitle": "subtitles.funnymodfortesting.ltf_interact",
+  "ltf_block_place": {
+    "subtitle": "subtitles.funnymodfortesting.ltf_block_place",
     "sounds": [
-      "funnymodfortesting:ltf_interact"
+      "funnymodfortesting:ltf_block_place"
     ]
   }
 }
