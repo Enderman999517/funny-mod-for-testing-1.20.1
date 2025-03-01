@@ -30,6 +30,4 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.AMOGH, AmoghModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.AMOGH, AmoghRenderer::new);
     }
-
-
 }
