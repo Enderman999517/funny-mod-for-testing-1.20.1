@@ -27,11 +27,15 @@ public class FlashbangStatusEffect extends StatusEffect {
 
     @Override
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        this.callbacks.get(debugMode).onApplied(entity, attributes, amplifier);
+        if (entity.getWorld().isClient) {
+            this.callbacks.get(debugMode).onApplied(entity, attributes, amplifier);
+        }
     }
 
     @Override
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        this.callbacks.get(debugMode).onApplied(entity, attributes, amplifier);
+        if (entity.getWorld().isClient) {
+            this.callbacks.get(debugMode).onApplied(entity, attributes, amplifier);
+        }
     }
 }

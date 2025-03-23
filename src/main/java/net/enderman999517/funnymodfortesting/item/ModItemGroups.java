@@ -19,6 +19,7 @@ public class ModItemGroups {
                         //custom
                         entries.add(ModItems.OVERPOWERED);
                         entries.add(ModItems.AMOGH);
+                        entries.add(ModItems.FLASHBANG);
 
                         //items
                         entries.add(ModItems.AMOGH_ESSENCE);

@@ -5,6 +5,7 @@ import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.item.custom.AmoghItem;
 import net.enderman999517.funnymodfortesting.item.custom.DebugItem;
+import net.enderman999517.funnymodfortesting.item.custom.FlashbangItem;
 import net.enderman999517.funnymodfortesting.item.custom.OverpoweredItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
@@ -28,6 +29,8 @@ public class ModItems {
             new OverpoweredItem(new FabricItemSettings()));
     public static final Item AMOGH = registerItem("amogh",
             new AmoghItem(new FabricItemSettings()));
+    public static final Item FLASHBANG = registerItem("flashbang",
+            new FlashbangItem(new FabricItemSettings()));
 
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
