@@ -25,11 +25,11 @@ public class DebugItem extends Item {
         this.callbacks.add(callback);
     }
 
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        this.callbacks.get(debugMode).use(world, player, hand);
-        return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
-    }
+    //@Override
+    //public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    //    this.callbacks.get(debugMode).use(world, player, hand);
+    //    return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
+    //}
 
     @Override
     public boolean hasGlint(ItemStack itemStack_1) {
