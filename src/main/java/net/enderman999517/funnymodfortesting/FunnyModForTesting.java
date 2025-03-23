@@ -8,15 +8,12 @@ import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.enderman999517.funnymodfortesting.block.entity.ModBlockEntities;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
-import net.enderman999517.funnymodfortesting.entity.effect.FlashbangStatusEffect;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItemGroups;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.sound.ModSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +58,24 @@ public class FunnyModForTesting implements ModInitializer {
 
 		ModStatusEffects.FLASHBANG.registerDebugCallback((entity, attributes, amplifier) -> {
 			//if (entity.getWorld().isClient) {
-				renderingBlit = !renderingBlit;
-				color.set(5.0f,5.0f,5.0f,5.0f);
+			// i know i probably shouldnt do this but i couldnt find another way that worked
+
+			try {
+                //int duration;
+                //for (duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration(); duration > 0; duration--) {
+                //    duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration();
+                    renderingBlit = !renderingBlit;
+                    color.set(5.0f, 5.0f, 5.0f, 5f);
+
+                //}
+                //duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration();
+
+
+            } catch (NullPointerException ignored) {
+
+			}
+
+
 			//}
 		});
 

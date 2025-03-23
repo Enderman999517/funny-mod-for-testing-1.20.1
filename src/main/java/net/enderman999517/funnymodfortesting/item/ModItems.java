@@ -17,8 +17,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-import static net.enderman999517.funnymodfortesting.block.ModBlocks.DEBUG_BLOCK;
-
 public class ModItems {
 
     public static final DebugItem DEBUG_ITEM = new DebugItem(new Item.Settings());
