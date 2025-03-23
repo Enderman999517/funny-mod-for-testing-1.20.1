@@ -29,7 +29,7 @@ public class DebugItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        //this.callbacks.get(debugMode).use(world, player, hand);
+        this.callbacks.get(debugMode).use(world, player, hand);
         return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
     }
 
