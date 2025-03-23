@@ -1,7 +1,9 @@
 package net.enderman999517.funnymodfortesting.item.custom;
 
 
+import net.enderman999517.funnymodfortesting.DepthFx;
 import net.enderman999517.funnymodfortesting.item.DebugCallback;
+import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,11 +27,11 @@ public class DebugItem extends Item {
         this.callbacks.add(callback);
     }
 
-    //@Override
-    //public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-    //    this.callbacks.get(debugMode).use(world, player, hand);
-    //    return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
-    //}
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        //this.callbacks.get(debugMode).use(world, player, hand);
+        return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
+    }
 
     @Override
     public boolean hasGlint(ItemStack itemStack_1) {

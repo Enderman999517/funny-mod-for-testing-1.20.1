@@ -46,8 +46,8 @@ void main()
 
     // Ping effect: color pixels that are some distance away from the center
     float d = distance(pixelPosition, Center);
-    d /= mod(STime, 20); // Scale the world to make the ping diffuse over time
-    vec3 rainbow = vec3(sin(STime), cos(STime), sin(STime + 1.)) * smoothstep(2, 3., d) * smoothstep(4, 3., d);
+    d /= mod(STime*10., 50); // Scale the world to make the ping diffuse over time
+    vec3 rainbow = vec3(0.3, 1, 0.7) * smoothstep(1, 3., d) * smoothstep(10, 3., d);
 
     gl_FragColor = vec4(tex.rgb + pow(rainbow, vec3(3)), 1.0);
 }
