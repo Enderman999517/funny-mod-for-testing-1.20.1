@@ -27,14 +27,6 @@ public class DebugItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        //if (player.isSneaking() && !world.isClient) {
-        //    if (this.callbacks.size() > 1) {
-        //        debugMode = (debugMode + 1) % this.callbacks.size();
-        //        player.sendMessage(Text.translatable("Switched mode to %s", debugMode), true);
-        //    }
-        //} else {
-        //    this.callbacks.get(debugMode).use(world, player, hand);
-        //}
         this.callbacks.get(debugMode).use(world, player, hand);
         return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
     }

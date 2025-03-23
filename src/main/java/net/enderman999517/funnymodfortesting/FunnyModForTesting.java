@@ -26,7 +26,6 @@ public class FunnyModForTesting implements ModInitializer {
 
 
 	private boolean renderingBlit = false;
-	// literally the same as minecraft's blit, we are just checking that custom paths work
 	private final ManagedShaderEffect testShader = ShaderEffectManager.getInstance().manage(new Identifier(MOD_ID, "shaders/post/blit.json"));
 	private final Uniform4f color = testShader.findUniform4f("ColorModulate");
 
@@ -57,7 +56,6 @@ public class FunnyModForTesting implements ModInitializer {
 		ModItems.DEBUG_ITEM.registerDebugCallback((world, player, hand) -> {
 			if (world.isClient) {
 				renderingBlit = !renderingBlit;
-				//color.set((float) Math.random(), (float) Math.random(), (float) Math.random(), 1.0f);
 				color.set(5.0f,5.0f,5.0f,5.0f);
 			}
 		});
