@@ -1,7 +1,6 @@
 package net.enderman999517.funnymodfortesting.sound;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
-import net.enderman999517.funnymodfortesting.block.custom.LtfBlock;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -18,7 +17,7 @@ public class ModSounds {
     public static final SoundEvent LTF_BLOCK_FALL = registerSoundEvent("ltf_block_fall");
 
 
-    public static final BlockSoundGroup LTF_BLOCK_SOUNDS = new BlockSoundGroup(-2f, LtfBlock.getRandomPitch(),
+    public static final BlockSoundGroup LTF_BLOCK_SOUNDS = new BlockSoundGroup(2f, 1,
             ModSounds.LTF_BLOCK_BREAK, ModSounds.LTF_BLOCK_STEP, ModSounds.LTF_BLOCK_PLACE,
             ModSounds.LTF_BLOCK_HIT, ModSounds.LTF_BLOCK_FALL);
 

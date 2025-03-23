@@ -15,9 +15,12 @@ import net.minecraft.util.Identifier;
 
 public class ModBlocks {
 
+
     //custom
     public static final Block LTF_BLOCK = registerBlock("ltf_block",
             new LtfBlock(FabricBlockSettings.copyOf(Blocks.STONE).sounds(ModSounds.LTF_BLOCK_SOUNDS)));
+
+    public static final Block DEBUG_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
 
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);
@@ -31,5 +34,9 @@ public class ModBlocks {
 
     public static void registerModBlocks() {
         FunnyModForTesting.LOGGER.info("Registering ModBlocks for " + FunnyModForTesting.MOD_ID);
+    }
+
+    public static void init() {
+        Registry.register(Registries.BLOCK, new Identifier(FunnyModForTesting.MOD_ID, "debug_block"), DEBUG_BLOCK);
     }
 }

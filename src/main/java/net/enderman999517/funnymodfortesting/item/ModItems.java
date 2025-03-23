@@ -1,12 +1,15 @@
 package net.enderman999517.funnymodfortesting.item;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
+import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.item.custom.AmoghItem;
+import net.enderman999517.funnymodfortesting.item.custom.DebugItem;
 import net.enderman999517.funnymodfortesting.item.custom.OverpoweredItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.SpawnEggItem;
@@ -14,7 +17,13 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
+import static net.enderman999517.funnymodfortesting.block.ModBlocks.DEBUG_BLOCK;
+
 public class ModItems {
+
+    public static final DebugItem DEBUG_ITEM = new DebugItem(new Item.Settings());
+    public static final BlockItem DEBUG_BLOCK = new BlockItem(ModBlocks.DEBUG_BLOCK, new Item.Settings());
+
 
     //custom
     public static final Item OVERPOWERED = registerItem("overpowered",
@@ -47,5 +56,10 @@ public class ModItems {
     public static void registerModItems() {
         FunnyModForTesting.LOGGER.info("Registering Mod Items for " + FunnyModForTesting.MOD_ID);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(ModItems::addItemsToSpawnEggItemGroup);
+    }
+
+    public static void init() {
+        Registry.register(Registries.ITEM, new Identifier(FunnyModForTesting.MOD_ID, "debug_item"), DEBUG_ITEM);
+        Registry.register(Registries.ITEM, Registries.BLOCK.getId(ModBlocks.DEBUG_BLOCK), DEBUG_BLOCK);
     }
 }

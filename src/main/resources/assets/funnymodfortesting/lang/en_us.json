@@ -16,5 +16,7 @@
   "tooltips.funnymodfortesting.overpowered.shift.l3": "Left click on an entity to kill it",
   "tooltips.funnymodfortesting.overpowered": "Press Shift for more info",
 
-  "subtitles.funnymodfortesting.ltf_block_place": "Imagine if Ninja got a low taper fade"
+  "subtitles.funnymodfortesting.ltf_block_place": "Imagine if Ninja got a low taper fade",
+
+  "effect.funnymodfortesting.exp": "Experience"
 }

@@ -24,23 +24,23 @@ public class LtfBlock extends Block {
         super(settings);
     }
 
-    private static float randomPitch;
+    //private static float randomPitch;
 
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        randomPitch = ((float) net.minecraft.util.math.random.Random.createLocal().nextBetweenExclusive(5, 20) / 10);
-        super.onPlaced(world, pos, state, placer, itemStack);
-    }
-
-    public static float getRandomPitch() {
-        return randomPitch;
-    }
+    //@Override
+    //public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    //    randomPitch = ((float) net.minecraft.util.math.random.Random.createLocal().nextBetweenExclusive(5, 20) / 10);
+    //    super.onPlaced(world, pos, state, placer, itemStack);
+    //}
+//
+    //public static float getRandomPitch() {
+    //    return randomPitch;
+    //}
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
                               PlayerEntity player, Hand hand, BlockHitResult hit) {
-        String randomPitchString = Float.toString(randomPitch);
-        player.sendMessage(Text.literal("randomPitch: " + randomPitchString));
+        //String randomPitchString = Float.toString(randomPitch);
+        //player.sendMessage(Text.literal("randomPitch: " + randomPitchString));
         //world.playSound(player, pos, ModSounds.LTF_INTERACT, SoundCategory.BLOCKS, 1f, 1f);
         return ActionResult.SUCCESS;
     }
