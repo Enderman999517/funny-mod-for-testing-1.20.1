@@ -33,10 +33,7 @@ public class ModBlocks {
     }
 
     public static void registerModBlocks() {
-        FunnyModForTesting.LOGGER.info("Registering ModBlocks for " + FunnyModForTesting.MOD_ID);
-    }
-
-    public static void init() {
         Registry.register(Registries.BLOCK, new Identifier(FunnyModForTesting.MOD_ID, "debug_block"), DEBUG_BLOCK);
+        FunnyModForTesting.LOGGER.info("Registering ModBlocks for " + FunnyModForTesting.MOD_ID);
     }
 }

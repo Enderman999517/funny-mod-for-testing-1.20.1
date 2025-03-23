@@ -8,6 +8,7 @@ import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.enderman999517.funnymodfortesting.block.entity.ModBlockEntities;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
+import net.enderman999517.funnymodfortesting.entity.effect.FlashbangStatusEffect;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItemGroups;
 import net.enderman999517.funnymodfortesting.item.ModItems;
@@ -45,8 +46,6 @@ public class FunnyModForTesting implements ModInitializer {
 		ModSounds.registerSounds();
 		ModStatusEffects.registerModStatusEffects();
 
-		ModBlocks.init();
-		ModItems.init();
 
 		ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
 			if (renderingBlit) {
@@ -58,6 +57,13 @@ public class FunnyModForTesting implements ModInitializer {
 				renderingBlit = !renderingBlit;
 				color.set(5.0f,5.0f,5.0f,5.0f);
 			}
+		});
+
+		ModStatusEffects.FLASHBANG.registerDebugCallback((entity, attributes, amplifier) -> {
+			//if (entity.getWorld().isClient) {
+				renderingBlit = !renderingBlit;
+				color.set(5.0f,5.0f,5.0f,5.0f);
+			//}
 		});
 
 	}

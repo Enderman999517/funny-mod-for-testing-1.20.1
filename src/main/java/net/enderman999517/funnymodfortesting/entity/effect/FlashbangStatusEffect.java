@@ -5,7 +5,17 @@ import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FlashbangStatusEffect extends StatusEffect {
+    private int debugMode;
+    private final List<DebugCallback> callbacks = new ArrayList<>();
+
+    public void registerDebugCallback(DebugCallback callback) {
+        this.callbacks.add(callback);
+    }
+
     protected FlashbangStatusEffect(StatusEffectCategory category, int color) {
         super(category, color);
     }
@@ -17,5 +27,11 @@ public class FlashbangStatusEffect extends StatusEffect {
 
     @Override
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+        this.callbacks.get(debugMode).onApplied(entity, attributes, amplifier);
+    }
+
+    @Override
+    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+        this.callbacks.get(debugMode).onApplied(entity, attributes, amplifier);
     }
 }
