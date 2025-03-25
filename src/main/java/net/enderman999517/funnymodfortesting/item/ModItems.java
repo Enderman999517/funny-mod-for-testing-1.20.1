@@ -3,10 +3,7 @@ package net.enderman999517.funnymodfortesting.item;
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
-import net.enderman999517.funnymodfortesting.item.custom.AmoghItem;
-import net.enderman999517.funnymodfortesting.item.custom.DebugItem;
-import net.enderman999517.funnymodfortesting.item.custom.FlashbangItem;
-import net.enderman999517.funnymodfortesting.item.custom.OverpoweredItem;
+import net.enderman999517.funnymodfortesting.item.custom.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -36,9 +33,12 @@ public class ModItems {
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
             new Item(new FabricItemSettings()));
 
-    ////armor + hats
+    //armor + hats
+    public static final Item NVG_GOGGLES = registerItem("nvg_goggles",
+            new NvgItem(new FabricItemSettings()));
     //public static final Item LTF_HAIR = registerItem("ltf_hair",
     //        new ArmorItem(ModArmorMaterials.HAIR, ArmorItem.Type.HELMET, new FabricItemSettings()));
+
 
 
     //spawn eggs

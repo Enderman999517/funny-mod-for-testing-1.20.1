@@ -1,9 +1,7 @@
 package net.enderman999517.funnymodfortesting.item.custom;
 
 
-import net.enderman999517.funnymodfortesting.DepthFx;
 import net.enderman999517.funnymodfortesting.item.DebugCallback;
-import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

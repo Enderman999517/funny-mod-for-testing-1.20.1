@@ -4,6 +4,7 @@
   "item.funnymodfortesting.amogh_essence": "Amogh Essence",
   "item.funnymodfortesting.amogh": "Amogh",
   "item.funnymodfortesting.ltf_hair": "Looooooooooooowwwwww Taperrrrrr fadeeeeeeee",
+  "item.funnymodfortesting.nvg_goggles": "NVG Goggles",
 
   "block.funnymodfortesting.ltf_block": "Block of Low Taper Fade",
 
@@ -15,8 +16,11 @@
   "tooltips.funnymodfortesting.overpowered.shift.l2": "Right click on an entity to despawn it",
   "tooltips.funnymodfortesting.overpowered.shift.l3": "Left click on an entity to kill it",
   "tooltips.funnymodfortesting.overpowered": "Press Shift for more info",
+  "tooltips.funnymodfortesting.nvg": "Press %1$s to toggle night vision",
 
   "subtitles.funnymodfortesting.ltf_block_place": "Imagine if Ninja got a low taper fade",
 
-  "effect.funnymodfortesting.exp": "Experience"
+  "effect.funnymodfortesting.exp": "Experience",
+
+  "key.funnymodfortesting.nvg": "Toggle Night Vision"
 }

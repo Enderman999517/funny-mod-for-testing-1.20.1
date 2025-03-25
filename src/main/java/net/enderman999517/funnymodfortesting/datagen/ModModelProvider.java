@@ -30,6 +30,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.OVERPOWERED, Models.GENERATED);
         itemModelGenerator.register(ModItems.AMOGH, Models.GENERATED);
         itemModelGenerator.register(ModItems.FLASHBANG, Models.GENERATED);
+        itemModelGenerator.register(ModItems.NVG_GOGGLES, Models.GENERATED);
 
         //items
         itemModelGenerator.register(ModItems.AMOGH_ESSENCE, Models.GENERATED);

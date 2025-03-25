@@ -27,64 +27,6 @@ public class OverpoweredItem extends Item {
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         target.kill();
-        //target.damage(new DamageSource(new RegistryEntry<DamageType>() {
-        //    //no clue why the overides are needed
-        //    @Override
-        //    public DamageType value() {
-        //        return null;
-        //    }
-//
-        //    @Override
-        //    public boolean hasKeyAndValue() {
-        //        return false;
-        //    }
-//
-        //    @Override
-        //    public boolean matchesId(Identifier id) {
-        //        return false;
-        //    }
-//
-        //    @Override
-        //    public boolean matchesKey(RegistryKey<DamageType> key) {
-        //        return false;
-        //    }
-//
-        //    @Override
-        //    public boolean matches(Predicate<RegistryKey<DamageType>> predicate) {
-        //        return false;
-        //    }
-//
-        //    @Override
-        //    public boolean isIn(TagKey<DamageType> tag) {
-        //        return false;
-        //    }
-//
-        //    @Override
-        //    public Stream<TagKey<DamageType>> streamTags() {
-        //        return Stream.empty();
-        //    }
-//
-        //    @Override
-        //    public Either<RegistryKey<DamageType>, DamageType> getKeyOrValue() {
-        //        return null;
-        //    }
-//
-        //    @Override
-        //    public Optional<RegistryKey<DamageType>> getKey() {
-        //        return Optional.empty();
-        //    }
-//
-        //    @Override
-        //    public Type getType() {
-        //        return null;
-        //    }
-//
-        //    @Override
-        //    public boolean ownerEquals(RegistryEntryOwner<DamageType> owner) {
-        //        return true;
-        //    }
-        //}), 1000);
-
         return super.postHit(stack, target, attacker);
     }
 
