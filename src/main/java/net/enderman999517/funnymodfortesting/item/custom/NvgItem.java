@@ -1,7 +1,7 @@
 package net.enderman999517.funnymodfortesting.item.custom;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.FunnyModForTestingClient;
-import net.enderman999517.funnymodfortesting.item.DebugCallback;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.item.TooltipContext;
@@ -24,9 +24,9 @@ import java.util.List;
 public class NvgItem extends Item implements Equipment {
 
     private int debugMode;
-    private final List<> callbacks = new ArrayList<>();
+    private final List<DebugCallbackNvg> callbacks = new ArrayList<>();
 
-    public void registerDebugCallback( callback) {
+    public void registerDebugCallback(DebugCallbackNvg callback) {
         this.callbacks.add(callback);
     }
 
@@ -54,7 +54,10 @@ public class NvgItem extends Item implements Equipment {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity.isPlayer() && FunnyModForTestingClient.NVG_TOGGLE.wasPressed() && entity.getArmorItems().equals(ModItems.NVG_GOGGLES)) {
-            this.callbacks.get(debugMode).use(world, entity, slot, selected);
+            this.callbacks.get(debugMode).inventoryTick(stack, world, entity, slot, selected);
+            FunnyModForTesting.LOGGER.info("test");
         }
     }
+
+
 }

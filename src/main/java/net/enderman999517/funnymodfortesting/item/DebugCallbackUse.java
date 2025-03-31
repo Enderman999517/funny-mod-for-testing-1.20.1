@@ -5,6 +5,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 @FunctionalInterface
-public interface DebugCallback {
+public interface DebugCallbackUse {
     void use(World world, PlayerEntity player, Hand hand);
 }
