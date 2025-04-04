@@ -8,10 +8,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Equipment;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -20,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NvgItem extends Item implements Equipment {
 
@@ -53,11 +51,35 @@ public class NvgItem extends Item implements Equipment {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (entity.isPlayer() && FunnyModForTestingClient.NVG_TOGGLE.wasPressed() && entity.getArmorItems().equals(ModItems.NVG_GOGGLES)) {
-            this.callbacks.get(debugMode).inventoryTick(stack, world, entity, slot, selected);
-            FunnyModForTesting.LOGGER.info("test");
+        //Iterable<ItemStack> itemStacks = new Iterable<ItemStack>() {
+        //    @Override
+        //    public @NotNull Iterator<ItemStack> iterator() {
+        //        return new Iterator<ItemStack>() {
+        //            @Override
+        //            public boolean hasNext() {
+        //                return true;
+        //            }
+//
+        //            @Override
+        //            public ItemStack next() {
+        //                return new ItemStack(ModItems.NVG_GOGGLES);
+        //            }
+        //        };
+        //    }
+        //};
+        //if (entity.isPlayer() && FunnyModForTestingClient.NVG_TOGGLE.wasPressed()) {
+        //    FunnyModForTesting.LOGGER.info("test1");
+        //    if(entity.getArmorItems().equals(itemStacks)) {
+        //        FunnyModForTesting.LOGGER.info("test");
+        //        this.callbacks.get(debugMode).inventoryTick(stack, world, entity, slot, selected);
+        //    }
+        //}
+        if (entity.isPlayer() && FunnyModForTestingClient.NVG_TOGGLE.wasPressed()) {
+            FunnyModForTesting.LOGGER.info("test1");
+            if (Objects.requireNonNull(entity.getWorld().getClosestPlayer(entity, 2)).getInventory().main.stream().anyMatch(stack1 -> stack1.isOf(ModItems.NVG_GOGGLES))) {
+                FunnyModForTesting.LOGGER.info("test");
+                this.callbacks.get(debugMode).inventoryTick(stack, world, entity, slot, selected);
+            }
         }
     }
-
-
 }
