@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.entity.custom.StatusEffectProjectileEntity;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,6 +36,7 @@ public class FlashbangItem extends Item {
         if (!world.isClient) {
             StatusEffectProjectileEntity statusEffectProjectileEntity = new StatusEffectProjectileEntity(user, world);
             statusEffectProjectileEntity.setItem(itemStack);
+            //statusEffectProjectileEntity.setEffect(StatusEffects.BLINDNESS);
             statusEffectProjectileEntity.setEffect(ModStatusEffects.FLASHBANG);
             statusEffectProjectileEntity.setRadius(3);
             statusEffectProjectileEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1F, 0.0F);
