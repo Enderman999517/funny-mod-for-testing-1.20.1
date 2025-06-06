@@ -17,6 +17,7 @@ import net.minecraft.util.Identifier;
 
 public class ModItems {
 
+    // for shader stuff triggered by items, add as below and add to registerModItems()
     public static final DebugItem DEBUG_ITEM = new DebugItem(new Item.Settings());
     public static final BlockItem DEBUG_BLOCK = new BlockItem(ModBlocks.DEBUG_BLOCK, new Item.Settings());
     public static final NvgItem NVG_GOGGLES = new NvgItem(new Item.Settings());
@@ -58,6 +59,7 @@ public class ModItems {
     public static void registerModItems() {
         FunnyModForTesting.LOGGER.info("Registering Mod Items for " + FunnyModForTesting.MOD_ID);
         Registry.register(Registries.ITEM, new Identifier(FunnyModForTesting.MOD_ID, "debug_item"), DEBUG_ITEM);
+        Registry.register(Registries.ITEM, new Identifier(FunnyModForTesting.MOD_ID, "nvg_goggles"), NVG_GOGGLES);
         Registry.register(Registries.ITEM, Registries.BLOCK.getId(ModBlocks.DEBUG_BLOCK), DEBUG_BLOCK);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(ModItems::addItemsToSpawnEggItemGroup);
     }

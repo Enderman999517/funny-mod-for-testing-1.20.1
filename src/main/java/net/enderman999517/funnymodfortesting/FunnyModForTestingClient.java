@@ -64,15 +64,15 @@ public class FunnyModForTestingClient implements ClientModInitializer {
                 color.set(0.0f,1.0f,0.4f,0.0f);
         });
 
-        //ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
-        //    if (renderingBlit) {
-        //        testShader.render(tickDelta);
-        //    }
-        //});
-        //ModItems.NVG_GOGGLES.registerDebugCallback((stack, world, entity, slot,selected) -> {
-        //        renderingBlit = !renderingBlit;
-        //        color.set(0.0f,1.0f,0.4f,0.0f);
-        //});
+        ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
+            if (renderingBlit) {
+                testShader.render(tickDelta);
+            }
+        });
+        ModItems.NVG_GOGGLES.registerDebugCallback((stack, world, entity, slot,selected) -> {
+                renderingBlit = !renderingBlit;
+                color.set(0.2f,1.0f,0.5f,1.0f);
+        });
 
         ModStatusEffects.FLASHBANG.registerDebugCallback((entity, attributes, amplifier) -> {
             // i know i probably shouldnt do this but i couldnt find another way that worked
@@ -82,7 +82,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             //for (duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration(); duration > 0; duration--) {
             //    duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration();
             renderingBlit = !renderingBlit;
-            color.set(5.0f, 5.0f, 5.0f, 5f);
+            color.set(1.0f, 1.0f, 1.0f, 1.0f);
 
             //}
             //duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration();
