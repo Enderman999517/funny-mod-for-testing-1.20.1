@@ -1,10 +1,9 @@
-// 1.20.1	2025-06-06T19:42:56.2026791	Funny Mod For Testing/Model Definitions
+// 1.20.1	2025-06-06T22:17:16.1263621	Funny Mod For Testing/Model Definitions
 a14ab8bce7a869731fe0b6bb467793e8cbb1d4ac assets\funnymodfortesting\blockstates\ltf_block.json
 52f6251ab871e279122e40fe7ac3792505bdb6a5 assets\funnymodfortesting\models\item\brainrotifier.json
 ae217626eb5be0d9fa032becc72e85ed0534e7c7 assets\funnymodfortesting\models\item\amogh_essence.json
 0fef1fc6eaa82df73ad096f75fd67f958d7013d0 assets\funnymodfortesting\models\item\overpowered.json
 0cced1a84ee98b5540cc30d3571d098d4c27c1eb assets\funnymodfortesting\models\block\ltf_block.json
-f1c8c83599fe5628b2c5c7eed001001ad1e74e71 assets\minecraft\models\item\air.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets\funnymodfortesting\models\item\amogh_spawn_egg.json
 abb3b3a8d32ae2bafe90ddb077588db0d9b7a740 assets\funnymodfortesting\blockstates\brainrotifier.json
 034750dc017e36bcfea5a357061c380f00c10982 assets\funnymodfortesting\models\item\amogh.json
