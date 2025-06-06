@@ -22,6 +22,9 @@ public class ModModelProvider extends FabricModelProvider {
 
         //random
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LTF_BLOCK);
+
+        //block entities
+        blockStateModelGenerator.registerSimpleState(ModBlocks.BRAINROTIFIER);
     }
 
     @Override
