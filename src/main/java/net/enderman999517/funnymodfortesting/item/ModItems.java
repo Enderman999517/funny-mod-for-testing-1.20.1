@@ -19,6 +19,7 @@ public class ModItems {
 
     public static final DebugItem DEBUG_ITEM = new DebugItem(new Item.Settings());
     public static final BlockItem DEBUG_BLOCK = new BlockItem(ModBlocks.DEBUG_BLOCK, new Item.Settings());
+    public static final NvgItem NVG_GOGGLES = new NvgItem(new Item.Settings());
 
 
     //custom
@@ -34,8 +35,8 @@ public class ModItems {
             new Item(new FabricItemSettings()));
 
     //armor + hats
-    public static final Item NVG_GOGGLES = registerItem("nvg_goggles",
-            new NvgItem(new FabricItemSettings()));
+    //public static final Item NVG_GOGGLES = registerItem("nvg_goggles",
+    //        new NvgItem(new FabricItemSettings()));
     //public static final Item LTF_HAIR = registerItem("ltf_hair",
     //        new ArmorItem(ModArmorMaterials.HAIR, ArmorItem.Type.HELMET, new FabricItemSettings()));
 

@@ -64,15 +64,15 @@ public class FunnyModForTestingClient implements ClientModInitializer {
                 color.set(0.0f,1.0f,0.4f,0.0f);
         });
 
-        ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
-            if (renderingBlit) {
-                testShader.render(tickDelta);
-            }
-        });
-        ModItems.DEBUG_ITEM.registerDebugCallback((world, player, hand) -> {
-                renderingBlit = !renderingBlit;
-                color.set(0.0f,1.0f,0.4f,0.0f);
-        });
+        //ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
+        //    if (renderingBlit) {
+        //        testShader.render(tickDelta);
+        //    }
+        //});
+        //ModItems.NVG_GOGGLES.registerDebugCallback((stack, world, entity, slot,selected) -> {
+        //        renderingBlit = !renderingBlit;
+        //        color.set(0.0f,1.0f,0.4f,0.0f);
+        //});
 
         ModStatusEffects.FLASHBANG.registerDebugCallback((entity, attributes, amplifier) -> {
             // i know i probably shouldnt do this but i couldnt find another way that worked
