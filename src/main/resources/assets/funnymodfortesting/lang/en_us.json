@@ -24,5 +24,9 @@
 
   "effect.funnymodfortesting.exp": "Experience",
 
-  "key.funnymodfortesting.nvg": "Toggle Night Vision"
+  "key.funnymodfortesting.nvg": "Toggle Night Vision",
+
+
+  "commands.funnymodfortesting.kill.success.multiple": "Killed %s entities",
+  "commands.funnymodfortesting.kill.success.single": "Killed %s"
 }
