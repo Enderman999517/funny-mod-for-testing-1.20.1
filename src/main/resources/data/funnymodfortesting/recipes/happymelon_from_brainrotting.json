@@ -1,0 +1,11 @@
+{
+  "type": "funnymodfortesting:brainrotting",
+  "ingredients": [
+    {
+      "item": "minecraft:melon_slice"
+    }
+  ],
+  "output": {
+    "item": "funnymodfortesting:overpowered"
+  }
+}

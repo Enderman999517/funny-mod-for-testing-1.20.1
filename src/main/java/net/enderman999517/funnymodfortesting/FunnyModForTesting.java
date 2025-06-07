@@ -7,6 +7,7 @@ import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItemGroups;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.recipe.ModRecipes;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.enderman999517.funnymodfortesting.sound.ModSounds;
 import net.fabricmc.api.ModInitializer;
@@ -34,6 +35,7 @@ public class FunnyModForTesting implements ModInitializer {
 		ModSounds.registerSounds();
 		ModStatusEffects.registerModStatusEffects();
 		ModScreenHandlers.registerScreenHandlers();
+		ModRecipes.registerRecipes();
 
 	}
 }
