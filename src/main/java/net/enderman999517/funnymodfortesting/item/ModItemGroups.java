@@ -27,6 +27,7 @@ public class ModItemGroups {
 
                         //blocks
                         entries.add(ModBlocks.LTF_BLOCK);
+                        entries.add(ModBlocks.BRAINROTIFIER);
 
                         ////armor
                         //entries.add(ModItems.LTF_HAIR);

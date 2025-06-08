@@ -30,6 +30,22 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .input('G', Items.GUNPOWDER)
                 .criterion(hasItem(ModItems.AMOGH_ESSENCE), conditionsFromItem(ModItems.AMOGH_ESSENCE))
                 .criterion(hasItem(ModItems.AMOGH), conditionsFromItem(ModItems.AMOGH))
+                .showNotification(true)
                 .offerTo(exporter, new Identifier(getRecipeName(ModItems.AMOGH)));
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.NVG_GOGGLES, 1)
+                .pattern("ISI")
+                .pattern("EAE")
+                .pattern("   ")
+                .input('I', Items.IRON_INGOT)
+                .input('S', Items.STRING)
+                .input('E', Items.ENDER_EYE)
+                .input('A', Items.AMETHYST_SHARD)
+                .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
+                .criterion(hasItem(Items.STRING), conditionsFromItem(Items.STRING))
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD))
+                .showNotification(true)
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.NVG_GOGGLES)));
     }
 }
