@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTestingClient;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.sound.ModSounds;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -23,6 +24,7 @@ import java.util.Objects;
 
 public class NvgItem extends Item implements Equipment {
 
+    private int toggle = 0;
     private int debugMode;
     private final List<DebugCallbackNvg> callbacks = new ArrayList<>();
 
@@ -58,6 +60,13 @@ public class NvgItem extends Item implements Equipment {
                 // no clue why you need to invert it but it works so i dont really care
                 if (!Objects.requireNonNull(entity.getWorld().getClosestPlayer(entity, 2)).getInventory().main.stream().anyMatch(stack1 -> stack1.isOf(ModItems.NVG_GOGGLES))) {
                     this.callbacks.get(debugMode).inventoryTick(stack, world, entity, slot, selected);
+                    if (toggle % 2 == 0) {
+                        entity.playSound(ModSounds.NVG_TURN_ON, 1f, 1f);
+                        toggle++;
+                    } else {
+                        entity.playSound(ModSounds.NVG_TURN_OFF, 1f, 1f);
+                        toggle++;
+                    }
                 }
             }
         }

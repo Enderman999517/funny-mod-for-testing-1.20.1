@@ -4,5 +4,17 @@
     "sounds": [
       "funnymodfortesting:ltf_block_place"
     ]
+  },
+  "nvg_turn_off": {
+    "subtitle": "subtitles.funnymodfortesting.nvg_turn_off",
+    "sounds": [
+      "funnymodfortesting:nvg_turn_off"
+    ]
+  },
+  "nvg_turn_on": {
+    "subtitle": "subtitles.funnymodfortesting.nvg_turn_on",
+    "sounds": [
+      "funnymodfortesting:nvg_turn_on"
+    ]
   }
 }

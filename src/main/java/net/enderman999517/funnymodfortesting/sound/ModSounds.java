@@ -16,6 +16,9 @@ public class ModSounds {
     public static final SoundEvent LTF_BLOCK_HIT = registerSoundEvent("ltf_block_hit");
     public static final SoundEvent LTF_BLOCK_FALL = registerSoundEvent("ltf_block_fall");
 
+    public static final SoundEvent NVG_TURN_OFF = registerSoundEvent("nvg_turn_off");
+    public static final SoundEvent NVG_TURN_ON = registerSoundEvent("nvg_turn_on");
+
 
     public static final BlockSoundGroup LTF_BLOCK_SOUNDS = new BlockSoundGroup(2f, 1,
             ModSounds.LTF_BLOCK_BREAK, ModSounds.LTF_BLOCK_STEP, ModSounds.LTF_BLOCK_PLACE,
