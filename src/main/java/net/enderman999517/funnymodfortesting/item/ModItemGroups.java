@@ -28,6 +28,8 @@ public class ModItemGroups {
                         //blocks
                         entries.add(ModBlocks.LTF_BLOCK);
                         entries.add(ModBlocks.BRAINROTIFIER);
+                        entries.add(ModBlocks.SHOWCASE_BLOCK_W);
+                        entries.add(ModBlocks.SHOWCASE_BLOCK_B);
 
                         ////armor
                         //entries.add(ModItems.LTF_HAIR);

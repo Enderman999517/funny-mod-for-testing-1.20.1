@@ -24,6 +24,11 @@ public class ModBlocks {
 
     public static final Block DEBUG_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
 
+    public static final Block SHOWCASE_BLOCK_W = registerBlock("showcase_block_w",
+            new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block SHOWCASE_BLOCK_B = registerBlock("showcase_block_b",
+            new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
+
     //block entities
     public static final Block BRAINROTIFIER = registerBlock("brainrotifier",
             new BrainrotifierBlock(FabricBlockSettings.copyOf(Blocks.SLIME_BLOCK).nonOpaque()));
