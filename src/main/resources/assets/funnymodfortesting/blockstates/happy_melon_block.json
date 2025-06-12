@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "number=north": {
+      "model": "funnymodfortesting:block/happy_melon_block1"
+    },
+    "number=east": {
+      "model": "funnymodfortesting:block/happy_melon_block2"
+    }
+  }
+}

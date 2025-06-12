@@ -3,14 +3,14 @@ package net.enderman999517.funnymodfortesting.item;
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
+import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.custom.*;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.SpawnEggItem;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -34,6 +34,8 @@ public class ModItems {
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
             new Item(new FabricItemSettings()));
+    public static final Item HAPPY_MELON_SLICE = registerItem("happy_melon_slice",
+            new Item(new FabricItemSettings().food(new FoodComponent.Builder().alwaysEdible().hunger(2).statusEffect(new StatusEffectInstance(ModStatusEffects.BRAINROT, 1), 1).build())));
 
     //armor + hats
     //public static final Item NVG_GOGGLES = registerItem("nvg_goggles",

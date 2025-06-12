@@ -11,6 +11,8 @@ public class ModStatusEffects {
 
     public static final StatusEffect EXP = registerStatusEffect("exp",
             new ExpStatusEffect(StatusEffectCategory.BENEFICIAL, 0xB00B69));
+    public static final StatusEffect BRAINROT = registerStatusEffect("brainrot",
+            new BrainrotStatusEffect(StatusEffectCategory.HARMFUL, 0x00ACE6));
 
     private static StatusEffect registerStatusEffect(String name, StatusEffect statusEffect) {
         return Registry.register(Registries.STATUS_EFFECT, new Identifier(FunnyModForTesting.MOD_ID, name), statusEffect);

@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "up": "minecraft:block/melon_top",
+    "down": "minecraft:block/melon_top",
+    "north": "funnymodfortesting:block/happy_melon_block_front",
+    "east": "minecraft:block/melon_side",
+    "south": "funnymodfortesting:block/happy_melon_block_back",
+    "west": "minecraft:block/melon_side"
+  }
+}

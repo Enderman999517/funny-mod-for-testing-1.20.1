@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.block;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.custom.BrainrotifierBlock;
+import net.enderman999517.funnymodfortesting.block.custom.HappyMelonBlock;
 import net.enderman999517.funnymodfortesting.block.custom.LtfBlock;
 import net.enderman999517.funnymodfortesting.block.entity.BrainrotifierBlockEntity;
 import net.enderman999517.funnymodfortesting.sound.ModSounds;
@@ -17,6 +18,10 @@ import net.minecraft.util.Identifier;
 
 public class ModBlocks {
 
+    public static final Block SHOWCASE_BLOCK_W = registerBlock("showcase_block_w",
+            new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block SHOWCASE_BLOCK_B = registerBlock("showcase_block_b",
+            new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     //custom
     public static final Block LTF_BLOCK = registerBlock("ltf_block",
@@ -24,10 +29,14 @@ public class ModBlocks {
 
     public static final Block DEBUG_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
 
-    public static final Block SHOWCASE_BLOCK_W = registerBlock("showcase_block_w",
-            new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
-    public static final Block SHOWCASE_BLOCK_B = registerBlock("showcase_block_b",
-            new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
+    //public static final Block HAPPY_MELON_BLOCK_1 = registerBlock("happy_melon_1",
+    //        new HappyMelonBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
+    public static final Block HAPPY_MELON_BLOCK = Registry.register(Registries.BLOCK, new Identifier(FunnyModForTesting.MOD_ID, "happy_melon_block"),
+            new HappyMelonBlock(FabricBlockSettings.copyOf(Blocks.STONE)));
+    //public static final Block HAPPY_MELON_BLOCK_2 = registerBlock("happy_melon_2",
+    //        new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
+    //public static final Block HAPPY_MELON_BLOCK_3 = registerBlock("happy_melon_3",
+    //        new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
 
     //block entities
     public static final Block BRAINROTIFIER = registerBlock("brainrotifier",

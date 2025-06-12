@@ -24,12 +24,16 @@ public class ModItemGroups {
 
                         //items
                         entries.add(ModItems.AMOGH_ESSENCE);
+                        entries.add(ModItems.HAPPY_MELON_SLICE);
 
                         //blocks
                         entries.add(ModBlocks.LTF_BLOCK);
                         entries.add(ModBlocks.BRAINROTIFIER);
                         entries.add(ModBlocks.SHOWCASE_BLOCK_W);
                         entries.add(ModBlocks.SHOWCASE_BLOCK_B);
+                        entries.add(ModBlocks.HAPPY_MELON_BLOCK);
+                        //entries.add(ModBlocks.HAPPY_MELON_BLOCK_2);
+                        //entries.add(ModBlocks.HAPPY_MELON_BLOCK_3);
 
                         ////armor
                         //entries.add(ModItems.LTF_HAIR);
