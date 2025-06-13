@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.block.entity;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.recipe.CompactingRecipe;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -11,6 +12,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -25,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
@@ -128,43 +131,57 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
             return;
         }
 
-        if (this.getCurrentOutput() != null) {
+        // WHY DO YOU CRASH YOURE NOT BEING CALLED WTF
+        if (this.getCurrentOutput() == null) {
+            if (this.getStack(INPUT_SLOT) != new ItemStack(Items.AIR) || this.getStack(INPUT_SLOT) != null) {
+                    Optional<CompactingRecipe> recipe = getCurrentRecipe();
+                    ItemStack result = recipe.get().getOutput(null);
+                    currentOutput = result;
+            } else return;
+        }
+
+        //if not null, if hasnt finished, only craft if same
+        if (currentOutput != null) {
             Optional<CompactingRecipe> recipe = getCurrentRecipe();
             ItemStack result = recipe.get().getOutput(null);
-            currentOutput = result;
-        }
-
-        if(isOutputSlotEmptyOrReceivable()) {
-            // if has item in input, decrement input, increment normalised progress bar
-            // if progress bar full, craft
-
-
-            if(this.hasRecipe()) {
-                this.increaseCraftProgress();
-                this.removeStack(INPUT_SLOT, 1);
-                markDirty(world, pos, state);
+            if (!hasCraftingFinished()) {
+                if (currentOutput == result){
+                    if(isOutputSlotEmptyOrReceivable()) {
+                        // if has item in input, decrement input, increment normalised progress bar
+                        // if progress bar full, craft
 
 
-                if(hasCraftingFinished()) {
-                    this.craftItem();
-                    this.resetProgress();
+                        if(this.hasRecipe()) {
+                            this.increaseCraftProgress();
+                            this.removeStack(INPUT_SLOT, 1);
+                            markDirty(world, pos, state);
+
+
+                            if(hasCraftingFinished()) {
+                                this.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput(null).getItem(),
+                                        getStack(OUTPUT_SLOT).getCount() + recipe.get().getOutput(null).getCount()));
+                                this.resetProgress();
+                                currentOutput = null;
+                            }
+
+                        }// else {
+                        //    this.resetProgress();
+                        //}
+                    } else {
+                        this.resetProgress();
+                        markDirty(world, pos, state);
+                    }
                 }
-
-            }// else {
-            //    this.resetProgress();
-            //}
-        } else {
-            this.resetProgress();
-            markDirty(world, pos, state);
+            }
         }
     }
 
-    private void craftItem() {
-
-        //change
-        this.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput(null).getItem(),
-                getStack(OUTPUT_SLOT).getCount() + recipe.get().getOutput(null).getCount()));
-    }
+    //private void craftItem() {
+//
+    //    //change
+    //    this.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput(null).getItem(),
+    //            getStack(OUTPUT_SLOT).getCount() + recipe.get().getOutput(null).getCount()));
+    //}
 
     private Optional<CompactingRecipe> getCurrentRecipe() {
         SimpleInventory inv = new SimpleInventory(this.size());
