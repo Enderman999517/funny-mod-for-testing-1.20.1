@@ -11,6 +11,9 @@ public class ModScreenHandlers {
     public static final ScreenHandlerType<BrainrottingScreenHandler> BRAINROTTING_SCREEN_HANDLER =
             Registry.register(Registries.SCREEN_HANDLER, new Identifier(FunnyModForTesting.MOD_ID, "brainrotting"),
                     new ExtendedScreenHandlerType<>(BrainrottingScreenHandler::new));
+    public static final ScreenHandlerType<CompactingScreenHandler> COMPACTING_SCREEN_HANDLER =
+            Registry.register(Registries.SCREEN_HANDLER, new Identifier(FunnyModForTesting.MOD_ID, "compacting"),
+                    new ExtendedScreenHandlerType<>(CompactingScreenHandler::new));
 
 
     public static void registerScreenHandlers() {

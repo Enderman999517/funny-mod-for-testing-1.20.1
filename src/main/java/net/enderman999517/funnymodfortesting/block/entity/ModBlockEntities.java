@@ -13,6 +13,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(FunnyModForTesting.MOD_ID, "brainrotifier_be"),
                     FabricBlockEntityTypeBuilder.create(BrainrotifierBlockEntity::new,
                             ModBlocks.BRAINROTIFIER).build());
+    public static final BlockEntityType<CompactorBlockEntity> COMPACTOR_BLOCK_ENTITY =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(FunnyModForTesting.MOD_ID, "compactor_be"),
+                    FabricBlockEntityTypeBuilder.create(CompactorBlockEntity::new,
+                            ModBlocks.COMPACTOR).build());
 
 
     public static void registerBlockEntities() {

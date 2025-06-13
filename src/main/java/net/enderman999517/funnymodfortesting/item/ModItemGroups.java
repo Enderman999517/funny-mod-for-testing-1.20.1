@@ -32,8 +32,6 @@ public class ModItemGroups {
                         entries.add(ModBlocks.SHOWCASE_BLOCK_W);
                         entries.add(ModBlocks.SHOWCASE_BLOCK_B);
                         entries.add(ModBlocks.HAPPY_MELON_BLOCK);
-                        //entries.add(ModBlocks.HAPPY_MELON_BLOCK_2);
-                        //entries.add(ModBlocks.HAPPY_MELON_BLOCK_3);
 
                         ////armor
                         //entries.add(ModItems.LTF_HAIR);

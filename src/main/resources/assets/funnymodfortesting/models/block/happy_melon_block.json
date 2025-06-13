@@ -1,11 +1,12 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "minecraft:block/cube_directional",
   "textures": {
+    "particle": "minecraft:block/melon_side",
     "up": "minecraft:block/melon_top",
     "down": "minecraft:block/melon_top",
     "north": "funnymodfortesting:block/happy_melon_block_front",
-    "east": "minecraft:block/melon_side",
+    "east": "funnymodfortesting:block/happy_melon_block_side",
     "south": "funnymodfortesting:block/happy_melon_block_back",
-    "west": "minecraft:block/melon_side"
+    "west": "funnymodfortesting:block/happy_melon_block_side"
   }
 }

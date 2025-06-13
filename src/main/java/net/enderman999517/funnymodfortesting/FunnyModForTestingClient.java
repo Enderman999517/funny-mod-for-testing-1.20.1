@@ -11,6 +11,7 @@ import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
+import net.enderman999517.funnymodfortesting.screen.CompactingScreen;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -43,6 +44,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.AMOGH, AmoghModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.AMOGH, AmoghRenderer::new);
         HandledScreens.register(ModScreenHandlers.BRAINROTTING_SCREEN_HANDLER, BrainrottingScreen::new);
+        HandledScreens.register(ModScreenHandlers.COMPACTING_SCREEN_HANDLER, CompactingScreen::new);
 
         //ClientTickEvents.END_CLIENT_TICK.register(DepthFx.INSTANCE);
         //ShaderEffectRenderCallback.EVENT.register(DepthFx.INSTANCE);

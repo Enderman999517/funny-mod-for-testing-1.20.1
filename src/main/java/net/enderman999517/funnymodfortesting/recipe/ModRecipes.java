@@ -12,5 +12,11 @@ public class ModRecipes {
 
         Registry.register(Registries.RECIPE_TYPE, new Identifier(FunnyModForTesting.MOD_ID, BrainrottingRecipe.Type.ID),
                 BrainrottingRecipe.Type.INSTANCE);
+
+        Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(FunnyModForTesting.MOD_ID, CompactingRecipe.Serializer.ID),
+                CompactingRecipe.Serializer.INSTANCE);
+
+        Registry.register(Registries.RECIPE_TYPE, new Identifier(FunnyModForTesting.MOD_ID, CompactingRecipe.Type.ID),
+                CompactingRecipe.Type.INSTANCE);
     }
 }

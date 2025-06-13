@@ -24,12 +24,10 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LTF_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SHOWCASE_BLOCK_W);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SHOWCASE_BLOCK_B);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.HAPPY_MELON_BLOCK);
-        //blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.HAPPY_MELON_BLOCK_2);
-        //blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.HAPPY_MELON_BLOCK_3);
 
         //block entities
         blockStateModelGenerator.registerSimpleState(ModBlocks.BRAINROTIFIER);
+        blockStateModelGenerator.registerSimpleState(ModBlocks.COMPACTOR);
     }
 
     @Override
