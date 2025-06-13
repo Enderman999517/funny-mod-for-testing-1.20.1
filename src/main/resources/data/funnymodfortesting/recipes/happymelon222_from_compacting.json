@@ -1,0 +1,11 @@
+{
+  "type": "funnymodfortesting:compacting",
+  "ingredients": [
+    {
+      "item": "funnymodfortesting:happy_melon_slice"
+    }
+  ],
+  "output": {
+    "item": "minecraft:diamond"
+  }
+}

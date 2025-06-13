@@ -16,7 +16,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.screen.CartographyTableScreenHandler;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -37,6 +36,7 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
     protected final PropertyDelegate propertyDelegate;
     private int progress = 0;
     private int maxProgress = 128;
+    private ItemStack currentOutput = null;
 
     public CompactorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.COMPACTOR_BLOCK_ENTITY, pos, state);
@@ -69,6 +69,10 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
     @Override
     public DefaultedList<ItemStack> getItems() {
         return inventory;
+    }
+
+    public ItemStack getCurrentOutput() {
+        return currentOutput;
     }
 
     @Override
@@ -118,23 +122,37 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
         progress++;
     }
 
+
     public void tick(World world, BlockPos pos, BlockState state) {
         if(world.isClient()) {
             return;
         }
 
+        if (this.getCurrentOutput() != null) {
+            Optional<CompactingRecipe> recipe = getCurrentRecipe();
+            ItemStack result = recipe.get().getOutput(null);
+            currentOutput = result;
+        }
+
         if(isOutputSlotEmptyOrReceivable()) {
+            // if has item in input, decrement input, increment normalised progress bar
+            // if progress bar full, craft
+
+
             if(this.hasRecipe()) {
                 this.increaseCraftProgress();
+                this.removeStack(INPUT_SLOT, 1);
                 markDirty(world, pos, state);
+
 
                 if(hasCraftingFinished()) {
                     this.craftItem();
                     this.resetProgress();
                 }
-            } else {
-                this.resetProgress();
-            }
+
+            }// else {
+            //    this.resetProgress();
+            //}
         } else {
             this.resetProgress();
             markDirty(world, pos, state);
@@ -142,8 +160,10 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
     }
 
     private void craftItem() {
-        Optional<CompactingRecipe> recipe = getCurrentRecipe();
-        ItemStack result = recipe.get().getOutput(null);
+
+        //change
+        this.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput(null).getItem(),
+                getStack(OUTPUT_SLOT).getCount() + recipe.get().getOutput(null).getCount()));
     }
 
     private Optional<CompactingRecipe> getCurrentRecipe() {

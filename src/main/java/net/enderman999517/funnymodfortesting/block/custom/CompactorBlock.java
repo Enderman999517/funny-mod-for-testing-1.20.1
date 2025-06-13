@@ -1,6 +1,5 @@
 package net.enderman999517.funnymodfortesting.block.custom;
 
-import net.enderman999517.funnymodfortesting.block.entity.BrainrotifierBlockEntity;
 import net.enderman999517.funnymodfortesting.block.entity.CompactorBlockEntity;
 import net.enderman999517.funnymodfortesting.block.entity.ModBlockEntities;
 import net.minecraft.block.*;
