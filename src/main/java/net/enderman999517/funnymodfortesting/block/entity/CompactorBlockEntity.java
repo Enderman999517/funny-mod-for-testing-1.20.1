@@ -131,45 +131,53 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
             return;
         }
 
-        // WHY DO YOU CRASH YOURE NOT BEING CALLED WTF
         if (this.getCurrentOutput() == null) {
-            if (this.getStack(INPUT_SLOT) != new ItemStack(Items.AIR) || this.getStack(INPUT_SLOT) != null) {
-                    Optional<CompactingRecipe> recipe = getCurrentRecipe();
-                    ItemStack result = recipe.get().getOutput(null);
-                    currentOutput = result;
-            } else return;
+                    if (getStack(INPUT_SLOT).getCount() >= 1) {
+                        //FunnyModForTesting.LOGGER.info("test");
+                        //gets called
+                        Optional<CompactingRecipe> recipe = getCurrentRecipe();
+                        ItemStack result = recipe.get().getOutput(null);
+                        currentOutput = result;
+                    }
         }
 
+        //i think currentOutput isnt being updated
         //if not null, if hasnt finished, only craft if same
         if (currentOutput != null) {
             Optional<CompactingRecipe> recipe = getCurrentRecipe();
-            ItemStack result = recipe.get().getOutput(null);
-            if (!hasCraftingFinished()) {
-                if (currentOutput == result){
-                    if(isOutputSlotEmptyOrReceivable()) {
-                        // if has item in input, decrement input, increment normalised progress bar
-                        // if progress bar full, craft
+            if (recipe.isPresent()) {
+                if (!hasCraftingFinished()) {
+                    ItemStack result = recipe.get().getOutput(null);
+                    //FunnyModForTesting.LOGGER.info("currentOutput is " + currentOutput);
+                    //FunnyModForTesting.LOGGER.info("result is " + result);
+                    //currentOutput is the same as result and im not smart enough to work out why the if statement doesnt work
+                    if (currentOutput == result) {
+                        FunnyModForTesting.LOGGER.info("test");
+                        if(isOutputSlotEmptyOrReceivable()) {
+                            // if has item in input, decrement input, increment normalised progress bar
+                            // if progress bar full, craft
 
 
-                        if(this.hasRecipe()) {
-                            this.increaseCraftProgress();
-                            this.removeStack(INPUT_SLOT, 1);
+                            if(this.hasRecipe()) {
+                                this.increaseCraftProgress();
+                                this.removeStack(INPUT_SLOT, 1);
+                                markDirty(world, pos, state);
+
+
+                                if(hasCraftingFinished()) {
+                                    this.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput(null).getItem(),
+                                            getStack(OUTPUT_SLOT).getCount() + recipe.get().getOutput(null).getCount()));
+                                    this.resetProgress();
+                                    currentOutput = null;
+                                }
+
+                            }// else {
+                            //    this.resetProgress();
+                            //}
+                        } else {
+                            this.resetProgress();
                             markDirty(world, pos, state);
-
-
-                            if(hasCraftingFinished()) {
-                                this.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput(null).getItem(),
-                                        getStack(OUTPUT_SLOT).getCount() + recipe.get().getOutput(null).getCount()));
-                                this.resetProgress();
-                                currentOutput = null;
-                            }
-
-                        }// else {
-                        //    this.resetProgress();
-                        //}
-                    } else {
-                        this.resetProgress();
-                        markDirty(world, pos, state);
+                        }
                     }
                 }
             }
