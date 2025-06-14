@@ -148,11 +148,7 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
             if (recipe.isPresent()) {
                 if (!hasCraftingFinished()) {
                     ItemStack result = recipe.get().getOutput(null);
-                    //FunnyModForTesting.LOGGER.info("currentOutput is " + currentOutput);
-                    //FunnyModForTesting.LOGGER.info("result is " + result);
-                    //currentOutput is the same as result and im not smart enough to work out why the if statement doesnt work
-                    if (currentOutput == result) {
-                        FunnyModForTesting.LOGGER.info("test");
+                    if (currentOutput.getItem() == result.getItem()) {
                         if(isOutputSlotEmptyOrReceivable()) {
                             // if has item in input, decrement input, increment normalised progress bar
                             // if progress bar full, craft
