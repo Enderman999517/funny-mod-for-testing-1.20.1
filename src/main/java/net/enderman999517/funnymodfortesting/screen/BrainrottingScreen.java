@@ -16,12 +16,12 @@ public class BrainrottingScreen extends HandledScreen<BrainrottingScreenHandler>
         super(handler, inventory, title);
     }
 
-    @Override
-    protected void init() {
-        super.init();
-        titleY = 1000;
-        playerInventoryTitleY = 1000;
-    }
+    //@Override
+    //protected void init() {
+    //    super.init();
+    //    titleY = 1000;
+    //    playerInventoryTitleY = 1000;
+    //}
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {

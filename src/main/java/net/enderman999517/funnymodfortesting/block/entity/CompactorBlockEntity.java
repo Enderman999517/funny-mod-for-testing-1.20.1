@@ -150,6 +150,7 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
                     ItemStack result = recipe.get().getOutput(null);
                     if (currentOutput.getItem() == result.getItem()) {
                         if(isOutputSlotEmptyOrReceivable()) {
+                            //FunnyModForTesting.LOGGER.info("input count is {}",);
                             // if has item in input, decrement input, increment normalised progress bar
                             // if progress bar full, craft
 

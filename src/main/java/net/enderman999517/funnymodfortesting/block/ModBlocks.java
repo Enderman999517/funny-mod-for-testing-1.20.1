@@ -5,7 +5,6 @@ import net.enderman999517.funnymodfortesting.block.custom.BrainrotifierBlock;
 import net.enderman999517.funnymodfortesting.block.custom.CompactorBlock;
 import net.enderman999517.funnymodfortesting.block.custom.HappyMelonBlock;
 import net.enderman999517.funnymodfortesting.block.custom.LtfBlock;
-import net.enderman999517.funnymodfortesting.block.entity.BrainrotifierBlockEntity;
 import net.enderman999517.funnymodfortesting.sound.ModSounds;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
