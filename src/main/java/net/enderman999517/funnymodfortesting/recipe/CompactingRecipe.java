@@ -66,12 +66,12 @@ public class CompactingRecipe implements Recipe<SimpleInventory> {
 
     public static class Type implements RecipeType<CompactingRecipe> {
         private Type() { }
-        public static final CompactingRecipe.Type INSTANCE = new CompactingRecipe.Type();
+        public static final Type INSTANCE = new Type();
         public static final String ID = "compacting";
     }
 
     public static class Serializer implements RecipeSerializer<CompactingRecipe> {
-        public static final CompactingRecipe.Serializer INSTANCE = new CompactingRecipe.Serializer();
+        public static final Serializer INSTANCE = new Serializer();
         public static final String ID = "compacting";
 
         @Override

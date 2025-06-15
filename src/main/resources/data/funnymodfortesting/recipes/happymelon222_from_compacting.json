@@ -2,12 +2,10 @@
   "type": "funnymodfortesting:compacting",
   "ingredients": [
     {
-      "item": "funnymodfortesting:happy_melon_slice",
-      "inputCount": "2"
+      "item": "funnymodfortesting:happy_melon_slice"
     }
   ],
   "output": {
-    "item": "minecraft:diamond",
-    "count": 2
+    "item": "minecraft:diamond"
   }
 }

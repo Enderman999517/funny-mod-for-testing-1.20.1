@@ -35,7 +35,7 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
 
     protected final PropertyDelegate propertyDelegate;
     private int progress = 0;
-    private int maxProgress = 128;
+    private int maxProgress = 128; /* change this number to change number of items required to craft */
     private ItemStack currentOutput = null;
 
     public CompactorBlockEntity(BlockPos pos, BlockState state) {
@@ -130,16 +130,12 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
 
         if (this.getCurrentOutput() == null) {
                     if (getStack(INPUT_SLOT).getCount() >= 1) {
-                        //FunnyModForTesting.LOGGER.info("test");
-                        //gets called
                         Optional<CompactingRecipe> recipe = getCurrentRecipe();
                         ItemStack result = recipe.get().getOutput(null);
                         currentOutput = result;
                     }
         }
 
-        //i think currentOutput isnt being updated
-        //if not null, if hasnt finished, only craft if same
         if (currentOutput != null) {
             Optional<CompactingRecipe> recipe = getCurrentRecipe();
             if (recipe.isPresent()) {
@@ -147,16 +143,11 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
                     ItemStack result = recipe.get().getOutput(null);
                     if (currentOutput.getItem() == result.getItem()) {
                         if(isOutputSlotEmptyOrReceivable()) {
-                            //FunnyModForTesting.LOGGER.info("input count is {}",);
-                            // if has item in input, decrement input, increment normalised progress bar
-                            // if progress bar full, craft
-
 
                             if(this.hasRecipe()) {
                                 this.increaseCraftProgress();
                                 this.removeStack(INPUT_SLOT, 1);
                                 markDirty(world, pos, state);
-
 
                                 if(hasCraftingFinished()) {
                                     this.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput(null).getItem(),
@@ -165,9 +156,7 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
                                     currentOutput = null;
                                 }
 
-                            }// else {
-                            //    this.resetProgress();
-                            //}
+                            }
                         } else {
                             this.resetProgress();
                             markDirty(world, pos, state);
@@ -177,13 +166,6 @@ public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenH
             }
         }
     }
-
-    //private void craftItem() {
-//
-    //    //change
-    //    this.setStack(OUTPUT_SLOT, new ItemStack(recipe.get().getOutput(null).getItem(),
-    //            getStack(OUTPUT_SLOT).getCount() + recipe.get().getOutput(null).getCount()));
-    //}
 
     private Optional<CompactingRecipe> getCurrentRecipe() {
         SimpleInventory inv = new SimpleInventory(this.size());
