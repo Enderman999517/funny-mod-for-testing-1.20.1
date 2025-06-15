@@ -16,18 +16,12 @@ public class CompactingRecipe implements Recipe<SimpleInventory> {
     private final Identifier id;
     private final ItemStack output;
     private final DefaultedList<Ingredient> recipeItems;
-    private final int inputCount;
 
-    public CompactingRecipe(Identifier id, ItemStack output, DefaultedList<Ingredient> recipeItems, int inputCount){
+    public CompactingRecipe(Identifier id, ItemStack output, DefaultedList<Ingredient> recipeItems){
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
-        this.inputCount = inputCount;
 
-    }
-
-    public int getInputCount () {
-        return this.inputCount;
     }
 
     @Override
@@ -86,32 +80,32 @@ public class CompactingRecipe implements Recipe<SimpleInventory> {
 
             JsonArray ingredients = JsonHelper.getArray(json, "ingredients");
             DefaultedList<Ingredient> inputs = DefaultedList.ofSize(1, Ingredient.EMPTY);
-            int inputCount = JsonHelper.asInt(json, "inputCount");
+            //int inputCount = JsonHelper.asInt(json, "inputCount");
 
             for (int i = 0; i < inputs.size(); i++) {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new CompactingRecipe(id, output, inputs, inputCount);
+            return new CompactingRecipe(id, output, inputs);
         }
 
         @Override
         public CompactingRecipe read(Identifier id, PacketByteBuf buf) {
             DefaultedList<Ingredient> inputs = DefaultedList.ofSize(buf.readInt(), Ingredient.EMPTY);
-            int inputCount = buf.readInt();
+            //int inputCount = buf.readInt();
 
             for (int i = 0; i < inputs.size(); i++) {
                 inputs.set(i, Ingredient.fromPacket(buf));
             }
 
             ItemStack output = buf.readItemStack();
-            return new CompactingRecipe(id, output, inputs, inputCount);
+            return new CompactingRecipe(id, output, inputs);
         }
 
         @Override
         public void write(PacketByteBuf buf, CompactingRecipe recipe) {
             buf.writeInt(recipe.getIngredients().size());
-            buf.writeInt(recipe.inputCount);
+            //buf.writeInt(recipe.inputCount);
             for (Ingredient ing : recipe.getIngredients()) {
                 ing.write(buf);
             }

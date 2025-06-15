@@ -1,6 +1,5 @@
 package net.enderman999517.funnymodfortesting.block.entity;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.recipe.CompactingRecipe;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -12,7 +11,6 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -27,7 +25,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class CompactorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
