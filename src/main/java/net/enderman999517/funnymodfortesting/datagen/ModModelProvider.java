@@ -34,6 +34,7 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         //custom
         itemModelGenerator.register(ModItems.OVERPOWERED, Models.GENERATED);
+        itemModelGenerator.register(ModItems.TORCH_GUN, Models.GENERATED);
         itemModelGenerator.register(ModItems.AMOGH, Models.GENERATED);
         itemModelGenerator.register(ModItems.FLASHBANG, Models.GENERATED);
 

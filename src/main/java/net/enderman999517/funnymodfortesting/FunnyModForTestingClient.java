@@ -8,8 +8,10 @@ import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.client.AmoghModel;
 import net.enderman999517.funnymodfortesting.entity.client.AmoghRenderer;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
+import net.enderman999517.funnymodfortesting.entity.custom.BlockPlacingProjectileEntity;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.item.custom.TorchGunItem;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreen;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
@@ -20,6 +22,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.Items;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -41,6 +46,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(ModEntities.EXPLOSIVE_PROJECTILE, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.STATUS_EFFECT_PROJECTILE, FlyingItemEntityRenderer::new);
+        EntityRendererRegistry.register(ModEntities.BLOCK_PLACING_PROJECTILE, FlyingItemEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.AMOGH, AmoghModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.AMOGH, AmoghRenderer::new);
         HandledScreens.register(ModScreenHandlers.BRAINROTTING_SCREEN_HANDLER, BrainrottingScreen::new);

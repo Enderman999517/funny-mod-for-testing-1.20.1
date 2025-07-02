@@ -30,6 +30,8 @@ public class ModItems {
             new AmoghItem(new FabricItemSettings()));
     public static final Item FLASHBANG = registerItem("flashbang",
             new FlashbangItem(new FabricItemSettings()));
+    public static final Item TORCH_GUN = registerItem("torch_gun",
+            new TorchGunItem(new FabricItemSettings()));
 
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
