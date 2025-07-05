@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 
 public class BlockPlacingProjectileEntity extends ThrownItemEntity {
     private Block block;
+    public Item item = this.block.asItem();
+
 
     public BlockPlacingProjectileEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);

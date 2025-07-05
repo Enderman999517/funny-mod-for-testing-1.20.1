@@ -3,8 +3,6 @@ package net.enderman999517.funnymodfortesting.item.custom;
 import net.enderman999517.funnymodfortesting.entity.custom.BlockPlacingProjectileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
