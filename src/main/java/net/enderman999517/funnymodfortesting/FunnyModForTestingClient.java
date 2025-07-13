@@ -30,7 +30,11 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             GLFW.GLFW_KEY_N,
             "category.funnymodfortesting"
     ));
-
+    public static final KeyBinding FISH = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.funnymodfortesting.fish",
+            GLFW.GLFW_KEY_F,
+            "category.funnymodfortesting"
+    ));
 
     public boolean renderingBlit = false;
     private static final ManagedShaderEffect testShader = ShaderEffectManager.getInstance().manage(new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/blit.json"));
