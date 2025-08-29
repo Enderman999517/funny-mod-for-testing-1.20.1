@@ -1,7 +1,9 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
+import net.enderman999517.funnymodfortesting.FunnyModForTestingClient;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
@@ -20,6 +22,18 @@ public abstract class ItemRendererMixin {
         if (stack.isOf(ModItems.NVG_GOGGLES) && renderMode == ModelTransformationMode.HEAD) {
             return ((ItemRendererAccessor) this).mccourse$getModels().getModelManager().getModel(new ModelIdentifier(FunnyModForTesting.MOD_ID, "nvg_3d", "inventory"));
         }
+
+        return value;
+    }
+
+    @ModifyVariable(method = "renderItem", at = @At(value = "HEAD"), argsOnly = true)
+    public BakedModel useScytheModel(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        if (stack.isOf(ModItems.SCYTHE) && renderMode != ModelTransformationMode.GUI) {
+            if (ScytheItem.isItemListEmpty(stack)) {
+                return ((ItemRendererAccessor) this).mccourse$getModels().getModelManager().getModel(new ModelIdentifier(FunnyModForTesting.MOD_ID, "scythe_3d", "inventory"));
+            } else return ((ItemRendererAccessor) this).mccourse$getModels().getModelManager().getModel(new ModelIdentifier(FunnyModForTesting.MOD_ID, "scythe_3d_1", "inventory"));
+        }
+
         return value;
     }
 }
