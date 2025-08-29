@@ -46,10 +46,12 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     public void registerModelPredicateProviders() {
         ModelPredicateProviderRegistry.register(ModItems.SCYTHE, new Identifier("cast"), (itemStack, clientWorld, livingEntity, seed) -> {
             if (itemStack.getItem() instanceof ScytheItem scytheItem) {
+                boolean hasEffects = !ScytheItem.isItemListEmpty(itemStack);
+
                 if (livingEntity == null) {
-                    return scytheItem.isItemListEmpty ? 0.0f : 1.0f;
+                    return ScytheItem.isItemListEmpty(itemStack) ? 0.0f : 1.0f;
                 } else {
-                    return livingEntity instanceof PlayerEntity && !scytheItem.isItemListEmpty ? 1.0F : 0.0F;
+                    return livingEntity instanceof PlayerEntity && !ScytheItem.isItemListEmpty(itemStack) ? 1.0F : 0.0F;
                 }
             }
             return 0.0f;

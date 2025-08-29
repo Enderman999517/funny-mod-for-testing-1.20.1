@@ -9,6 +9,9 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -32,8 +35,7 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
         this.useOnSelf = useOnSelf;
         this.useOnOthers = useOnOthers;
     }
-    private final Collection<StatusEffectInstance> playerEffectsList = new ArrayList<>();
-    private final Collection<StatusEffectInstance> itemEffectsList = new ArrayList<>();
+
     private final boolean damagesUser;
     private final RegistryKey<DamageType> damageTypeRegistryKey;
     private final float damageAmount;
@@ -41,64 +43,82 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
     private final boolean useOnSelf;
     private final boolean useOnOthers;
 
+    public static void writeEffectsToNbt(ItemStack stack, Collection<StatusEffectInstance> effects) {
+        NbtList effectList = new NbtList();
+        for (StatusEffectInstance effect : effects) {
+            effectList.add(effect.writeNbt(new NbtCompound()));
+        }
+        stack.getOrCreateNbt().put("CustomEffects", effectList);
+    }
+
+    public static List<StatusEffectInstance> readEffectsFromNbt(ItemStack stack) {
+        List<StatusEffectInstance> effects = new ArrayList<>();
+        if (stack.hasNbt() && stack.getNbt().contains("CustomEffects")) {
+            NbtList list = stack.getNbt().getList("CustomEffects", NbtElement.COMPOUND_TYPE);
+            for (int i = 0; i < list.size(); i++) {
+                effects.add(StatusEffectInstance.fromNbt(list.getCompound(i)));
+            }
+        }
+        return effects;
+    }
+
+    public static void clearEffectsFromNbt(ItemStack stack) {
+        if (stack.hasNbt()) {
+            stack.getNbt().remove("CustomEffects");
+        }
+    }
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
+        ItemStack stack = user.getStackInHand(hand);
         if (clearable) {
             if (Screen.hasShiftDown()) {
-                clearItemEffects();
-            } else useItem(world, user);
+                clearEffectsFromNbt(stack);
+            } else {
+                useItem(world, user);
+            }
         } else {
             if (Screen.hasShiftDown() && useOnSelf) {
                 if (!world.isClient) {
-                    putEffectsOnTarget(user);
-                    clearItemEffects();
+                    for (StatusEffectInstance effect : readEffectsFromNbt(stack)) {
+                        user.addStatusEffect(new StatusEffectInstance(effect));
+                    }
+                    clearEffectsFromNbt(stack);
                 }
             } else {
                 useItem(world, user);
             }
         }
 
-        return TypedActionResult.success(itemStack, world.isClient);
+        return TypedActionResult.success(stack, world.isClient);
     }
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (useOnOthers) {
-            putEffectsOnTarget(target);
-            clearItemEffects();
+            for (StatusEffectInstance effect : readEffectsFromNbt(stack)) {
+                target.addStatusEffect(new StatusEffectInstance(effect));
+            }
+            clearEffectsFromNbt(stack);
         }
         return super.postHit(stack, target, attacker);
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        PotionUtil.buildTooltip(itemEffectsList.stream().toList(), tooltip, 1f);
+        List<StatusEffectInstance> effects = readEffectsFromNbt(stack);
+        PotionUtil.buildTooltip(effects, tooltip, 1f);
         super.appendTooltip(stack, world, tooltip, context);
     }
 
-    private void clearPlayerEffects(PlayerEntity user) {
-        user.clearStatusEffects();
-    }
-
-    private void getPlayerEffects(PlayerEntity user) {
-        playerEffectsList.addAll(user.getStatusEffects());
-    }
-
-    private void putEffectsOnItem() {
-        itemEffectsList.addAll(playerEffectsList);
-        playerEffectsList.clear();
-    }
-
-    private void clearItemEffects() {
-        itemEffectsList.clear();
-    }
-
     private void useItem(World world, PlayerEntity user) {
+        ItemStack stack = user.getMainHandStack();
+
         if (!world.isClient) {
-            getPlayerEffects(user);
-            clearPlayerEffects(user);
-            putEffectsOnItem();
+            Collection<StatusEffectInstance> playerEffects = user.getStatusEffects();
+            writeEffectsToNbt(stack, playerEffects);
+            user.clearStatusEffects();
+
             if (damagesUser) {
                 DamageSource damageSource = new DamageSource(
                         world.getRegistryManager()
@@ -109,13 +129,7 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
         }
     }
 
-    private void putEffectsOnTarget(LivingEntity target) {
-        for (int i = 0; i < itemEffectsList.size(); i++) {
-            target.addStatusEffect(itemEffectsList.stream().toList().get(i));
-        }
-    }
-
-    public Collection<StatusEffectInstance> getItemList() {
-        return itemEffectsList;
+    protected boolean hasItems() {
+        return this.getDefaultStack().hasNbt();
     }
 }

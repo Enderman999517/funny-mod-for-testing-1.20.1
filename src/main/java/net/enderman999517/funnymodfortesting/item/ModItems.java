@@ -43,14 +43,6 @@ public class ModItems {
     public static final Item HAPPY_MELON_SLICE = registerItem("happy_melon_slice",
             new Item(new FabricItemSettings().food(new FoodComponent.Builder().alwaysEdible().hunger(2).statusEffect(new StatusEffectInstance(ModStatusEffects.BRAINROT, 1), 1).build())));
 
-    //armor + hats
-    //public static final Item NVG_GOGGLES = registerItem("nvg_goggles",
-    //        new NvgItem(new FabricItemSettings()));
-    //public static final Item LTF_HAIR = registerItem("ltf_hair",
-    //        new ArmorItem(ModArmorMaterials.HAIR, ArmorItem.Type.HELMET, new FabricItemSettings()));
-
-
-
     //spawn eggs
     public static final Item AMOGH_SPAWN_EGG = registerItem("amogh_spawn_egg",
             new SpawnEggItem(ModEntities.AMOGH, 0xf86518, 0x3b3d0f, new FabricItemSettings()));
