@@ -34,7 +34,7 @@ public class ScytheItem extends Item {
             getPlayerEffects(user);
             clearPlayerEffects(user);
             putEffectsOnScythe();
-            user.sendMessage(Text.literal("scytheEffectsList onUse: " + scytheEffectsList.toString()));
+            //user.sendMessage(Text.literal("scytheEffectsList onUse: " + scytheEffectsList.toString()));
             DamageSource damageSource = new DamageSource(
                     world.getRegistryManager()
                             .get(RegistryKeys.DAMAGE_TYPE)
@@ -50,7 +50,7 @@ public class ScytheItem extends Item {
         for (int i = 0; i < scytheEffectsList.size(); i++) {
             target.addStatusEffect(scytheEffectsList.stream().toList().get(i));
         }
-        attacker.sendMessage(Text.literal("scytheEffectsList postHit: " + scytheEffectsList.toString()));
+        //attacker.sendMessage(Text.literal("scytheEffectsList postHit: " + scytheEffectsList.toString()));
         clearScytheEffects();
         return super.postHit(stack, target, attacker);
     }
@@ -67,7 +67,7 @@ public class ScytheItem extends Item {
 
     private void getPlayerEffects(PlayerEntity user){
         playerEffectsList.addAll(user.getStatusEffects());
-        user.sendMessage(Text.literal("playerEffectsList: " + playerEffectsList.toString()));
+        //user.sendMessage(Text.literal("playerEffectsList: " + playerEffectsList.toString()));
     }
 
     private void putEffectsOnScythe(){
