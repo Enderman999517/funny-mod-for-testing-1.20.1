@@ -23,28 +23,23 @@ public class ScytheItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-
-        getPlayerEffects(user);
-        clearPlayerEffects(user);
-        putEffectsOnScythe();
-        //user.sendMessage(Text.literal("scythe1: " + scytheEffectsList.toString()));
+        if (!world.isClient) {
+            getPlayerEffects(user);
+            clearPlayerEffects(user);
+            putEffectsOnScythe();
+            user.sendMessage(Text.literal("scytheEffectsList onUse: " + scytheEffectsList.toString()));
+        }
 
         return TypedActionResult.success(itemStack, world.isClient);
     }
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        ArrayList<StatusEffectInstance> testList = new ArrayList<>();
-        for (int i = scytheEffectsList.size(); i >=0; i--) {
-            if (i>0) {
-                target.addStatusEffect(scytheEffectsList.stream().toList().get(i - 1));
-                testList.add(scytheEffectsList.stream().toList().get(i));
-            }
+        for (int i = 0; i < scytheEffectsList.size(); i++) {
+            target.addStatusEffect(scytheEffectsList.stream().toList().get(i));
         }
+        attacker.sendMessage(Text.literal("scytheEffectsList postHit: " + scytheEffectsList.toString()));
         clearScytheEffects();
-
-        attacker.sendMessage(Text.literal("scythe: " + testList.toString()));
-        testList.clear();
         return super.postHit(stack, target, attacker);
     }
 
@@ -54,7 +49,7 @@ public class ScytheItem extends Item {
 
     private void getPlayerEffects(PlayerEntity user){
         playerEffectsList.addAll(user.getStatusEffects());
-        user.sendMessage(Text.literal("player: " + playerEffectsList.toString()));
+        user.sendMessage(Text.literal("playerEffectsList: " + playerEffectsList.toString()));
     }
 
     private void putEffectsOnScythe(){
