@@ -1,6 +1,7 @@
 package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -30,16 +31,19 @@ public class ScytheItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        if (!world.isClient) {
-            getPlayerEffects(user);
-            clearPlayerEffects(user);
-            putEffectsOnScythe();
-            //user.sendMessage(Text.literal("scytheEffectsList onUse: " + scytheEffectsList.toString()));
-            DamageSource damageSource = new DamageSource(
-                    world.getRegistryManager()
-                            .get(RegistryKeys.DAMAGE_TYPE)
-                            .entryOf(ModDamageSources.SCYTHE_DAMAGE));
-            user.damage(damageSource, 4);
+        if (!Screen.hasShiftDown()) {
+            if (!world.isClient) {
+                getPlayerEffects(user);
+                clearPlayerEffects(user);
+                putEffectsOnScythe();
+                DamageSource damageSource = new DamageSource(
+                        world.getRegistryManager()
+                                .get(RegistryKeys.DAMAGE_TYPE)
+                                .entryOf(ModDamageSources.SCYTHE_DAMAGE));
+                user.damage(damageSource, 4);
+            }
+        } else {
+            clearScytheEffects();
         }
 
         return TypedActionResult.success(itemStack, world.isClient);
@@ -50,7 +54,6 @@ public class ScytheItem extends Item {
         for (int i = 0; i < scytheEffectsList.size(); i++) {
             target.addStatusEffect(scytheEffectsList.stream().toList().get(i));
         }
-        //attacker.sendMessage(Text.literal("scytheEffectsList postHit: " + scytheEffectsList.toString()));
         clearScytheEffects();
         return super.postHit(stack, target, attacker);
     }
@@ -67,7 +70,6 @@ public class ScytheItem extends Item {
 
     private void getPlayerEffects(PlayerEntity user){
         playerEffectsList.addAll(user.getStatusEffects());
-        //user.sendMessage(Text.literal("playerEffectsList: " + playerEffectsList.toString()));
     }
 
     private void putEffectsOnScythe(){
