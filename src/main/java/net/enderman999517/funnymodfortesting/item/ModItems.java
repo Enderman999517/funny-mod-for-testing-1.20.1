@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.item;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.ModBlocks;
+import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.custom.*;
@@ -33,7 +34,7 @@ public class ModItems {
     public static final Item TORCH_GUN = registerItem("torch_gun",
             new TorchGunItem(new FabricItemSettings()));
     public static final Item SCYTHE = registerItem("scythe",
-            new ScytheItem(new FabricItemSettings()));
+            new StatusEffectStoringItem(new FabricItemSettings(), true, ModDamageSources.SCYTHE_DAMAGE,4,true));
 
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
