@@ -23,13 +23,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class StatusEffectStoringItem extends Item {
-    public StatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf) {
+    public StatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean useOnOthers) {
         super(settings);
         this.damagesUser = damagesUser;
         this.damageTypeRegistryKey = damageTypeRegistryKey;
         this.damageAmount = damageAmount;
         this.clearable = clearable;
         this.useOnSelf = useOnSelf;
+        this.useOnOthers = useOnOthers;
     }
     private final Collection<StatusEffectInstance> playerEffectsList = new ArrayList<>();
     private final Collection<StatusEffectInstance> itemEffectsList = new ArrayList<>();
@@ -38,6 +39,7 @@ public class StatusEffectStoringItem extends Item {
     private final float damageAmount;
     private final boolean clearable;
     private final boolean useOnSelf;
+    private final boolean useOnOthers;
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
@@ -48,7 +50,10 @@ public class StatusEffectStoringItem extends Item {
             } else useItem(world, user);
         } else {
             if (Screen.hasShiftDown() && useOnSelf) {
-                putEffectsOnTarget(user);
+                if (!world.isClient) {
+                    putEffectsOnTarget(user);
+                    clearItemEffects();
+                }
             } else {
                 useItem(world, user);
             }
@@ -59,8 +64,10 @@ public class StatusEffectStoringItem extends Item {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        putEffectsOnTarget(target);
-        clearItemEffects();
+        if (useOnOthers) {
+            putEffectsOnTarget(target);
+            clearItemEffects();
+        }
         return super.postHit(stack, target, attacker);
     }
 

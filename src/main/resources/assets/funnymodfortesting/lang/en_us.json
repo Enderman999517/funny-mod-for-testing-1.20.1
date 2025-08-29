@@ -32,5 +32,6 @@
   "commands.funnymodfortesting.kill.success.multiple": "Killed %s entities",
   "commands.funnymodfortesting.kill.success.single": "Killed %s",
 
-  "death.attack.scythe": "%1$s drained too much of their blood"
+  "death.attack.scythe": "%1$s drained too much of their blood",
+  "death.attack.stim": "%1$s got too stimulated"
 }

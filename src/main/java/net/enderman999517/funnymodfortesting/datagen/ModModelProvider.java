@@ -19,6 +19,7 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+        //RUN DATAGEN
 
         //random
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LTF_BLOCK);
@@ -32,12 +33,14 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+        //RUN DATAGEN
         //custom
         itemModelGenerator.register(ModItems.OVERPOWERED, Models.GENERATED);
         itemModelGenerator.register(ModItems.TORCH_GUN, Models.GENERATED);
         itemModelGenerator.register(ModItems.AMOGH, Models.GENERATED);
         itemModelGenerator.register(ModItems.FLASHBANG, Models.GENERATED);
         itemModelGenerator.register(ModItems.SCYTHE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.STIM, Models.GENERATED);
 
         //items
         itemModelGenerator.register(ModItems.AMOGH_ESSENCE, Models.GENERATED);

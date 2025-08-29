@@ -22,6 +22,7 @@ public class ModItemGroups {
                         entries.add(ModItems.FLASHBANG);
                         entries.add(ModItems.NVG_GOGGLES);
                         entries.add(ModItems.SCYTHE);
+                        entries.add(ModItems.STIM);
 
                         //items
                         entries.add(ModItems.AMOGH_ESSENCE);
