@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -71,25 +72,26 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        if (clearable) {
-            if (Screen.hasShiftDown()) {
-                clearEffectsFromNbt(stack);
+        if (!world.isClient) {
+            if (clearable) {
+                if (Screen.hasShiftDown()) {
+                    clearEffectsFromNbt(stack);
+                } else {
+                    if (!user.getStatusEffects().toString().contains("[]")) {
+                        useItem(world, user);
+                    }
+                }
             } else {
-                useItem(world, user);
-            }
-        } else {
-            if (Screen.hasShiftDown() && useOnSelf) {
-                if (!world.isClient) {
+                if (Screen.hasShiftDown() && useOnSelf) {
                     for (StatusEffectInstance effect : readEffectsFromNbt(stack)) {
                         user.addStatusEffect(new StatusEffectInstance(effect));
                     }
                     clearEffectsFromNbt(stack);
+                } else {
+                    useItem(world, user);
                 }
-            } else {
-                useItem(world, user);
             }
         }
-
         return TypedActionResult.success(stack, world.isClient);
     }
 
