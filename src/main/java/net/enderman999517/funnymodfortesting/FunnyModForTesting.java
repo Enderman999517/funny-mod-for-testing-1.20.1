@@ -3,6 +3,7 @@ package net.enderman999517.funnymodfortesting;
 import net.enderman999517.funnymodfortesting.block.ModBlocks;
 import net.enderman999517.funnymodfortesting.block.entity.ModBlockEntities;
 import net.enderman999517.funnymodfortesting.command.ModCommands;
+import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
@@ -35,6 +36,7 @@ public class FunnyModForTesting implements ModInitializer {
 		ModScreenHandlers.registerScreenHandlers();
 		ModRecipes.registerRecipes();
 		ModCommands.registerCommands();
+		ModDamageSources.registerDamageSources();
 
 	}
 }
