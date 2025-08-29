@@ -10,6 +10,7 @@ import net.enderman999517.funnymodfortesting.entity.client.AmoghRenderer;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreen;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
@@ -18,8 +19,10 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -40,6 +43,24 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     private static final ManagedShaderEffect testShader = ShaderEffectManager.getInstance().manage(new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/blit.json"));
     private static final Uniform4f color = testShader.findUniform4f("ColorModulate");
 
+    public void registerModelPredicateProviders() {
+        ModelPredicateProviderRegistry.register(ModItems.SCYTHE, new Identifier("cast"), (itemStack, clientWorld, livingEntity, seed) -> {
+            if (livingEntity == null) {
+                if (ScytheItem.isItemListEmpty) {
+                    return 0.0f;
+                } else return 1.0f;
+            } else {
+                boolean bl = livingEntity.getMainHandStack() == itemStack;
+                boolean bl2 = livingEntity.getOffHandStack() == itemStack;
+                if (livingEntity.getMainHandStack().getItem() instanceof ScytheItem) {
+                    bl2 = false;
+                }
+
+                return livingEntity instanceof PlayerEntity && !ScytheItem.isItemListEmpty ? 1.0F : 0.0F;
+            }
+        });
+    }
+
     @Override
     public void onInitializeClient() {
 
@@ -51,6 +72,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         HandledScreens.register(ModScreenHandlers.BRAINROTTING_SCREEN_HANDLER, BrainrottingScreen::new);
         HandledScreens.register(ModScreenHandlers.COMPACTING_SCREEN_HANDLER, CompactingScreen::new);
 
+        registerModelPredicateProviders();
+
         //ClientTickEvents.END_CLIENT_TICK.register(DepthFx.INSTANCE);
         //ShaderEffectRenderCallback.EVENT.register(DepthFx.INSTANCE);
         //PostWorldRenderCallback.EVENT.register(DepthFx.INSTANCE);
@@ -59,6 +82,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         //        DepthFx.INSTANCE.testShader.release();
         //    //}
         //});
+
 
 
         ShaderEffectRenderCallback.EVENT.register(tickDelta -> {

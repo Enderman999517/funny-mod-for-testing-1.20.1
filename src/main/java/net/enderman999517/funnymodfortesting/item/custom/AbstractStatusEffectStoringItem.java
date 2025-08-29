@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class StatusEffectStoringItem extends Item {
-    public StatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean useOnOthers) {
+public abstract class AbstractStatusEffectStoringItem extends Item {
+    public AbstractStatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean useOnOthers) {
         super(settings);
         this.damagesUser = damagesUser;
         this.damageTypeRegistryKey = damageTypeRegistryKey;
@@ -77,20 +77,20 @@ public class StatusEffectStoringItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
     }
 
-    private void clearPlayerEffects(PlayerEntity user){
+    private void clearPlayerEffects(PlayerEntity user) {
         user.clearStatusEffects();
     }
 
-    private void getPlayerEffects(PlayerEntity user){
+    private void getPlayerEffects(PlayerEntity user) {
         playerEffectsList.addAll(user.getStatusEffects());
     }
 
-    private void putEffectsOnItem(){
+    private void putEffectsOnItem() {
         itemEffectsList.addAll(playerEffectsList);
         playerEffectsList.clear();
     }
 
-    private void clearItemEffects(){
+    private void clearItemEffects() {
         itemEffectsList.clear();
     }
 
@@ -113,5 +113,9 @@ public class StatusEffectStoringItem extends Item {
         for (int i = 0; i < itemEffectsList.size(); i++) {
             target.addStatusEffect(itemEffectsList.stream().toList().get(i));
         }
+    }
+
+    public Collection<StatusEffectInstance> getItemList() {
+        return itemEffectsList;
     }
 }

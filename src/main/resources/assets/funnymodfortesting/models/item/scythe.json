@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "funnymodfortesting:item/scythe"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "cast": 1
+      },
+      "model": "funnymodfortesting:item/scythe_1"
+    }
+  ]
+}

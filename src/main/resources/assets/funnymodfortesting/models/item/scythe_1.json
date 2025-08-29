@@ -1,0 +1,6 @@
+{
+  "parent": "funnymodfortesting:item/scythe",
+  "textures": {
+    "layer0": "funnymodfortesting:item/scythe_1"
+  }
+}
