@@ -23,19 +23,21 @@ import java.util.Collection;
 import java.util.List;
 
 public class StatusEffectStoringItem extends Item {
-    public StatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable) {
+    public StatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf) {
         super(settings);
         this.damagesUser = damagesUser;
         this.damageTypeRegistryKey = damageTypeRegistryKey;
         this.damageAmount = damageAmount;
         this.clearable = clearable;
+        this.useOnSelf = useOnSelf;
     }
-    private Collection<StatusEffectInstance> playerEffectsList = new ArrayList<>();
-    private Collection<StatusEffectInstance> itemEffectsList = new ArrayList<>();
-    private boolean damagesUser;
-    private RegistryKey<DamageType> damageTypeRegistryKey;
-    private float damageAmount;
-    private boolean clearable;
+    private final Collection<StatusEffectInstance> playerEffectsList = new ArrayList<>();
+    private final Collection<StatusEffectInstance> itemEffectsList = new ArrayList<>();
+    private final boolean damagesUser;
+    private final RegistryKey<DamageType> damageTypeRegistryKey;
+    private final float damageAmount;
+    private final boolean clearable;
+    private final boolean useOnSelf;
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
@@ -45,7 +47,11 @@ public class StatusEffectStoringItem extends Item {
                 clearItemEffects();
             } else useItem(world, user);
         } else {
-            useItem(world, user);
+            if (Screen.hasShiftDown() && useOnSelf) {
+                putEffectsOnTarget(user);
+            } else {
+                useItem(world, user);
+            }
         }
 
         return TypedActionResult.success(itemStack, world.isClient);
@@ -53,9 +59,7 @@ public class StatusEffectStoringItem extends Item {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        for (int i = 0; i < itemEffectsList.size(); i++) {
-            target.addStatusEffect(itemEffectsList.stream().toList().get(i));
-        }
+        putEffectsOnTarget(target);
         clearItemEffects();
         return super.postHit(stack, target, attacker);
     }
@@ -95,6 +99,12 @@ public class StatusEffectStoringItem extends Item {
                                 .entryOf(damageTypeRegistryKey));
                 user.damage(damageSource, damageAmount);
             }
+        }
+    }
+
+    private void putEffectsOnTarget(LivingEntity target) {
+        for (int i = 0; i < itemEffectsList.size(); i++) {
+            target.addStatusEffect(itemEffectsList.stream().toList().get(i));
         }
     }
 }

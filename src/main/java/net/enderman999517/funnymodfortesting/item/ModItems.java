@@ -34,7 +34,7 @@ public class ModItems {
     public static final Item TORCH_GUN = registerItem("torch_gun",
             new TorchGunItem(new FabricItemSettings()));
     public static final Item SCYTHE = registerItem("scythe",
-            new StatusEffectStoringItem(new FabricItemSettings(), true, ModDamageSources.SCYTHE_DAMAGE,4,true));
+            new StatusEffectStoringItem(new FabricItemSettings(), true, ModDamageSources.SCYTHE_DAMAGE,4,true, false));
 
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
