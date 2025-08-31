@@ -6,7 +6,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -48,7 +47,34 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
         NbtList effectList = new NbtList();
         for (StatusEffectInstance effect : effects) {
             effectList.add(effect.writeNbt(new NbtCompound()));
+            if (stack.hasNbt()) {
+                effectList.add(stack.getNbt());
+            }
         }
+        //if (stack.hasNbt()) {
+        //    if (stack.getNbt().contains("CustomEffects")) {
+        //        FunnyModForTesting.LOGGER.info("elb: " + effectList);
+        //        //FunnyModForTesting.LOGGER.info("gnbtt: " + effectList.getNbtType());
+        //        effectList.add(stack.getNbt().get("CustomEffects"));
+        //        FunnyModForTesting.LOGGER.info("s.gnbt: " + stack.getNbt().toString());
+        //        FunnyModForTesting.LOGGER.info("ela: " + effectList);
+        //        //clearEffectsFromNbt(stack);
+        //        stack.getOrCreateNbt().put("CustomEffects", effectList);
+        //    }
+        //} else stack.getOrCreateNbt().put("CustomEffects", effectList);
+
+        //if (stack.hasNbt()) {
+        //    if (stack.getNbt().contains("CustomEffects")) {
+        //        //for (StatusEffectInstance effect1 : effects) {
+        //        //    effects.add(readEffectsFromNbt(stack));
+        //        //}
+//
+//
+        //        List<StatusEffectInstance> effects1 = readEffectsFromNbt(stack);
+        //        effects.addAll(effects1);
+        //    }
+        //}
+
         stack.getOrCreateNbt().put("CustomEffects", effectList);
     }
 
@@ -69,6 +95,13 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
         }
     }
 
+    public static boolean isItemListEmpty(ItemStack stack) {
+        var nbt = stack.getNbt();
+        if (stack == null || !stack.hasNbt()) return true;
+        if (nbt == null || !nbt.contains("CustomEffects")) return true;
+        return nbt.getList("CustomEffects", 10).isEmpty();
+    }
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
@@ -77,7 +110,7 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
                 if (Screen.hasShiftDown()) {
                     clearEffectsFromNbt(stack);
                 } else {
-                    if (!user.getStatusEffects().toString().contains("[]")) {
+                    if (!user.getStatusEffects().isEmpty()) {
                         useItem(world, user);
                     }
                 }
