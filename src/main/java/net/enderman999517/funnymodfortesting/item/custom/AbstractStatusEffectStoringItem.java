@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class AbstractStatusEffectStoringItem extends Item {
-    public AbstractStatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean useOnOthers, int effectSwapping) {
+    public AbstractStatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean useOnOthers, int effectSwapping, boolean stacksAmp) {
         super(settings);
         this.damagesUser = damagesUser;
         this.damageTypeRegistryKey = damageTypeRegistryKey;
@@ -38,6 +38,7 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
         this.useOnSelf = useOnSelf;
         this.useOnOthers = useOnOthers;
         this.effectSwapping = effectSwapping;
+        this.stacksAmp = stacksAmp;
     }
 
     private final boolean damagesUser;
@@ -47,16 +48,15 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
     private final boolean useOnSelf;
     private final boolean useOnOthers;
     private final int effectSwapping;
-
-    private boolean stacks;
+    private boolean stacksAmp;
 
     public void writeEffectsToNbt(ItemStack stack, Collection<StatusEffectInstance> effects) {
         List<StatusEffectInstance> existingEffects = readEffectsFromNbt(stack);
 
         if (EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) != 0) {
-            stacks = true;
+            stacksAmp = true;
         }
-        testBehavior(effects, existingEffects, effectSwapping, stacks, stack);
+        testBehavior(effects, existingEffects, effectSwapping, stacksAmp, stack);
 
         NbtList effectList = new NbtList();
         for (StatusEffectInstance effect : existingEffects) {
@@ -149,6 +149,8 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
                                 .entryOf(damageTypeRegistryKey));
                 user.damage(damageSource, damageAmount);
             }
+            stack.damage(1, user,
+                    player -> player.sendToolBreakStatus(player.getActiveHand()));
         }
     }
 
