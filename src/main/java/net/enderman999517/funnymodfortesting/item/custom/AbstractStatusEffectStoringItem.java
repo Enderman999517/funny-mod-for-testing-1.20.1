@@ -181,47 +181,51 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
         for (int i = 0; i < existingEffects.size(); i++) {
             StatusEffectInstance existing = existingEffects.get(i);
             if (existing.getEffectType() == newEffect.getEffectType()) {
+                // check to add
                 if (((existing.getAmplifier() + 1) + (newEffect.getAmplifier() + 1) <= 3) && (EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) >= 1)) {
                     StatusEffectInstance effectInstance = new StatusEffectInstance(existing.getEffectType(), Math.max(existing.getDuration(), newEffect.getDuration()),
                             existing.getAmplifier() + newEffect.getAmplifier() + 1);
-                    FunnyModForTesting.LOGGER.info(String.valueOf((existing.getAmplifier() + newEffect.getAmplifier())));
                     existingEffects.set(i, effectInstance);
                     found = true;
                     break;
+                // revert to max level
+                } else if (((existing.getAmplifier() + 1) + (newEffect.getAmplifier() + 1) > 3) && (EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) == 1)) {
+                    StatusEffectInstance effectInstance = new StatusEffectInstance(existing.getEffectType(), Math.max(existing.getDuration(), newEffect.getDuration()),
+                            2);
+                    existingEffects.set(i, effectInstance);
+                    found = true;
+                    break;
+                // check to add
                 } else if (((existing.getAmplifier() + 1) + (newEffect.getAmplifier() + 1) <= 4) && (EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) >= 2)) {
                     StatusEffectInstance effectInstance = new StatusEffectInstance(existing.getEffectType(), Math.max(existing.getDuration(), newEffect.getDuration()),
                             existing.getAmplifier() + newEffect.getAmplifier() + 1);
                     existingEffects.set(i, effectInstance);
                     found = true;
                     break;
-
+                // revert to max level
+                } else if (((existing.getAmplifier() + 1) + (newEffect.getAmplifier() + 1) > 4) && (EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) == 2)) {
+                    StatusEffectInstance effectInstance = new StatusEffectInstance(existing.getEffectType(), Math.max(existing.getDuration(), newEffect.getDuration()),
+                            3);
+                    existingEffects.set(i, effectInstance);
+                    found = true;
+                    break;
+                // check to add
                 } else if (((existing.getAmplifier() + 1) + (newEffect.getAmplifier() + 1) <= 5) && (EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) >= 3)) {
                     StatusEffectInstance effectInstance = new StatusEffectInstance(existing.getEffectType(), Math.max(existing.getDuration(), newEffect.getDuration()),
                             existing.getAmplifier() + newEffect.getAmplifier() + 1);
                     existingEffects.set(i, effectInstance);
                     found = true;
                     break;
-
+                // revert to max level
+                } else if (((existing.getAmplifier() + 1) + (newEffect.getAmplifier() + 1) > 5) && (EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) == 3)) {
+                    StatusEffectInstance effectInstance = new StatusEffectInstance(existing.getEffectType(), Math.max(existing.getDuration(), newEffect.getDuration()),
+                            4);
+                    existingEffects.set(i, effectInstance);
+                    found = true;
+                    break;
                 } else found = true;
-                //} else if (existing.getAmplifier() + newEffect.getAmplifier() <= 4 && EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) >= 2) {
-            //    if (existing.getEffectType() == newEffect.getEffectType()) {
-            //        StatusEffectInstance effectInstance = new StatusEffectInstance(existing.getEffectType(), Math.max(existing.getDuration(), newEffect.getDuration()),
-            //                existing.getAmplifier() + newEffect.getAmplifier() + 1);
-            //        existingEffects.set(i, effectInstance);
-            //        found = true;
-            //        break;
-            //    }
-            //} else if (existing.getAmplifier() + newEffect.getAmplifier() <= 5 && EnchantmentHelper.getLevel(ModEnchantments.CONCENTRATION, stack) >= 3) {
-            //    if (existing.getEffectType() == newEffect.getEffectType()) {
-            //        StatusEffectInstance effectInstance = new StatusEffectInstance(existing.getEffectType(), Math.max(existing.getDuration(), newEffect.getDuration()),
-            //                existing.getAmplifier() + newEffect.getAmplifier() + 1);
-            //        existingEffects.set(i, effectInstance);
-            //        found = true;
-            //        break;
-            //    }
-            } else found = true;
+            } else found = false;
         }
-
         return found;
     }
 
