@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.enchantment.ModEnchantments;
+import net.enderman999517.funnymodfortesting.item.ModToolMaterial;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -12,6 +13,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -28,9 +30,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class AbstractStatusEffectStoringItem extends Item {
-    public AbstractStatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean useOnOthers, int effectSwapping, boolean stacksAmp) {
-        super(settings);
+public abstract class AbstractStatusEffectStoringItem extends SwordItem {
+    public AbstractStatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean useOnOthers, int effectSwapping, boolean stacksAmp, int attackDamage, float attackSpeed) {
+        super(ModToolMaterial.SCYTHE, attackDamage, attackSpeed, settings);
         this.damagesUser = damagesUser;
         this.damageTypeRegistryKey = damageTypeRegistryKey;
         this.damageAmount = damageAmount;
@@ -39,6 +41,8 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
         this.useOnOthers = useOnOthers;
         this.effectSwapping = effectSwapping;
         this.stacksAmp = stacksAmp;
+        this.attackDamage = attackDamage;
+        this.attackSpeed = attackSpeed;
     }
 
     private final boolean damagesUser;
@@ -49,6 +53,8 @@ public abstract class AbstractStatusEffectStoringItem extends Item {
     private final boolean useOnOthers;
     private final int effectSwapping;
     private boolean stacksAmp;
+    private final int attackDamage;
+    private final float attackSpeed;
 
     public void writeEffectsToNbt(ItemStack stack, Collection<StatusEffectInstance> effects) {
         List<StatusEffectInstance> existingEffects = readEffectsFromNbt(stack);
