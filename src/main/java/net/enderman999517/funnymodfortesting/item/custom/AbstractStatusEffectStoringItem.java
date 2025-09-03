@@ -20,6 +20,8 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -129,6 +131,7 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
                 target.addStatusEffect(new StatusEffectInstance(effect));
             }
             clearEffectsFromNbt(stack);
+            attacker.getWorld().playSound(null, attacker.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_DEATH, SoundCategory.BLOCKS);
         }
         return super.postHit(stack, target, attacker);
     }
@@ -157,7 +160,9 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
             }
             stack.damage(1, user,
                     player -> player.sendToolBreakStatus(player.getActiveHand()));
+            user.getWorld().playSound(null, user.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_DEATH, SoundCategory.BLOCKS);
         }
+
     }
 
     private static boolean noSwapping(List<StatusEffectInstance> existingEffects, Collection<StatusEffectInstance> effects, boolean found, StatusEffectInstance newEffect) {
