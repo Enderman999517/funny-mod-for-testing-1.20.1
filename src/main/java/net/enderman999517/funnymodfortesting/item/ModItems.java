@@ -33,9 +33,11 @@ public class ModItems {
     public static final Item TORCH_GUN = registerItem("torch_gun",
             new TorchGunItem(new FabricItemSettings()));
     public static final Item SCYTHE = registerItem("scythe",
-            new ScytheItem(new FabricItemSettings().maxCount(1).maxDamage(128), true, ModDamageSources.SCYTHE_DAMAGE,4,true, false, true, 1, false, 4 -5, 1 -4));
+            new ScytheItem(new FabricItemSettings().maxCount(1).maxDamage(128), true, ModDamageSources.SCYTHE_DAMAGE,4,
+                    true, false, true, 1, false, 4 -5, 1 -4));
     public static final Item STIM = registerItem("stim",
-            new StimItem(new FabricItemSettings().maxCount(1).maxDamage(64), true, ModDamageSources.STIM_DAMAGE,1,false, true, true, 1, false, 1 -5, 2 -4));
+            new StimItem(new FabricItemSettings().maxCount(1).maxDamage(64), true, ModDamageSources.STIM_DAMAGE,1,
+                    false, true, true, 1, false, 1 -5, 2 -4));
 
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
