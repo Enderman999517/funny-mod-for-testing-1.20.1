@@ -11,6 +11,7 @@ import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
+import net.enderman999517.funnymodfortesting.networking.FunnyModForTestingNetworking;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreen;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
@@ -70,6 +71,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         HandledScreens.register(ModScreenHandlers.COMPACTING_SCREEN_HANDLER, CompactingScreen::new);
 
         registerModelPredicateProviders();
+
+        FunnyModForTestingNetworking.register();
 
         //ClientTickEvents.END_CLIENT_TICK.register(DepthFx.INSTANCE);
         //ShaderEffectRenderCallback.EVENT.register(DepthFx.INSTANCE);

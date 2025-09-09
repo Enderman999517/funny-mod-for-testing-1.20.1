@@ -38,6 +38,8 @@ public class ModItems {
     public static final Item STIM = registerItem("stim",
             new StimItem(new FabricItemSettings().maxCount(1).maxDamage(64), true, ModDamageSources.STIM_DAMAGE,1,
                     false, true, true, 1, false, 1 -5, 2 -4));
+    public static final Item RING = registerItem("ring",
+            new RingItem(new FabricItemSettings()));
 
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
