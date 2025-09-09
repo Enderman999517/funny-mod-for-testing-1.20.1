@@ -16,6 +16,9 @@ public class FunnyModForTestingNetworking {
 
             minecraftClient.execute(() -> {
                 Entity entity = minecraftClient.world.getEntityById(entityId);
+                if (entity == null) {
+                    return;
+                }
                 if (entity instanceof ModEntityData modData) {
                     modData.setHidden(isHidden);
                 }

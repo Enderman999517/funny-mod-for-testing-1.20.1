@@ -3,6 +3,7 @@ package net.enderman999517.funnymodfortesting.item.custom;
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,9 +29,15 @@ public class RingItem extends Item {
             for (Entity entity : client.world.getEntities()) {
                 if (entity != user && entity instanceof ModEntityData modEntityData) {
                     if (modEntityData.isHidden()) {
-                        //client.world.removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
-                        FunnyModForTesting.LOGGER.info(String.valueOf(entity));
+                        client.world.removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
+                        //FunnyModForTesting.LOGGER.info(String.valueOf(entity));
                     }
+                }
+            }
+            if (Screen.hasShiftDown()) {
+                if (user instanceof ModEntityData modEntityData) {
+                    modEntityData.setHidden(true);
+                    FunnyModForTesting.LOGGER.info(String.valueOf(modEntityData));
                 }
             }
         }
@@ -41,10 +48,8 @@ public class RingItem extends Item {
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if (!user.getWorld().isClient) {
-            FunnyModForTesting.LOGGER.info("test2");
             if (entity instanceof ModEntityData modEntityData) {
                 modEntityData.setHidden(true);
-                FunnyModForTesting.LOGGER.info("test");
             }
         }
         return ActionResult.SUCCESS;

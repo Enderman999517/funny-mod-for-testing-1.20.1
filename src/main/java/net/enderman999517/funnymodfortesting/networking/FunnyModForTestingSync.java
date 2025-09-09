@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.networking;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -22,7 +23,8 @@ public class FunnyModForTestingSync {
 
         storage.getPlayersWatchingChunk(entity.getChunkPos(), false).forEach(player ->  {
             if (player != null) {
-                player.networkHandler.sendPacket(packet);
+                player.networkHandler.sendPacket(new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, buf));
+                FunnyModForTesting.LOGGER.info(storage.getPlayersWatchingChunk(entity.getChunkPos(), false).toString());
             }
         });
     }
