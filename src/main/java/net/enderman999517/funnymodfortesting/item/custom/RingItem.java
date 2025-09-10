@@ -19,30 +19,30 @@ public class RingItem extends Item {
         super(settings);
     }
 
+    int toggle = 0;
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient) return TypedActionResult.pass(user.getStackInHand(hand));
-
-        MinecraftClient client = MinecraftClient.getInstance();
-
-        if (client.world != null) {
-            for (Entity entity : client.world.getEntities()) {
-                if (entity != user && entity instanceof ModEntityData modEntityData) {
-                    if (modEntityData.isHidden()) {
-                        client.world.removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
-                        //FunnyModForTesting.LOGGER.info(String.valueOf(entity));
-                    }
-                }
-            }
-            if (Screen.hasShiftDown()) {
+        if (toggle % 2 == 0) {
+            toggle = 0;
+            if (!world.isClient) {
                 if (user instanceof ModEntityData modEntityData) {
                     modEntityData.setHidden(true);
-                    FunnyModForTesting.LOGGER.info(String.valueOf(modEntityData));
+                    toggle ++;
                 }
+                return TypedActionResult.success(user.getStackInHand(hand), false);
+            }
+        } else {
+            if (!world.isClient) {
+                if (user instanceof ModEntityData modEntityData) {
+                    modEntityData.setHidden(false);
+                    toggle ++;
+                }
+                return TypedActionResult.success(user.getStackInHand(hand), false);
             }
         }
 
-        return TypedActionResult.success(user.getStackInHand(hand), world.isClient);
+        return TypedActionResult.success(user.getStackInHand(hand), true);
     }
 
     @Override

@@ -23,8 +23,7 @@ public class FunnyModForTestingSync {
 
         storage.getPlayersWatchingChunk(entity.getChunkPos(), false).forEach(player ->  {
             if (player != null) {
-                player.networkHandler.sendPacket(new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, buf));
-                FunnyModForTesting.LOGGER.info(storage.getPlayersWatchingChunk(entity.getChunkPos(), false).toString());
+                player.networkHandler.sendPacket(packet);
             }
         });
     }
