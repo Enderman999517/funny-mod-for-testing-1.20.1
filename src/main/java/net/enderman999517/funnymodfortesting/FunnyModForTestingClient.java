@@ -45,17 +45,12 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     private static final Uniform4f color = testShader.findUniform4f("ColorModulate");
 
     public void registerModelPredicateProviders() {
-        ModelPredicateProviderRegistry.register(ModItems.SCYTHE, new Identifier("cast"), (itemStack, clientWorld, livingEntity, seed) -> {
-            //if (itemStack.getItem() instanceof ScytheItem scytheItem) {
-                //boolean hasEffects = !ScytheItem.isItemListEmpty(itemStack);
-
+        ModelPredicateProviderRegistry.register(ModItems.SCYTHE, new Identifier("effects"), (itemStack, clientWorld, livingEntity, seed) -> {
                 if (livingEntity == null) {
                     return ScytheItem.isItemListEmpty(itemStack) ? 0.0f : 1.0f;
                 } else {
                     return livingEntity instanceof PlayerEntity && !ScytheItem.isItemListEmpty(itemStack) ? 1.0F : 0.0F;
                 }
-            //}
-            //return 0.0f;
         });
     }
 
@@ -74,16 +69,6 @@ public class FunnyModForTestingClient implements ClientModInitializer {
 
         FunnyModForTestingNetworking.register();
 
-        //ClientTickEvents.END_CLIENT_TICK.register(DepthFx.INSTANCE);
-        //ShaderEffectRenderCallback.EVENT.register(DepthFx.INSTANCE);
-        //PostWorldRenderCallback.EVENT.register(DepthFx.INSTANCE);
-        //ModItems.DEBUG_ITEM.registerDebugCallback((world, player, hand) -> {
-        //    //if (world.isClient) {
-        //        DepthFx.INSTANCE.testShader.release();
-        //    //}
-        //});
-
-
 
         ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
             if (renderingBlit) {
@@ -100,28 +85,14 @@ public class FunnyModForTestingClient implements ClientModInitializer {
                 testShader.render(tickDelta);
             }
         });
-        ModItems.NVG_GOGGLES.registerDebugCallback((stack, world, entity, slot,selected) -> {
+        ModItems.NVG_GOGGLES.registerNvgCallback((stack, world, entity, slot, selected) -> {
                 renderingBlit = !renderingBlit;
                 color.set(0.2f,1.0f,0.5f,1.0f);
         });
 
         ModStatusEffects.FLASHBANG.registerDebugCallback((entity, attributes, amplifier) -> {
-            // i know i probably shouldnt do this but i couldnt find another way that worked
-
-            //try {
-            //int duration;
-            //for (duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration(); duration > 0; duration--) {
-            //    duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration();
             renderingBlit = !renderingBlit;
             color.set(1.0f, 1.0f, 1.0f, 1.0f);
-
-            //}
-            //duration = entity.getStatusEffect(ModStatusEffects.FLASHBANG).getDuration();
-
-
-            //} catch (NullPointerException ignored) {
-
-            //}
         });
 
     }

@@ -25,10 +25,10 @@ import java.util.Objects;
 public class NvgItem extends Item implements Equipment {
 
     private int toggle = 0;
-    private int debugMode;
-    private final List<DebugCallbackNvg> callbacks = new ArrayList<>();
+    private int nvgMode;
+    private final List<NvgCallback> callbacks = new ArrayList<>();
 
-    public void registerDebugCallback(DebugCallbackNvg callback) {
+    public void registerNvgCallback(NvgCallback callback) {
         this.callbacks.add(callback);
     }
 
@@ -59,7 +59,7 @@ public class NvgItem extends Item implements Equipment {
             if (entity.isPlayer() && FunnyModForTestingClient.NVG_TOGGLE.wasPressed()) {
                 // no clue why you need to invert it but it works so i dont really care
                 if (!Objects.requireNonNull(entity.getWorld().getClosestPlayer(entity, 2)).getInventory().main.stream().anyMatch(stack1 -> stack1.isOf(ModItems.NVG_GOGGLES))) {
-                    this.callbacks.get(debugMode).inventoryTick(stack, world, entity, slot, selected);
+                    this.callbacks.get(nvgMode).inventoryTick(stack, world, entity, slot, selected);
                     if (toggle % 2 == 0) {
                         entity.playSound(ModSounds.NVG_TURN_ON, 1f, 1f);
                         toggle++;

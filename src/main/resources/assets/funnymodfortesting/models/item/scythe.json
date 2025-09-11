@@ -6,7 +6,7 @@
   "overrides": [
     {
       "predicate": {
-        "cast": 1
+        "effects": 1
       },
       "model": "funnymodfortesting:item/scythe_1"
     }

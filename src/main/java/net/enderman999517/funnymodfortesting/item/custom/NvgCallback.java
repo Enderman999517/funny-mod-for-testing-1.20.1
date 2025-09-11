@@ -5,6 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 @FunctionalInterface
-public interface DebugCallbackNvg {
+public interface NvgCallback {
     void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected);
 }
