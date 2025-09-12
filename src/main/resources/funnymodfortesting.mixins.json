@@ -4,13 +4,13 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"EnchantmentTargetWeaponMixin",
-		"EntityClientDespawnMixin",
-		"EntityRenderDispatcherMixin"
+		"EntityClientDespawnMixin"
 	],
 	"client": [
 		"ItemRendererAccessor",
 		"ItemRendererMixin",
-		"ModelLoaderMixin"
+		"ModelLoaderMixin",
+		"EntityRenderDispatcherMixin"
 	],
 	"server": [],
 	"injectors": {

@@ -2,9 +2,6 @@ package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -19,30 +16,20 @@ public class RingItem extends Item {
         super(settings);
     }
 
-    int toggle = 0;
-
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (toggle % 2 == 0) {
-            toggle = 0;
-            if (!world.isClient) {
-                if (user instanceof ModEntityData modEntityData) {
+        if (!world.isClient) {
+            if (user instanceof ModEntityData modEntityData) {
+                if (!modEntityData.isHidden()) {
                     modEntityData.setHidden(true);
-                    toggle ++;
-                }
-                return TypedActionResult.success(user.getStackInHand(hand), false);
-            }
-        } else {
-            if (!world.isClient) {
-                if (user instanceof ModEntityData modEntityData) {
+                    FunnyModForTesting.LOGGER.error("set hidden");
+                } else {
                     modEntityData.setHidden(false);
-                    toggle ++;
+                    FunnyModForTesting.LOGGER.error("set unhidden");
                 }
                 return TypedActionResult.success(user.getStackInHand(hand), false);
             }
-        }
-
-        return TypedActionResult.success(user.getStackInHand(hand), true);
+        } return TypedActionResult.success(user.getStackInHand(hand), true);
     }
 
     @Override

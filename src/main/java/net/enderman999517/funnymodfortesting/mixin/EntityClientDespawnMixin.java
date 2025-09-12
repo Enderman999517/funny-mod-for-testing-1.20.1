@@ -1,6 +1,5 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.networking.FunnyModForTestingSync;
 import net.minecraft.entity.Entity;
