@@ -21,7 +21,6 @@ public class FunnyModForTestingNetworking {
                 }
                 if (entity instanceof ModEntityData modData) {
                     modData.setHidden(isHidden);
-                    FunnyModForTesting.LOGGER.error("set hidden nw");
                 }
             });
         });

@@ -8,47 +8,61 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FunnyModForTestingSync {
 
     public static void syncHiddenFlag(Entity entity, boolean hidden) {
         if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVarInt(entity.getId());
-        buf.writeBoolean(hidden);
 
         PacketByteBuf bufH = PacketByteBufs.create();
         bufH.writeVarInt(entity.getId());
-        bufH.writeBoolean(false);
+        bufH.writeBoolean(true);
 
         PacketByteBuf bufU = PacketByteBufs.create();
         bufU.writeVarInt(entity.getId());
-        bufU.writeBoolean(true);
+        bufU.writeBoolean(false);
 
-        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, buf);
         CustomPayloadS2CPacket packetH = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufH);
         CustomPayloadS2CPacket packetU = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufU);
 
-        ThreadedAnvilChunkStorage storage = serverWorld.getChunkManager().threadedAnvilChunkStorage;
-        List<ServerPlayerEntity> playerEntities = new ArrayList<>(storage.getPlayersWatchingChunk(entity.getChunkPos(), false));
+        //ThreadedAnvilChunkStorage storage = serverWorld.getChunkManager().threadedAnvilChunkStorage;
+        List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
 
         playerEntities.forEach(player ->  {
             if (player instanceof ModEntityData modEntityDataP) {
                 if (entity instanceof ModEntityData modEntityDataE) {
-                    //half worked
-                    //if (!modEntityData.isHidden()) {
-                    //    player.networkHandler.sendPacket(packet);
-                    //    FunnyModForTesting.LOGGER.error("sent hidden packet");
+                //    //half worked
+                //    //if (!modEntityData.isHidden()) {
+                //    //    player.networkHandler.sendPacket(packet);
+                //    //    FunnyModForTesting.LOGGER.error("sent hidden packet");
+//
+                //    //checks if currently hidden ie going to be unhidden
+                //    if (modEntityDataE.isHidden()) {
+                //        if (modEntityDataP.isHidden()) {
+                //            player.networkHandler.sendPacket(packetU);
+                //            FunnyModForTesting.LOGGER.error("U from " + entity.getName() + "to " + player.getName());
+                //        } else {
+                //            player.networkHandler.sendPacket(packetH);
+                //            FunnyModForTesting.LOGGER.error("H from " + entity.getName() + "to " + player.getName());
+                //        }
+                //    } else {
+                //            player.networkHandler.sendPacket(packetH);
+                //            FunnyModForTesting.LOGGER.error("H1 from " + entity.getName() + "to " + player.getName());
+                //    }
 
-                    if (!modEntityDataE.isHidden()) {
-                        player.networkHandler.sendPacket(packet);
-                    } else if (modEntityDataP.isHidden()) {
-                        player.networkHandler.sendPacket(packetU);
-                    }
+                    //boolean userInvis = modEntityDataE.isHidden();
+                    //boolean playerInvis = modEntityDataP.isHidden();
+                    //boolean shouldSee = (userInvis && playerInvis) || (!userInvis && playerInvis);
+//
+//
+                    //PacketByteBuf buf = PacketByteBufs.create();
+                    //buf.writeVarInt(entity.getId());
+                    //buf.writeBoolean(!shouldSee);
+                    //CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, buf);
+//
+                    //player.networkHandler.sendPacket(packet);
                 }
             }
         });
