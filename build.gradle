@@ -26,14 +26,14 @@ repositories {
 		}
 	}
 
-	maven {
-		name = 'GeckoLib'
-		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-		content {
-			includeGroupByRegex("software\\.bernie.*")
-			includeGroup("com.eliotlash.mclib")
-		}
-	}
+	//maven {
+	//	name = 'GeckoLib'
+	//	url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+	//	content {
+	//		includeGroupByRegex("software\\.bernie.*")
+	//		includeGroup("com.eliotlash.mclib")
+	//	}
+	//}
 }
 
 fabricApi {
@@ -49,8 +49,8 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "org.ladysnake:satin:${satin_version}"
 
-	modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
-	implementation("com.eliotlash.mclib:mclib:20")
+	//modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
+	//implementation("com.eliotlash.mclib:mclib:20")
 
 	include "org.ladysnake:satin:${satin_version}"
 

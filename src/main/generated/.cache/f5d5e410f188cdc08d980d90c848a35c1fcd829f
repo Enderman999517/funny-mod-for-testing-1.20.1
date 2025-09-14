@@ -1,4 +1,4 @@
-// 1.20.1	2025-08-29T16:33:54.8921153	Funny Mod For Testing/Model Definitions
+// 1.20.1	2025-09-14T18:15:44.5620571	Funny Mod For Testing/Model Definitions
 0449566660d83c9ae4fc2bb4edd48c3975504977 assets\funnymodfortesting\blockstates\showcase_block_w.json
 3f998b0fc0763cf4f13da7c15e02606c6432df0b assets\funnymodfortesting\models\item\stim.json
 0fef1fc6eaa82df73ad096f75fd67f958d7013d0 assets\funnymodfortesting\models\item\overpowered.json
@@ -6,8 +6,8 @@
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets\funnymodfortesting\models\item\amogh_spawn_egg.json
 fce6dda5fab708964b5b22a6e3078b9bc712afba assets\funnymodfortesting\models\item\ltf_block.json
 a14ab8bce7a869731fe0b6bb467793e8cbb1d4ac assets\funnymodfortesting\blockstates\ltf_block.json
-52f6251ab871e279122e40fe7ac3792505bdb6a5 assets\funnymodfortesting\models\item\brainrotifier.json
 9a987fb28c8d936a5ad3c5af965efa2368d8d716 assets\funnymodfortesting\models\block\showcase_block_w.json
+52f6251ab871e279122e40fe7ac3792505bdb6a5 assets\funnymodfortesting\models\item\brainrotifier.json
 ae217626eb5be0d9fa032becc72e85ed0534e7c7 assets\funnymodfortesting\models\item\amogh_essence.json
 8a2108ceeca5265f93950d898b2bcf1b80fcdd01 assets\funnymodfortesting\models\item\showcase_block_w.json
 46aa1cf6e4922e6c51a958f06d00f25fd292240d assets\funnymodfortesting\models\item\happy_melon_slice.json

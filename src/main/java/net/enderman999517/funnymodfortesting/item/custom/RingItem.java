@@ -9,6 +9,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class RingItem extends Item {
+    public static boolean shouldRender;
+
     public RingItem(Settings settings) {
         super(settings);
     }
@@ -16,10 +18,11 @@ public class RingItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient) {
-            if (user instanceof ModEntityData modEntityData) {
-                modEntityData.setHidden(!modEntityData.isHidden());
-                return TypedActionResult.success(user.getStackInHand(hand), false);
-            }
+            //if (user instanceof ModEntityData modEntityData) {
+            //    modEntityData.setHidden(!modEntityData.isHidden());
+            //    return TypedActionResult.success(user.getStackInHand(hand), false);
+            //}
+            shouldRender = true;
         } return TypedActionResult.success(user.getStackInHand(hand), true);
     }
 }

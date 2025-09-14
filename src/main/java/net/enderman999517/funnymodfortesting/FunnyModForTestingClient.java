@@ -12,6 +12,8 @@ import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
 import net.enderman999517.funnymodfortesting.networking.FunnyModForTestingNetworking;
+import net.enderman999517.funnymodfortesting.render.ChargedPlayerRenderFeature;
+import net.enderman999517.funnymodfortesting.render.LightningOverlayFeatureRenderer;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreen;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
@@ -19,10 +21,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -68,6 +72,18 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         registerModelPredicateProviders();
 
         FunnyModForTestingNetworking.register();
+
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+            if (entityRenderer instanceof PlayerEntityRenderer playerEntityRenderer) {
+                registrationHelper.register(new LightningOverlayFeatureRenderer(playerEntityRenderer));
+            }
+        });
+
+        //LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+        //    if (entityRenderer instanceof PlayerEntityRenderer playerEntityRenderer) {
+        //        registrationHelper.register(new ChargedPlayerRenderFeature(playerEntityRenderer, context.getModelLoader()));
+        //    }
+        //});
 
 
         ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
