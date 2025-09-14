@@ -17,11 +17,7 @@ public class RingItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient) {
             if (user instanceof ModEntityData modEntityData) {
-                if (!modEntityData.isHidden()) {
-                    modEntityData.setHidden(true);
-                } else {
-                    modEntityData.setHidden(false);
-                }
+                modEntityData.setHidden(!modEntityData.isHidden());
                 return TypedActionResult.success(user.getStackInHand(hand), false);
             }
         } return TypedActionResult.success(user.getStackInHand(hand), true);

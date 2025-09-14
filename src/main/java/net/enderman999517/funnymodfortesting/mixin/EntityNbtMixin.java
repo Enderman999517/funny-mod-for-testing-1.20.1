@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityClientDespawnMixin implements ModEntityData {
+public abstract class EntityNbtMixin implements ModEntityData {
     private boolean hidden = false;
 
     @Inject(method = "writeNbt(Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/nbt/NbtCompound;", at = @At("RETURN"))
@@ -34,9 +34,7 @@ public abstract class EntityClientDespawnMixin implements ModEntityData {
     @Override
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
-
         Entity entity = (Entity)(Object)this;
-
         if (!entity.getWorld().isClient) {
             FunnyModForTestingSync.syncHiddenFlag(entity, hidden);
         }
