@@ -27,42 +27,41 @@ public class FunnyModForTestingSync {
         CustomPayloadS2CPacket packetH = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufH);
         CustomPayloadS2CPacket packetU = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufU);
 
-        //ThreadedAnvilChunkStorage storage = serverWorld.getChunkManager().threadedAnvilChunkStorage;
         List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
 
         playerEntities.forEach(player ->  {
             if (player instanceof ModEntityData modEntityDataP) {
                 if (entity instanceof ModEntityData modEntityDataE) {
-                //    //half worked
-                //    //if (!modEntityData.isHidden()) {
-                //    //    player.networkHandler.sendPacket(packet);
-                //    //    FunnyModForTesting.LOGGER.error("sent hidden packet");
-//
-                //    //checks if currently hidden ie going to be unhidden
-                //    if (modEntityDataE.isHidden()) {
-                //        if (modEntityDataP.isHidden()) {
-                //            player.networkHandler.sendPacket(packetU);
-                //            FunnyModForTesting.LOGGER.error("U from " + entity.getName() + "to " + player.getName());
-                //        } else {
-                //            player.networkHandler.sendPacket(packetH);
-                //            FunnyModForTesting.LOGGER.error("H from " + entity.getName() + "to " + player.getName());
-                //        }
-                //    } else {
-                //            player.networkHandler.sendPacket(packetH);
-                //            FunnyModForTesting.LOGGER.error("H1 from " + entity.getName() + "to " + player.getName());
-                //    }
+                    PacketByteBuf bufHp = PacketByteBufs.create();
+                    bufHp.writeVarInt(player.getId());
+                    bufHp.writeBoolean(true);
 
-                    //boolean userInvis = modEntityDataE.isHidden();
-                    //boolean playerInvis = modEntityDataP.isHidden();
-                    //boolean shouldSee = (userInvis && playerInvis) || (!userInvis && playerInvis);
-//
-//
-                    //PacketByteBuf buf = PacketByteBufs.create();
-                    //buf.writeVarInt(entity.getId());
-                    //buf.writeBoolean(!shouldSee);
-                    //CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, buf);
-//
-                    //player.networkHandler.sendPacket(packet);
+                    PacketByteBuf bufUp = PacketByteBufs.create();
+                    bufUp.writeVarInt(player.getId());
+                    bufUp.writeBoolean(false);
+
+                    CustomPayloadS2CPacket packetHp = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufHp);
+                    CustomPayloadS2CPacket packetUp = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufUp);
+                    //checks if currently hidden ie should be unrendered
+                    if (modEntityDataE.isHidden()) {
+                        //both hidden
+                        if (modEntityDataP.isHidden()) {
+                            player.networkHandler.sendPacket(packetU);
+                            ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                            //entity hidden, player not hidden
+                        } else {
+                            player.networkHandler.sendPacket(packetH);
+                            ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                        }
+                        //entity not hidden, player hidden
+                    } else if (modEntityDataP.isHidden()) {
+                        player.networkHandler.sendPacket(packetU);
+                        ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetHp);
+                        //entity not hidden, player not hidden
+                    } else {
+                        player.networkHandler.sendPacket(packetU);
+                        ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                    }
                 }
             }
         });
