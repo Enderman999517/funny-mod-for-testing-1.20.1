@@ -13,7 +13,6 @@ import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
 import net.enderman999517.funnymodfortesting.networking.FunnyModForTestingNetworking;
 import net.enderman999517.funnymodfortesting.render.ChargedPlayerRenderFeature;
-import net.enderman999517.funnymodfortesting.render.LightningOverlayFeatureRenderer;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreen;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
@@ -68,22 +67,17 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.AMOGH, AmoghRenderer::new);
         HandledScreens.register(ModScreenHandlers.BRAINROTTING_SCREEN_HANDLER, BrainrottingScreen::new);
         HandledScreens.register(ModScreenHandlers.COMPACTING_SCREEN_HANDLER, CompactingScreen::new);
-
+        ModModelLayers.registerModelLayers();
         registerModelPredicateProviders();
-
         FunnyModForTestingNetworking.register();
+
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
             if (entityRenderer instanceof PlayerEntityRenderer playerEntityRenderer) {
-                registrationHelper.register(new LightningOverlayFeatureRenderer(playerEntityRenderer));
+                registrationHelper.register(new ChargedPlayerRenderFeature(playerEntityRenderer, context.getModelLoader()));
             }
         });
 
-        //LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-        //    if (entityRenderer instanceof PlayerEntityRenderer playerEntityRenderer) {
-        //        registrationHelper.register(new ChargedPlayerRenderFeature(playerEntityRenderer, context.getModelLoader()));
-        //    }
-        //});
 
 
         ShaderEffectRenderCallback.EVENT.register(tickDelta -> {

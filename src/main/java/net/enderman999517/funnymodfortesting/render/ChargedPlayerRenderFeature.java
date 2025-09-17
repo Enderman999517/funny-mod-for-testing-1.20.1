@@ -1,5 +1,9 @@
 package net.enderman999517.funnymodfortesting.render;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
+import net.enderman999517.funnymodfortesting.FunnyModForTestingClient;
+import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.enderman999517.funnymodfortesting.item.custom.RingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,12 +21,13 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class ChargedPlayerRenderFeature extends FeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
-    private static final Identifier SKIN = new Identifier("funnymodfortesting:textures/entity/player/player_charge.png");
+    private static final Identifier SKIN = new Identifier("textures/entity/creeper/creeper_armor.png"); //textures/entity/creeper/creeper_armor.png funnymodfortesting:textures/entity/player/player_charge.png
     private final PlayerEntityModel<AbstractClientPlayerEntity> chargedModel;
 
     public ChargedPlayerRenderFeature(FeatureRendererContext<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> context, EntityModelLoader loader) {
         super(context);
-        this.chargedModel = new PlayerEntityModel<>(loader.getModelPart(ModEntityModelLayers.PLAYER_CHARGED), false);
+        boolean slim = context.getModel().equals("slim");
+        this.chargedModel = new PlayerEntityModel<>(loader.getModelPart(ModModelLayers.PLAYER_CHARGED), slim);
     }
 
     @Override
@@ -41,9 +46,9 @@ public class ChargedPlayerRenderFeature extends FeatureRenderer<AbstractClientPl
         if (this.shouldRenderOverlay(entity)) {
             float partialAge = (float)entity.age + tickDelta;
             this.chargedModel.animateModel(entity, limbAngle, limbDistance, tickDelta);
-            this.chargedModel.copyStateTo(this.chargedModel);
+            this.getContextModel().copyStateTo(this.chargedModel);
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(
-                    RenderLayer.getEnergySwirl(SKIN, this.getEnergySwirlX(partialAge) % 1.0F, partialAge * 0.01F % 1.0F)
+                    RenderLayer.getEnergySwirl(SKIN, this.getEnergySwirlX(partialAge) * 20 / (entity.getHealth()) % 1.0F, partialAge * 0.01F % 1.0F)
             );
             this.chargedModel.setAngles(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
             this.chargedModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 0.5F, 0.5F, 0.5F, 1.0F);
@@ -51,9 +56,7 @@ public class ChargedPlayerRenderFeature extends FeatureRenderer<AbstractClientPl
     }
 
     private boolean shouldRenderOverlay(AbstractClientPlayerEntity player) {
-        //if (player instanceof ModEntityData modEntityData) {
-        //    return modEntityData.isHidden();
-        //} else return false;
+        //FunnyModForTesting.LOGGER.error(String.valueOf(RingItem.shouldRender));
         return RingItem.shouldRender;
     }
 

@@ -1,6 +1,8 @@
 package net.enderman999517.funnymodfortesting.render;
 
 import com.google.common.collect.ImmutableMap;
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
+import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Dilation;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 public class ModEntityModels {
     public static Map<EntityModelLayer, TexturedModelData> getModels() {
         ImmutableMap.Builder<EntityModelLayer, TexturedModelData> builder = ImmutableMap.builder();
-        builder.put(ModEntityModelLayers.PLAYER_CHARGED, TexturedModelData.of(PlayerEntityModel.getTexturedModelData(new Dilation(2f), false), 64, 64));
+        builder.put(ModModelLayers.PLAYER_CHARGED, TexturedModelData.of(PlayerEntityModel.getTexturedModelData(new Dilation(2.0f), false), 64, 64));
 
 
         ImmutableMap<EntityModelLayer, TexturedModelData> immutableMap = builder.build();
@@ -30,5 +32,4 @@ public class ModEntityModels {
             return immutableMap;
         }
     }
-
 }

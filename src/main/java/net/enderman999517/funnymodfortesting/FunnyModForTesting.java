@@ -25,7 +25,6 @@ public class FunnyModForTesting implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
 		ModItemGroups.registerItemGroups();

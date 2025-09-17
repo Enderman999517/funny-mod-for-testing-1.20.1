@@ -9,7 +9,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class RingItem extends Item {
-    public static boolean shouldRender;
+    public static boolean shouldRender = false;
 
     public RingItem(Settings settings) {
         super(settings);
@@ -18,11 +18,11 @@ public class RingItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient) {
-            //if (user instanceof ModEntityData modEntityData) {
-            //    modEntityData.setHidden(!modEntityData.isHidden());
-            //    return TypedActionResult.success(user.getStackInHand(hand), false);
-            //}
-            shouldRender = true;
+            if (user instanceof ModEntityData modEntityData) {
+                modEntityData.setHidden(!modEntityData.isHidden());
+            }
+            shouldRender = !shouldRender;
+            return TypedActionResult.success(user.getStackInHand(hand), false);
         } return TypedActionResult.success(user.getStackInHand(hand), true);
     }
 }
