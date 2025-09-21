@@ -74,4 +74,20 @@ public class FunnyModForTestingSync {
         CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, buf);
         player.networkHandler.sendPacket(packet);
     }
+
+    public static void syncRenderingOverlayFlag(Entity entity, boolean renderingOverlay) {
+        if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(entity.getId());
+        buf.writeBoolean(renderingOverlay);
+
+        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.DISPLAY_OVERLAY_SYNC, buf);
+
+        List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
+
+        playerEntities.forEach(player -> {
+            player.networkHandler.sendPacket(packet);
+        });
+    }
 }

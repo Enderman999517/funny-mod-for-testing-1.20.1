@@ -20,6 +20,7 @@ public class RingItem extends Item {
         if (!world.isClient) {
             if (user instanceof ModEntityData modEntityData) {
                 modEntityData.setHidden(!modEntityData.isHidden());
+                modEntityData.setRenderingOverlay(!modEntityData.isRenderingOverlay());
             }
             shouldRender = !shouldRender;
             return TypedActionResult.success(user.getStackInHand(hand), false);

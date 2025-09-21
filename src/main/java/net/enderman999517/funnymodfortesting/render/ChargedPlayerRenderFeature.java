@@ -56,8 +56,10 @@ public class ChargedPlayerRenderFeature extends FeatureRenderer<AbstractClientPl
     }
 
     private boolean shouldRenderOverlay(AbstractClientPlayerEntity player) {
-        //FunnyModForTesting.LOGGER.error(String.valueOf(RingItem.shouldRender));
-        return RingItem.shouldRender;
+        if (player instanceof ModEntityData modEntityData) {
+            return modEntityData.isRenderingOverlay();
+        } else return false;
+        //return RingItem.shouldRender;
     }
 
     protected float getEnergySwirlX(float partialAge) {
