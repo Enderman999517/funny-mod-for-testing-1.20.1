@@ -1,7 +1,7 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
 import net.enderman999517.funnymodfortesting.ModEntityData;
-import net.enderman999517.funnymodfortesting.networking.FunnyModForTestingSync;
+import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,7 +41,7 @@ public abstract class EntityNbtMixin implements ModEntityData {
         this.hidden = hidden;
         Entity entity = (Entity)(Object)this;
         if (!entity.getWorld().isClient) {
-            FunnyModForTestingSync.syncHiddenFlag(entity, hidden);
+            ModSync.syncHiddenFlag(entity, hidden);
         }
     }
 
@@ -55,7 +55,7 @@ public abstract class EntityNbtMixin implements ModEntityData {
         this.renderingOverlay = renderingOverlay;
         Entity entity = (Entity)(Object)this;
         if (!entity.getWorld().isClient) {
-            FunnyModForTestingSync.syncRenderingOverlayFlag(entity, renderingOverlay);
+            ModSync.syncRenderingOverlayFlag(entity, renderingOverlay);
         }
     }
 }

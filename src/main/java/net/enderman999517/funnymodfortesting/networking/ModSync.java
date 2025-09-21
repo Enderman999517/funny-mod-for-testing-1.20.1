@@ -1,7 +1,10 @@
 package net.enderman999517.funnymodfortesting.networking;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
@@ -10,7 +13,7 @@ import net.minecraft.server.world.ServerWorld;
 
 import java.util.List;
 
-public class FunnyModForTestingSync {
+public class ModSync {
 
     public static void syncHiddenFlag(Entity entity, boolean hidden) {
         if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
@@ -23,8 +26,8 @@ public class FunnyModForTestingSync {
         bufU.writeVarInt(entity.getId());
         bufU.writeBoolean(false);
 
-        CustomPayloadS2CPacket packetH = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufH);
-        CustomPayloadS2CPacket packetU = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufU);
+        CustomPayloadS2CPacket packetH = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufH);
+        CustomPayloadS2CPacket packetU = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufU);
 
         List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
 
@@ -39,8 +42,8 @@ public class FunnyModForTestingSync {
                     bufUp.writeVarInt(player.getId());
                     bufUp.writeBoolean(false);
 
-                    CustomPayloadS2CPacket packetHp = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufHp);
-                    CustomPayloadS2CPacket packetUp = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, bufUp);
+                    CustomPayloadS2CPacket packetHp = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufHp);
+                    CustomPayloadS2CPacket packetUp = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufUp);
                     //checks if currently hidden ie should be unrendered
                     if (modEntityDataE.isHidden()) {
                         //both hidden
@@ -71,7 +74,7 @@ public class FunnyModForTestingSync {
         buf.writeVarInt(entity.getId());
         buf.writeBoolean(hidden);
 
-        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.ENTITY_HIDDEN_SYNC, buf);
+        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, buf);
         player.networkHandler.sendPacket(packet);
     }
 
@@ -82,12 +85,36 @@ public class FunnyModForTestingSync {
         buf.writeVarInt(entity.getId());
         buf.writeBoolean(renderingOverlay);
 
-        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(FunnyModForTestingNetworking.DISPLAY_OVERLAY_SYNC, buf);
+        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.DISPLAY_OVERLAY_SYNC, buf);
 
         List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
 
         playerEntities.forEach(player -> {
             player.networkHandler.sendPacket(packet);
+        });
+    }
+
+    public static void checkFlags() {
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ServerPlayerEntity player = handler.getPlayer();
+
+            if (player instanceof ModEntityData modEntityData) {
+                boolean isHidden = modEntityData.isHidden();
+
+                PacketByteBuf bufH = PacketByteBufs.create();
+                bufH.writeVarInt(((Entity) modEntityData).getId());
+                bufH.writeBoolean(isHidden);
+                ServerPlayNetworking.send(player, ModNetworking.ENTITY_HIDDEN_SYNC, bufH);
+
+                boolean hasOverlay = modEntityData.isRenderingOverlay();
+
+                PacketByteBuf bufO = PacketByteBufs.create();
+                bufO.writeVarInt(((Entity) modEntityData).getId());
+                bufO.writeBoolean(hasOverlay);
+                ServerPlayNetworking.send(player, ModNetworking.DISPLAY_OVERLAY_SYNC, bufO);
+
+                FunnyModForTesting.LOGGER.error("server " + hasOverlay + " to " + player.getName());
+            }
         });
     }
 }

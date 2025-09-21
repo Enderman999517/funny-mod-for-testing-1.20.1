@@ -1,10 +1,8 @@
 package net.enderman999517.funnymodfortesting.render;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
-import net.enderman999517.funnymodfortesting.FunnyModForTestingClient;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
-import net.enderman999517.funnymodfortesting.item.custom.RingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -21,7 +19,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class ChargedPlayerRenderFeature extends FeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
-    private static final Identifier SKIN = new Identifier("textures/entity/creeper/creeper_armor.png"); //textures/entity/creeper/creeper_armor.png funnymodfortesting:textures/entity/player/player_charge.png
+    private static final Identifier SKIN = new Identifier("funnymodfortesting:textures/entity/player/player_charge.png"); //textures/entity/creeper/creeper_armor.png funnymodfortesting:textures/entity/player/player_charge.png
     private final PlayerEntityModel<AbstractClientPlayerEntity> chargedModel;
 
     public ChargedPlayerRenderFeature(FeatureRendererContext<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> context, EntityModelLoader loader) {
@@ -48,18 +46,22 @@ public class ChargedPlayerRenderFeature extends FeatureRenderer<AbstractClientPl
             this.chargedModel.animateModel(entity, limbAngle, limbDistance, tickDelta);
             this.getContextModel().copyStateTo(this.chargedModel);
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(
-                    RenderLayer.getEnergySwirl(SKIN, this.getEnergySwirlX(partialAge) * 20 / (entity.getHealth()) % 1.0F, partialAge * 0.01F % 1.0F)
+                    RenderLayer.getEnergySwirl(SKIN, this.getEnergySwirlX(partialAge) % 1.0F, partialAge * 0.01F % 1.0F)
             );
             this.chargedModel.setAngles(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
-            this.chargedModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 0.5F, 0.5F, 0.5F, 1.0F);
+            this.chargedModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, -getNormalHealth(entity) + 1, 0.5F * (getNormalHealth(entity)), getNormalHealth(entity), 1.0F);
         }
     }
 
     private boolean shouldRenderOverlay(AbstractClientPlayerEntity player) {
         if (player instanceof ModEntityData modEntityData) {
+            FunnyModForTesting.LOGGER.error("renderfeature" + modEntityData.isRenderingOverlay());
             return modEntityData.isRenderingOverlay();
         } else return false;
-        //return RingItem.shouldRender;
+    }
+
+    private float getNormalHealth(AbstractClientPlayerEntity entity) {
+        return (entity.getHealth() - 1)/ 20;
     }
 
     protected float getEnergySwirlX(float partialAge) {

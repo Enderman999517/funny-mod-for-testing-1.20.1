@@ -1,7 +1,6 @@
 package net.enderman999517.funnymodfortesting.render;
 
 import com.google.common.collect.ImmutableMap;
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -10,6 +10,7 @@ import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItemGroups;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.enderman999517.funnymodfortesting.recipe.ModRecipes;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.enderman999517.funnymodfortesting.sound.ModSounds;
@@ -38,6 +39,7 @@ public class FunnyModForTesting implements ModInitializer {
 		ModCommands.registerCommands();
 		ModDamageSources.registerDamageSources();
 		ModEnchantments.registerModEnchantments();
+		ModSync.checkFlags();
 
 	}
 }

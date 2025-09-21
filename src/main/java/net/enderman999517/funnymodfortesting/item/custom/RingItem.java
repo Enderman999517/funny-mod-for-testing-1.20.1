@@ -9,7 +9,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class RingItem extends Item {
-    public static boolean shouldRender = false;
 
     public RingItem(Settings settings) {
         super(settings);
@@ -22,7 +21,6 @@ public class RingItem extends Item {
                 modEntityData.setHidden(!modEntityData.isHidden());
                 modEntityData.setRenderingOverlay(!modEntityData.isRenderingOverlay());
             }
-            shouldRender = !shouldRender;
             return TypedActionResult.success(user.getStackInHand(hand), false);
         } return TypedActionResult.success(user.getStackInHand(hand), true);
     }
