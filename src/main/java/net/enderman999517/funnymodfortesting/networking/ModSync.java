@@ -31,7 +31,7 @@ public class ModSync {
 
         List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
 
-        playerEntities.forEach(player ->  {
+        playerEntities.forEach(player -> {
             if (player instanceof ModEntityData modEntityDataP) {
                 if (entity instanceof ModEntityData modEntityDataE) {
                     PacketByteBuf bufHp = PacketByteBufs.create();
@@ -69,15 +69,6 @@ public class ModSync {
         });
     }
 
-    public static void syncHiddenFlagToPlayer(Entity entity, ServerPlayerEntity player, boolean hidden) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVarInt(entity.getId());
-        buf.writeBoolean(hidden);
-
-        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, buf);
-        player.networkHandler.sendPacket(packet);
-    }
-
     public static void syncRenderingOverlayFlag(Entity entity, boolean renderingOverlay) {
         if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
 
@@ -95,26 +86,90 @@ public class ModSync {
     }
 
     public static void checkFlags() {
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
 
             if (player instanceof ModEntityData modEntityData) {
-                boolean isHidden = modEntityData.isHidden();
-
-                PacketByteBuf bufH = PacketByteBufs.create();
-                bufH.writeVarInt(((Entity) modEntityData).getId());
-                bufH.writeBoolean(isHidden);
-                ServerPlayNetworking.send(player, ModNetworking.ENTITY_HIDDEN_SYNC, bufH);
-
-                boolean hasOverlay = modEntityData.isRenderingOverlay();
-
-                PacketByteBuf bufO = PacketByteBufs.create();
-                bufO.writeVarInt(((Entity) modEntityData).getId());
-                bufO.writeBoolean(hasOverlay);
-                ServerPlayNetworking.send(player, ModNetworking.DISPLAY_OVERLAY_SYNC, bufO);
-
-                FunnyModForTesting.LOGGER.error("server " + hasOverlay + " to " + player.getName());
+                modEntityData.setHidden(false);
+                modEntityData.setRenderingOverlay(false);
             }
+        });
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            //ServerPlayerEntity player = handler.getPlayer();
+//
+            //if (player instanceof ModEntityData modEntityData) {
+            //    PacketByteBuf buf = PacketByteBufs.create();
+            //    buf.writeVarInt(((Entity) modEntityData).getId());
+            //    buf.writeBoolean(false);
+            //    CustomPayloadS2CPacket packetH = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, buf);
+            //    CustomPayloadS2CPacket packetO = new CustomPayloadS2CPacket(ModNetworking.DISPLAY_OVERLAY_SYNC, buf);
+//
+            //    server.getPlayerManager().getPlayerList().forEach(player1 -> {
+            //        player1.networkHandler.sendPacket(packetO);
+            //        player1.networkHandler.sendPacket(packetH);
+            //        if (player1 instanceof ModEntityData modEntityData1) {
+            //            syncHiddenFlag((player1), modEntityData1.isHidden());
+            //            syncRenderingOverlayFlag((player1), modEntityData1.isRenderingOverlay());
+            //            syncHiddenFlag(((Entity) modEntityData1), modEntityData.isHidden());
+            //            syncRenderingOverlayFlag(((Entity) modEntityData1), modEntityData.isRenderingOverlay());
+            //        }
+//
+            //        syncHiddenFlag(((Entity) modEntityData), modEntityData.isHidden());
+            //        syncRenderingOverlayFlag(((Entity) modEntityData), modEntityData.isRenderingOverlay());
+            //    });
+            //}
+
+            ServerPlayerEntity player = handler.getPlayer();
+
+            if (!(player.getWorld() instanceof ServerWorld serverWorld)) return;
+
+            PacketByteBuf bufH = PacketByteBufs.create();
+            bufH.writeVarInt(player.getId());
+            bufH.writeBoolean(true);
+
+            PacketByteBuf bufU = PacketByteBufs.create();
+            bufU.writeVarInt(player.getId());
+            bufU.writeBoolean(false);
+
+            CustomPayloadS2CPacket packetH = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufH);
+            CustomPayloadS2CPacket packetU = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufU);
+
+            List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
+
+            playerEntities.forEach(player1 -> {
+                if (player instanceof ModEntityData modEntityDataP) {
+                    if (player1 instanceof ModEntityData modEntityDataP1) {
+                        PacketByteBuf bufHp = PacketByteBufs.create();
+                        bufHp.writeVarInt(player1.getId());
+                        bufHp.writeBoolean(true);
+
+                        PacketByteBuf bufUp = PacketByteBufs.create();
+                        bufUp.writeVarInt(player1.getId());
+                        bufUp.writeBoolean(false);
+
+                        CustomPayloadS2CPacket packetHp = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufHp);
+                        CustomPayloadS2CPacket packetUp = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufUp);
+                        if (modEntityDataP.isHidden()) {
+                            if (modEntityDataP1.isHidden()) {
+                                player1.networkHandler.sendPacket(packetU);
+                                player.networkHandler.sendPacket(packetUp);
+                            } else {
+                                player1.networkHandler.sendPacket(packetH);
+                                player.networkHandler.sendPacket(packetUp);
+                            }
+                        } else if (modEntityDataP1.isHidden()) {
+                            player1.networkHandler.sendPacket(packetU);
+                            player.networkHandler.sendPacket(packetHp);
+                        } else {
+                            player1.networkHandler.sendPacket(packetU);
+                            player.networkHandler.sendPacket(packetUp);
+                        }
+                        FunnyModForTesting.LOGGER.error("{} to {} {}", player, player1, modEntityDataP.isHidden());
+                        FunnyModForTesting.LOGGER.error("{} to {} {}", player1, player, modEntityDataP1.isHidden());
+                    }
+                }
+            });
         });
     }
 }

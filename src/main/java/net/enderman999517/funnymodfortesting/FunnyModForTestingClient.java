@@ -73,14 +73,11 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         ModNetworking.register();
 
 
-
-
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
             if (entityRenderer instanceof PlayerEntityRenderer playerEntityRenderer) {
                 registrationHelper.register(new ChargedPlayerRenderFeature(playerEntityRenderer, context.getModelLoader()));
             }
         });
-
 
 
         ShaderEffectRenderCallback.EVENT.register(tickDelta -> {

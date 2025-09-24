@@ -36,7 +36,6 @@ public class ModNetworking {
                    return;
                }
                if (entity instanceof ModEntityData modEntityData) {
-                   FunnyModForTesting.LOGGER.error("client " + shouldRenderOverlay);
                    modEntityData.setRenderingOverlay(shouldRenderOverlay);
                }
             });

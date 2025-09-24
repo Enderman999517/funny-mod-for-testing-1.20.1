@@ -1,6 +1,5 @@
 package net.enderman999517.funnymodfortesting.render;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.fabricmc.api.EnvType;
@@ -55,7 +54,6 @@ public class ChargedPlayerRenderFeature extends FeatureRenderer<AbstractClientPl
 
     private boolean shouldRenderOverlay(AbstractClientPlayerEntity player) {
         if (player instanceof ModEntityData modEntityData) {
-            FunnyModForTesting.LOGGER.error("renderfeature" + modEntityData.isRenderingOverlay());
             return modEntityData.isRenderingOverlay();
         } else return false;
     }
