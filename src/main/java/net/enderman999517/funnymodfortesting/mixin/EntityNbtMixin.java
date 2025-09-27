@@ -1,8 +1,6 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
-import net.enderman999517.funnymodfortesting.networking.HiddenTracker;
 import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
@@ -44,8 +42,6 @@ public abstract class EntityNbtMixin implements ModEntityData {
         Entity entity = (Entity)(Object)this;
         if (!entity.getWorld().isClient) {
             ModSync.syncHiddenFlag(entity, hidden);
-            HiddenTracker.setHidden(entity.getUuid(), hidden);
-            FunnyModForTesting.LOGGER.error("trk " + HiddenTracker.getAll());
         }
     }
 

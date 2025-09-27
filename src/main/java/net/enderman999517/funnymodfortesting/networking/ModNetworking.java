@@ -46,17 +46,6 @@ public class ModNetworking {
             });
         });
 
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            client.execute(() -> {
-                for (Entity entity : client.world.getEntities()) {
-                    if (entity instanceof ModEntityData modEntityData) {
-                        modEntityData.setHidden(modEntityData.isHidden());
-                        FunnyModForTesting.LOGGER.error(entity.getName().getString() + " hidden: " + modEntityData.isHidden());
-                    }
-                }
-            });
-        });
-
         AtomicInteger tickCounter = new AtomicInteger();
         AtomicBoolean awaitingResync = new AtomicBoolean(false);
 
@@ -76,6 +65,7 @@ public class ModNetworking {
                     for (Entity entity : client.world.getEntities()) {
                         if (entity instanceof ModEntityData data) {
                             data.setHidden(data.isHidden());
+                            data.setRenderingOverlay(data.isRenderingOverlay());
                         }
                     }
                 }

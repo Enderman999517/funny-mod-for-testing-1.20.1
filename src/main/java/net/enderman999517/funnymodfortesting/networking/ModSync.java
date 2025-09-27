@@ -96,23 +96,8 @@ public class ModSync {
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            //ServerPlayerEntity player = handler.getPlayer();
-            //if (!(player.getWorld() instanceof ServerWorld serverWorld)) return;
-            //List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
-//
-            //playerEntities.forEach(player1 -> {
-            //    if (player instanceof ModEntityData modEntityDataP) {
-            //        if (player1 instanceof ModEntityData modEntityDataP1) {
-            //            //FunnyModForTesting.LOGGER.error("{} to {} {}", player, player1, modEntityDataP.isHidden());
-            //            //FunnyModForTesting.LOGGER.error("{} to {} {}", player1, player, modEntityDataP1.isHidden());
-            //            syncHiddenFlag((Entity) modEntityDataP1, modEntityDataP1.isHidden());
-            //            syncHiddenFlag((Entity) modEntityDataP, modEntityDataP1.isHidden());
-            //        }
-            //    }
-            //});
-
             ServerPlayerEntity player = handler.getPlayer();
-            resyncWaitTicks.put(player.getUuid(), 0); // Start tracking delay
+            resyncWaitTicks.put(player.getUuid(), 0);
         });
 
 
@@ -123,10 +108,11 @@ public class ModSync {
                 UUID uuid = entry.getKey();
                 int ticks = entry.getValue();
 
-                if (ticks >= 20) {
+                if (ticks >= 0) {
                     ServerPlayerEntity joiningPlayer = server.getPlayerManager().getPlayer(uuid);
                     if (joiningPlayer != null) {
                         reSyncAllVisibilityFor(joiningPlayer);
+                        reSyncAllOverlayFor(joiningPlayer);
                     }
                     iterator.remove();
                 } else {
@@ -158,6 +144,30 @@ public class ModSync {
         buf.writeBoolean(hidden);
 
         CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, buf);
+        target.networkHandler.sendPacket(packet);
+    }
+
+    private static void reSyncAllOverlayFor(ServerPlayerEntity joiningPlayer) {
+        ServerWorld serverWorld = joiningPlayer.getServerWorld();
+        List<ServerPlayerEntity> players = serverWorld.getPlayers();
+
+        for (ServerPlayerEntity other : players) {
+            if (other == joiningPlayer) continue;
+
+            ModEntityData otherData = (ModEntityData) other;
+            ModEntityData joiningData = (ModEntityData) joiningPlayer;
+
+            syncOverlayFlag(other, otherData.isRenderingOverlay(), joiningPlayer);
+            syncOverlayFlag(joiningPlayer, joiningData.isRenderingOverlay(), other);
+        }
+    }
+
+    public static void syncOverlayFlag(Entity entity, boolean renderingOverlay, ServerPlayerEntity target) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(entity.getId());
+        buf.writeBoolean(renderingOverlay);
+
+        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.DISPLAY_OVERLAY_SYNC, buf);
         target.networkHandler.sendPacket(packet);
     }
 }

@@ -40,6 +40,8 @@ public class ModItems {
                     false, true, true, 1, false, 1 -5, 2 -4));
     public static final Item RING = registerItem("ring",
             new RingItem(new FabricItemSettings()));
+    public static final Item SPEAR = registerItem("spear",
+            new SpearItem(ToolMaterials.IRON, 2, 0.8f, new FabricItemSettings(), 50, 100));
 
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",

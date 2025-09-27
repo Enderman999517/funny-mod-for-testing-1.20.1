@@ -10,6 +10,7 @@ import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItemGroups;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.networking.EntityMovementTracker;
 import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.enderman999517.funnymodfortesting.recipe.ModRecipes;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
@@ -40,6 +41,7 @@ public class FunnyModForTesting implements ModInitializer {
 		ModDamageSources.registerDamageSources();
 		ModEnchantments.registerModEnchantments();
 		ModSync.checkFlags();
+		EntityMovementTracker.register();
 
 	}
 }
