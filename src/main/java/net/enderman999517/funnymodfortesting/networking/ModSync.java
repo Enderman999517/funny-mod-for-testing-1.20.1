@@ -1,17 +1,16 @@
 package net.enderman999517.funnymodfortesting.networking;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
-import java.util.List;
+import java.util.*;
 
 public class ModSync {
 
@@ -86,6 +85,7 @@ public class ModSync {
     }
 
     public static void checkFlags() {
+        final Map<UUID, Integer> resyncWaitTicks = new HashMap<>();
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
 
@@ -97,79 +97,67 @@ public class ModSync {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             //ServerPlayerEntity player = handler.getPlayer();
+            //if (!(player.getWorld() instanceof ServerWorld serverWorld)) return;
+            //List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
 //
-            //if (player instanceof ModEntityData modEntityData) {
-            //    PacketByteBuf buf = PacketByteBufs.create();
-            //    buf.writeVarInt(((Entity) modEntityData).getId());
-            //    buf.writeBoolean(false);
-            //    CustomPayloadS2CPacket packetH = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, buf);
-            //    CustomPayloadS2CPacket packetO = new CustomPayloadS2CPacket(ModNetworking.DISPLAY_OVERLAY_SYNC, buf);
-//
-            //    server.getPlayerManager().getPlayerList().forEach(player1 -> {
-            //        player1.networkHandler.sendPacket(packetO);
-            //        player1.networkHandler.sendPacket(packetH);
-            //        if (player1 instanceof ModEntityData modEntityData1) {
-            //            syncHiddenFlag((player1), modEntityData1.isHidden());
-            //            syncRenderingOverlayFlag((player1), modEntityData1.isRenderingOverlay());
-            //            syncHiddenFlag(((Entity) modEntityData1), modEntityData.isHidden());
-            //            syncRenderingOverlayFlag(((Entity) modEntityData1), modEntityData.isRenderingOverlay());
+            //playerEntities.forEach(player1 -> {
+            //    if (player instanceof ModEntityData modEntityDataP) {
+            //        if (player1 instanceof ModEntityData modEntityDataP1) {
+            //            //FunnyModForTesting.LOGGER.error("{} to {} {}", player, player1, modEntityDataP.isHidden());
+            //            //FunnyModForTesting.LOGGER.error("{} to {} {}", player1, player, modEntityDataP1.isHidden());
+            //            syncHiddenFlag((Entity) modEntityDataP1, modEntityDataP1.isHidden());
+            //            syncHiddenFlag((Entity) modEntityDataP, modEntityDataP1.isHidden());
             //        }
-//
-            //        syncHiddenFlag(((Entity) modEntityData), modEntityData.isHidden());
-            //        syncRenderingOverlayFlag(((Entity) modEntityData), modEntityData.isRenderingOverlay());
-            //    });
-            //}
+            //    }
+            //});
 
             ServerPlayerEntity player = handler.getPlayer();
-
-            if (!(player.getWorld() instanceof ServerWorld serverWorld)) return;
-
-            PacketByteBuf bufH = PacketByteBufs.create();
-            bufH.writeVarInt(player.getId());
-            bufH.writeBoolean(true);
-
-            PacketByteBuf bufU = PacketByteBufs.create();
-            bufU.writeVarInt(player.getId());
-            bufU.writeBoolean(false);
-
-            CustomPayloadS2CPacket packetH = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufH);
-            CustomPayloadS2CPacket packetU = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufU);
-
-            List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
-
-            playerEntities.forEach(player1 -> {
-                if (player instanceof ModEntityData modEntityDataP) {
-                    if (player1 instanceof ModEntityData modEntityDataP1) {
-                        PacketByteBuf bufHp = PacketByteBufs.create();
-                        bufHp.writeVarInt(player1.getId());
-                        bufHp.writeBoolean(true);
-
-                        PacketByteBuf bufUp = PacketByteBufs.create();
-                        bufUp.writeVarInt(player1.getId());
-                        bufUp.writeBoolean(false);
-
-                        CustomPayloadS2CPacket packetHp = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufHp);
-                        CustomPayloadS2CPacket packetUp = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, bufUp);
-                        if (modEntityDataP.isHidden()) {
-                            if (modEntityDataP1.isHidden()) {
-                                player1.networkHandler.sendPacket(packetU);
-                                player.networkHandler.sendPacket(packetUp);
-                            } else {
-                                player1.networkHandler.sendPacket(packetH);
-                                player.networkHandler.sendPacket(packetUp);
-                            }
-                        } else if (modEntityDataP1.isHidden()) {
-                            player1.networkHandler.sendPacket(packetU);
-                            player.networkHandler.sendPacket(packetHp);
-                        } else {
-                            player1.networkHandler.sendPacket(packetU);
-                            player.networkHandler.sendPacket(packetUp);
-                        }
-                        FunnyModForTesting.LOGGER.error("{} to {} {}", player, player1, modEntityDataP.isHidden());
-                        FunnyModForTesting.LOGGER.error("{} to {} {}", player1, player, modEntityDataP1.isHidden());
-                    }
-                }
-            });
+            resyncWaitTicks.put(player.getUuid(), 0); // Start tracking delay
         });
+
+
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            Iterator<Map.Entry<UUID, Integer>> iterator = resyncWaitTicks.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<UUID, Integer> entry = iterator.next();
+                UUID uuid = entry.getKey();
+                int ticks = entry.getValue();
+
+                if (ticks >= 20) {
+                    ServerPlayerEntity joiningPlayer = server.getPlayerManager().getPlayer(uuid);
+                    if (joiningPlayer != null) {
+                        reSyncAllVisibilityFor(joiningPlayer);
+                    }
+                    iterator.remove();
+                } else {
+                    entry.setValue(ticks + 1);
+                }
+            }
+        });
+    }
+
+
+    private static void reSyncAllVisibilityFor(ServerPlayerEntity joiningPlayer) {
+        ServerWorld serverWorld = joiningPlayer.getServerWorld();
+        List<ServerPlayerEntity> players = serverWorld.getPlayers();
+
+        for (ServerPlayerEntity other : players) {
+            if (other == joiningPlayer) continue;
+
+            ModEntityData otherData = (ModEntityData) other;
+            ModEntityData joiningData = (ModEntityData) joiningPlayer;
+
+            syncHiddenFlag(other, otherData.isHidden(), joiningPlayer);
+            syncHiddenFlag(joiningPlayer, joiningData.isHidden(), other);
+        }
+    }
+
+    public static void syncHiddenFlag(Entity entity, boolean hidden, ServerPlayerEntity target) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(entity.getId());
+        buf.writeBoolean(hidden);
+
+        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.ENTITY_HIDDEN_SYNC, buf);
+        target.networkHandler.sendPacket(packet);
     }
 }
