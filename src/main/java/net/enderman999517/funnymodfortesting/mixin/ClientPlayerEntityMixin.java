@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin {
     ClientPlayerEntity entity = (ClientPlayerEntity)(Object) this;
+
     //@Inject(method = "tickMovement", at = @At("TAIL"))
     //private void resetEntityUseSpeed(CallbackInfo ci) {
     //    ClientPlayerEntity entity = (ClientPlayerEntity)(Object) this;

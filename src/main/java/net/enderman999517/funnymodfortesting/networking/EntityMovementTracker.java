@@ -10,6 +10,8 @@ import java.util.UUID;
 public class EntityMovementTracker {
     private static final HashMap<UUID, Vec3d> lastTickPos = new HashMap<>();
     private static final HashMap<UUID, Double> lastCalculatedSpeed = new HashMap<>();
+    private static final HashMap<UUID, Double> lastCalculatedDx = new HashMap<>();
+    private static final HashMap<UUID, Double> lastCalculatedDz = new HashMap<>();
 
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
@@ -22,13 +24,20 @@ public class EntityMovementTracker {
                     double dz = currentPos.z - last.z;
                     double horizontalSpeed = Math.sqrt(dx * dx + dz * dz);
                     lastCalculatedSpeed.put(id, horizontalSpeed);
+                    lastCalculatedDx.put(id, dx);
+                    lastCalculatedDz.put(id, dz);
                 }
                 lastTickPos.put(id, currentPos);
             }
         });
     }
-
     public static double getHSpeed(UUID id) {
         return lastCalculatedSpeed.getOrDefault(id, 0.0);
+    }
+    public static double getDx(UUID id) {
+        return lastCalculatedDx.getOrDefault(id, 0.0);
+    }
+    public static double getDz(UUID id) {
+        return lastCalculatedDz.getOrDefault(id, 0.0);
     }
 }

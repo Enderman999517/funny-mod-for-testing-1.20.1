@@ -13,17 +13,16 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 
 public class SpearItem extends SwordItem {
     private final float speedScale;
     private final float maxExtraDamage;
     private boolean canDoExtraDamage = false;
 
-    public SpearItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings, float speedScale, float maxDamage) {
+    public SpearItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings, float speedScale, float maxExtraDamage) {
         super(toolMaterial, attackDamage, attackSpeed, settings);
         this.speedScale = speedScale;
-        this.maxExtraDamage = maxDamage;
+        this.maxExtraDamage = maxExtraDamage;
     }
 
     @Override
