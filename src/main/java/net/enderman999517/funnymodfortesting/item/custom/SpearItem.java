@@ -44,39 +44,6 @@ public class SpearItem extends SwordItem {
         return super.postHit(stack, target, attacker);
     }
 
-    //@Override
-    //public UseAction getUseAction(ItemStack stack) {
-    //    return UseAction.SPEAR;
-    //}
-//
-    //@Override
-    //public int getMaxUseTime(ItemStack stack) {
-    //    return 72000;
-    //}
-//
-    //@Override
-    //public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-    //    ItemStack itemStack = user.getStackInHand(hand);
-    //    user.setCurrentHand(hand);
-    //    this.canDoExtraDamage = true;
-    //    user.getItemCooldownManager().set(this, 20);
-    //    user.setMovementSpeed((float) (Math.sqrt(user.getVelocity().x * user.getVelocity().x + user.getVelocity().z * user.getVelocity().z) + 1000));
-    //    return TypedActionResult.consume(itemStack);
-    //}
-//
-    //@Override
-    //public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-    //    this.canDoExtraDamage = false;
-    //    super.onStoppedUsing(stack, world, user, remainingUseTicks);
-    //}
-
-
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        user.setCurrentHand(hand);
-        return TypedActionResult.consume(user.getStackInHand(hand));
-    }
-
     @Override
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.SPEAR;
@@ -85,5 +52,20 @@ public class SpearItem extends SwordItem {
     @Override
     public int getMaxUseTime(ItemStack stack) {
         return 72000;
+    }
+
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack itemStack = user.getStackInHand(hand);
+        user.setCurrentHand(hand);
+        this.canDoExtraDamage = true;
+        user.getItemCooldownManager().set(this, 20);
+        return TypedActionResult.consume(itemStack);
+    }
+
+    @Override
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        this.canDoExtraDamage = false;
+        super.onStoppedUsing(stack, world, user, remainingUseTicks);
     }
 }
