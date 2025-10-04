@@ -5,7 +5,7 @@
 	"mixins": [
 		"EnchantmentTargetWeaponMixin",
 		"EntityNbtMixin",
-		"PlayerEntityMixin"
+		"ClientPlayerEntityMixin"
 	],
 	"client": [
 		"ItemRendererAccessor",
