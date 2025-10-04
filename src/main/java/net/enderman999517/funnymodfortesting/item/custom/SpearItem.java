@@ -2,8 +2,10 @@ package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
 import net.enderman999517.funnymodfortesting.networking.EntityMovementTracker;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
@@ -12,17 +14,28 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class SpearItem extends SwordItem {
     private final float speedScale;
     private final float maxExtraDamage;
     private boolean canDoExtraDamage = false;
+    private final int maxChargedTicks;
+    private final double kbStrength;
+    private final int maxUseTime;
 
-    public SpearItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings, float speedScale, float maxExtraDamage) {
+    public int chargedTicks;
+
+    public SpearItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings, float speedScale, float maxExtraDamage, int maxChargedTicks, double kbStrength, int maxUseTime) {
         super(toolMaterial, attackDamage, attackSpeed, settings);
         this.speedScale = speedScale;
         this.maxExtraDamage = maxExtraDamage;
+        this.maxChargedTicks = maxChargedTicks;
+        this.kbStrength = kbStrength;
+        this.maxUseTime = maxUseTime;
     }
 
     @Override
@@ -50,7 +63,7 @@ public class SpearItem extends SwordItem {
 
     @Override
     public int getMaxUseTime(ItemStack stack) {
-        return 72000;
+        return maxUseTime;
     }
 
     @Override
@@ -58,13 +71,43 @@ public class SpearItem extends SwordItem {
         ItemStack itemStack = user.getStackInHand(hand);
         user.setCurrentHand(hand);
         this.canDoExtraDamage = true;
-        user.getItemCooldownManager().set(this, 20);
+        user.getItemCooldownManager().set(this, maxChargedTicks);
         return TypedActionResult.consume(itemStack);
     }
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         this.canDoExtraDamage = false;
-        super.onStoppedUsing(stack, world, user, remainingUseTicks);
+    }
+
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        chargedTicks = getMaxUseTime(stack) - remainingUseTicks;
+
+        if (!user.getWorld().isClient) {
+            List<Entity> nearby = user.getWorld().getOtherEntities(
+                    user,
+                    new Box(user.raycast(2, 1, true).getPos(), user.raycast(2,1,true).getPos()).expand(0.1),
+                    e -> e != user && e !=user.getControllingVehicle()
+            );
+            for (Entity other : nearby) {
+                if (other instanceof LivingEntity otherL) {
+                    if (chargedTicks <= maxChargedTicks) {
+                        double hSpeed = EntityMovementTracker.getHSpeed(user.getUuid()) - EntityMovementTracker.getHSpeed(otherL.getUuid());
+                        double closingX = EntityMovementTracker.getDx(user.getUuid()) - EntityMovementTracker.getDx(otherL.getUuid());
+                        double closingZ = EntityMovementTracker.getDz(user.getUuid()) - EntityMovementTracker.getDz(otherL.getUuid());
+                        float extra = (float) Math.min(maxExtraDamage, hSpeed * speedScale) * 2 * ((float) (-chargedTicks + maxChargedTicks) / maxChargedTicks);
+                        if (extra > 5f) {
+                            DamageSource source = new DamageSource(
+                                    user.getWorld().getRegistryManager()
+                                            .get(RegistryKeys.DAMAGE_TYPE)
+                                            .entryOf(DamageTypes.PLAYER_ATTACK));
+                            otherL.damage(source, extra);
+                            otherL.takeKnockback(kbStrength, -closingX, -closingZ);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
