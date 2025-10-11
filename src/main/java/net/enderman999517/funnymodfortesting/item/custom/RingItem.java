@@ -8,10 +8,19 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RingItem extends Item {
+    private int shaderMode;
+    private final List<RingCallback> callbacks = new ArrayList<>();
 
     public RingItem(Settings settings) {
         super(settings);
+    }
+
+    public void registerRingCallback(RingCallback callback) {
+        this.callbacks.add(callback);
     }
 
     @Override
@@ -20,6 +29,7 @@ public class RingItem extends Item {
             if (user instanceof ModEntityData modEntityData) {
                 modEntityData.setHidden(!modEntityData.isHidden());
                 modEntityData.setRenderingOverlay(!modEntityData.isRenderingOverlay());
+                this.callbacks.get(shaderMode).use(world, user, hand);
             }
             return TypedActionResult.success(user.getStackInHand(hand), false);
         } return TypedActionResult.success(user.getStackInHand(hand), true);

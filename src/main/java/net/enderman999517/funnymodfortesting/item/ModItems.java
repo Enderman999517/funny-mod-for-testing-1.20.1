@@ -18,6 +18,7 @@ import net.minecraft.util.Identifier;
 public class ModItems {
 
     // for shader stuff triggered by items, add as below and add to registerModItems()
+    // or just cast it in client i think
     public static final DebugItem DEBUG_ITEM = new DebugItem(new Item.Settings());
     public static final BlockItem DEBUG_BLOCK = new BlockItem(ModBlocks.DEBUG_BLOCK, new Item.Settings());
     public static final NvgItem NVG_GOGGLES = new NvgItem(new Item.Settings());

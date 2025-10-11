@@ -10,6 +10,7 @@ import net.enderman999517.funnymodfortesting.entity.client.AmoghRenderer;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.item.custom.RingItem;
 import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
 import net.enderman999517.funnymodfortesting.networking.ModNetworking;
 import net.enderman999517.funnymodfortesting.render.ChargedPlayerRenderFeature;
@@ -46,6 +47,10 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     public boolean renderingBlit = false;
     private static final ManagedShaderEffect testShader = ShaderEffectManager.getInstance().manage(new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/blit.json"));
     private static final Uniform4f color = testShader.findUniform4f("ColorModulate");
+
+    public boolean renderingWarp = false;
+    private static final ManagedShaderEffect warpShader = ShaderEffectManager.getInstance().manage(new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/warp.json"));
+    private static final Uniform4f colorW = warpShader.findUniform4f("ColorModulate");
 
     public void registerModelPredicateProviders() {
         ModelPredicateProviderRegistry.register(ModItems.SCYTHE, new Identifier("effects"), (itemStack, clientWorld, livingEntity, seed) -> {
@@ -104,5 +109,14 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             color.set(1.0f, 1.0f, 1.0f, 1.0f);
         });
 
+        ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
+            if (renderingWarp) {
+                warpShader.render(tickDelta);
+            }
+        });
+        ((RingItem) ModItems.RING).registerRingCallback((world, player, hand) -> {
+            renderingWarp = !renderingWarp;
+            colorW.set(1.0f, 1.0f, 1.0f, 1.0f);
+        });
     }
 }
