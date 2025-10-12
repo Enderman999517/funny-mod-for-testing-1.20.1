@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting;
 
+import ladysnake.satin.api.event.PostWorldRenderCallback;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
@@ -18,6 +19,7 @@ import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreen;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -75,6 +77,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         ModModelLayers.registerModelLayers();
         registerModelPredicateProviders();
         ModNetworking.register();
+        ClientTickEvents.END_CLIENT_TICK.register(DepthFx.INSTANCE);
+        PostWorldRenderCallback.EVENT.register(DepthFx.INSTANCE);
 
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {

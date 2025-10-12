@@ -23,6 +23,7 @@ import org.joml.Matrix4f;
 
 public class DepthFx implements PostWorldRenderCallback, ShaderEffectRenderCallback, ClientTickEvents.EndTick {
     public static final Identifier FANCY_NIGHT_SHADER_ID = new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/rainbow_ping.json");
+    public static final Identifier WARP_ID = new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/warp.json");
     public static final DepthFx INSTANCE = new DepthFx();
 
     private final MinecraftClient mc = MinecraftClient.getInstance();
@@ -31,7 +32,12 @@ public class DepthFx implements PostWorldRenderCallback, ShaderEffectRenderCallb
         shader.setSamplerUniform("DepthSampler", ((ReadableDepthFramebuffer)mc.getFramebuffer()).getStillDepthMap());
         shader.setUniformValue("ViewPort", 0, 0, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight());
     });
+    public final ManagedShaderEffect warpShader = ShaderEffectManager.getInstance().manage(WARP_ID, shader -> {
+        shader.setSamplerUniform("DepthSampler", ((ReadableDepthFramebuffer)mc.getFramebuffer()).getStillDepthMap());
+        shader.setUniformValue("ViewPort", 0, 0, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight());
+    });
     private final Uniform1f uniformSTime = testShader.findUniform1f("STime");
+    private final Uniform1f uniformWarpSTime = warpShader.findUniform1f("STime");
     private final UniformMat4 uniformInverseTransformMatrix = testShader.findUniformMat4("InverseTransformMatrix");
     private final Uniform3f uniformCameraPosition = testShader.findUniform3f("CameraPosition");
     private final Uniform3f uniformCenter = testShader.findUniform3f("Center");
@@ -59,19 +65,21 @@ public class DepthFx implements PostWorldRenderCallback, ShaderEffectRenderCallb
     @Override
     public void onWorldRendered(Camera camera, float tickDelta, long nanoTime) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (isWorldNight(mc.player)) {
-            uniformSTime.set((ticks + tickDelta) / 20f);
-            uniformInverseTransformMatrix.set(GlMatrices.getInverseTransformMatrix(projectionMatrix));
-            Vec3d cameraPos = camera.getPos();
-            uniformCameraPosition.set((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z);
-            Entity e = camera.getFocusedEntity();
-            uniformCenter.set(lerpf(e.getX(), e.prevX, tickDelta), lerpf(e.getY(), e.prevY, tickDelta), lerpf(e.getZ(), e.prevZ, tickDelta));
-        }
+        //if (isWorldNight(mc.player)) {
+        //    uniformSTime.set((ticks + tickDelta) / 20f);
+        //    uniformInverseTransformMatrix.set(GlMatrices.getInverseTransformMatrix(projectionMatrix));
+        //    Vec3d cameraPos = camera.getPos();
+        //    uniformCameraPosition.set((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z);
+        //    Entity e = camera.getFocusedEntity();
+        //    uniformCenter.set(lerpf(e.getX(), e.prevX, tickDelta), lerpf(e.getY(), e.prevY, tickDelta), lerpf(e.getZ(), e.prevZ, tickDelta));
+        //}
+        uniformWarpSTime.set((ticks + tickDelta) / 20f);
     }
 
     @Override
     public void renderShaderEffects(float tickDelta) {
         testShader.render(tickDelta);
+        warpShader.render(tickDelta);
     }
 
     private static float lerpf(double n, double prevN, float tickDelta) {
