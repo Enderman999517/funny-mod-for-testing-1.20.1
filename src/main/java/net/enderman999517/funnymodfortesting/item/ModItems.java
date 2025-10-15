@@ -18,10 +18,10 @@ import net.minecraft.util.Identifier;
 public class ModItems {
 
     // for shader stuff triggered by items, add as below and add to registerModItems()
-    // or just cast it in client i think
     public static final DebugItem DEBUG_ITEM = new DebugItem(new Item.Settings());
     public static final BlockItem DEBUG_BLOCK = new BlockItem(ModBlocks.DEBUG_BLOCK, new Item.Settings());
     public static final NvgItem NVG_GOGGLES = new NvgItem(new Item.Settings());
+    public static final RingItem RING = new RingItem(new Item.Settings());
 
 
     //custom
@@ -39,8 +39,6 @@ public class ModItems {
     public static final Item STIM = registerItem("stim",
             new StimItem(new FabricItemSettings().maxCount(1).maxDamage(64), true, ModDamageSources.STIM_DAMAGE,1,
                     false, true, true, 1, false, 1 -5, 2 -4));
-    public static final Item RING = registerItem("ring",
-            new RingItem(new FabricItemSettings()));
     public static final Item SPEAR = registerItem("spear",
             new SpearItem(ToolMaterials.IRON, 2, 0.8f, new FabricItemSettings(), 23, 100, 50, 0.5, 200));
 
@@ -67,6 +65,7 @@ public class ModItems {
         FunnyModForTesting.LOGGER.info("Registering Mod Items for " + FunnyModForTesting.MOD_ID);
         Registry.register(Registries.ITEM, new Identifier(FunnyModForTesting.MOD_ID, "debug_item"), DEBUG_ITEM);
         Registry.register(Registries.ITEM, new Identifier(FunnyModForTesting.MOD_ID, "nvg_goggles"), NVG_GOGGLES);
+        Registry.register(Registries.ITEM, new Identifier(FunnyModForTesting.MOD_ID, "ring"), RING);
         Registry.register(Registries.ITEM, Registries.BLOCK.getId(ModBlocks.DEBUG_BLOCK), DEBUG_BLOCK);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(ModItems::addItemsToSpawnEggItemGroup);
     }

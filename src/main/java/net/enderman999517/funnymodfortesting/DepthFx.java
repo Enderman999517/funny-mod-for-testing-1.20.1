@@ -6,6 +6,7 @@ import ladysnake.satin.api.experimental.ReadableDepthFramebuffer;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
 import ladysnake.satin.api.managed.uniform.Uniform1f;
+import ladysnake.satin.api.managed.uniform.Uniform1i;
 import ladysnake.satin.api.managed.uniform.Uniform3f;
 import ladysnake.satin.api.managed.uniform.UniformMat4;
 import ladysnake.satin.api.util.GlMatrices;
@@ -38,6 +39,7 @@ public class DepthFx implements PostWorldRenderCallback, ShaderEffectRenderCallb
     });
     private final Uniform1f uniformSTime = testShader.findUniform1f("STime");
     private final Uniform1f uniformWarpSTime = warpShader.findUniform1f("STime");
+    private final Uniform1i uniformWarpRendering = warpShader.findUniform1i("Rendering");
     private final UniformMat4 uniformInverseTransformMatrix = testShader.findUniformMat4("InverseTransformMatrix");
     private final Uniform3f uniformCameraPosition = testShader.findUniform3f("CameraPosition");
     private final Uniform3f uniformCenter = testShader.findUniform3f("Center");
@@ -69,16 +71,19 @@ public class DepthFx implements PostWorldRenderCallback, ShaderEffectRenderCallb
         //    uniformSTime.set((ticks + tickDelta) / 20f);
         //    uniformInverseTransformMatrix.set(GlMatrices.getInverseTransformMatrix(projectionMatrix));
         //    Vec3d cameraPos = camera.getPos();
-        //    uniformCameraPosition.set((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z);
+        //    uniformCameraPosition.set((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z); .
         //    Entity e = camera.getFocusedEntity();
         //    uniformCenter.set(lerpf(e.getX(), e.prevX, tickDelta), lerpf(e.getY(), e.prevY, tickDelta), lerpf(e.getZ(), e.prevZ, tickDelta));
         //}
-        uniformWarpSTime.set((ticks + tickDelta) / 20f);
+        if (FunnyModForTestingClient.renderingWarp) {
+            uniformWarpRendering.set(1);
+            uniformWarpSTime.set((ticks + tickDelta) / 20f);
+        } else uniformWarpRendering.set(0);
     }
 
     @Override
     public void renderShaderEffects(float tickDelta) {
-        testShader.render(tickDelta);
+        //testShader.render(tickDelta);
         warpShader.render(tickDelta);
     }
 

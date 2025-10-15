@@ -50,7 +50,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     private static final ManagedShaderEffect testShader = ShaderEffectManager.getInstance().manage(new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/blit.json"));
     private static final Uniform4f color = testShader.findUniform4f("ColorModulate");
 
-    public boolean renderingWarp = false;
+    public static boolean renderingWarp = false;
     private static final ManagedShaderEffect warpShader = ShaderEffectManager.getInstance().manage(new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/warp.json"));
     private static final Uniform4f colorW = warpShader.findUniform4f("ColorModulate");
 
@@ -78,6 +78,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         registerModelPredicateProviders();
         ModNetworking.register();
         ClientTickEvents.END_CLIENT_TICK.register(DepthFx.INSTANCE);
+        ShaderEffectRenderCallback.EVENT.register(DepthFx.INSTANCE);
         PostWorldRenderCallback.EVENT.register(DepthFx.INSTANCE);
 
 
@@ -118,9 +119,10 @@ public class FunnyModForTestingClient implements ClientModInitializer {
                 warpShader.render(tickDelta);
             }
         });
-        ((RingItem) ModItems.RING).registerRingCallback((world, player, hand) -> {
-            renderingWarp = !renderingWarp;
-            colorW.set(1.0f, 1.0f, 1.0f, 1.0f);
+        ModItems.RING.registerRingCallback((world, player, hand) -> {
+            //if (world.isClient) {
+                renderingWarp = !renderingWarp;
+            //}
         });
     }
 }
