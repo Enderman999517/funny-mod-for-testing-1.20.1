@@ -6,7 +6,16 @@
     {
       "name": "funnymodfortesting:warp",
       "intarget": "minecraft:main",
-      "outtarget": "swap"
+      "outtarget": "swap",
+      "auxtargets": [
+        {
+          "name": "WarpBase",
+          "id": "funnymodfortesting:textures/misc/warpBase",
+          "bilinear": true,
+          "width": 16,
+          "height": 9
+        }
+      ]
     },
     {
       "name": "blit",

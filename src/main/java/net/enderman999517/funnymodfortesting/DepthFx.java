@@ -34,7 +34,6 @@ public class DepthFx implements PostWorldRenderCallback, ShaderEffectRenderCallb
         shader.setUniformValue("ViewPort", 0, 0, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight());
     });
     public final ManagedShaderEffect warpShader = ShaderEffectManager.getInstance().manage(WARP_ID, shader -> {
-        shader.setSamplerUniform("DepthSampler", ((ReadableDepthFramebuffer)mc.getFramebuffer()).getStillDepthMap());
         shader.setUniformValue("ViewPort", 0, 0, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight());
     });
     private final Uniform1f uniformSTime = testShader.findUniform1f("STime");
