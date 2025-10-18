@@ -10,10 +10,10 @@
       "auxtargets": [
         {
           "name": "WarpBase",
-          "id": "funnymodfortesting:textures/misc/warpBase",
+          "id": "dither",
           "bilinear": true,
-          "width": 16,
-          "height": 9
+          "width": 4,
+          "height": 4
         }
       ]
     },

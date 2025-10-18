@@ -131,7 +131,7 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
                 target.addStatusEffect(new StatusEffectInstance(effect));
             }
             clearEffectsFromNbt(stack);
-            attacker.getWorld().playSound(null, attacker.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_DEATH, SoundCategory.BLOCKS);
+            //attacker.getWorld().playSound(null, attacker.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_DEATH, SoundCategory.BLOCKS);
         }
         return super.postHit(stack, target, attacker);
     }

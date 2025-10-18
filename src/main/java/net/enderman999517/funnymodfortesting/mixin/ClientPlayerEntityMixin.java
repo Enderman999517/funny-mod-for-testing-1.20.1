@@ -17,30 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class ClientPlayerEntityMixin {
     ClientPlayerEntity entity = (ClientPlayerEntity)(Object) this;
 
-    //@Inject(method = "tickMovement", at = @At("TAIL"))
-    //private void resetEntityUseSpeed(CallbackInfo ci) {
-    //    ClientPlayerEntity entity = (ClientPlayerEntity)(Object) this;
-    //    if (entity.isUsingItem() && !entity.hasVehicle()) {
-    //        if (entity.getStackInHand(entity.getActiveHand()).isOf(ModItems.SPEAR)) {
-    //            float yaw = MathHelper.wrapDegrees(entity.getBodyYaw());
-    //            float forward =  entity.input.movementForward;
-    //            float side =  entity.input.movementSideways;
-    //            float normalForward = (float) (forward * Math.cos(Math.toRadians(yaw)) + side * Math.sin(Math.toRadians(yaw)));
-    //            float normalSide = (float) (forward * Math.sin(Math.toRadians(yaw)) + side * -Math.cos(Math.toRadians(yaw)));
-    //            float x;
-    //            float z;
-    //            x = -normalSide;
-    //            z = normalForward;
-    //            entity.input.movementForward *= 5;
-    //            entity.input.movementSideways *= 5;
-    //            entity.setVelocity(entity.getVelocity().x, entity.getVelocity().y, entity.getVelocity().z);
-    //            float f = MathHelper.clamp(0.3F + EnchantmentHelper.getSwiftSneakSpeedBoost(entity), 0.0F, 1.0F);
-    //            entity.input.tick(false, f);
-//
-    //        }
-    //    }
-    //}
-
     @Inject(
             method = "tickMovement",
             at = @At(

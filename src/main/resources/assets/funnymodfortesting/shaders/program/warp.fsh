@@ -176,17 +176,24 @@ uniform sampler2D WarpBase;
 
 
 void main() {
+    float r = 0.55;
+    float g = 0.85;
+    float b = 1.;
     float warpSpeed =0.3;
     float warpDistance =0.02;
     vec2 uv = texCoord;
     vec4 warpTex = texture(WarpBase,texCoord);
     vec3 offTexX = texture(WarpBase, uv).rgb;
-    vec3 luma = vec3(0.299, 0.587, 0.114);
+    vec3 luma = vec3(1.299, 0.587, 0.114);
     float powerX = dot(offTexX, luma);
     float powerY = dot(offTexX, luma);
 
+                        /*freq*/
     powerX = sin(3.1415927*2.0*mod(powerX+STime*warpSpeed, 1.));
     powerY = sin(3.1415927*2.0*mod(powerY+STime*warpSpeed, 1.));
-
-    fragColor = texture(DiffuseSampler, uv+Rendering*(vec2(powerY, powerX)*warpDistance));
+                                                /*amplitude*/
+    //fragColor = texture(DiffuseSampler, uv+Rendering*0.75*(vec2(powerY, powerX)*warpDistance));
+    vec4 tex = texture2D(DiffuseSampler, uv+Rendering*0.75*(vec2(powerY, powerX)*warpDistance));
+    //fragColor = vec4(tex.r+1.-pow(1.,Rendering),tex.g+1.-pow(g,Rendering),tex.b+1-pow(b,Rendering), 1.);
+    fragColor = vec4(tex.r*pow(r,Rendering),tex.g*pow(g,Rendering),tex.b*pow(b,Rendering), 1.);
 }

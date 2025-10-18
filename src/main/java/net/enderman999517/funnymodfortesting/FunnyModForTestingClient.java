@@ -21,6 +21,7 @@ import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
@@ -120,9 +121,11 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             }
         });
         ModItems.RING.registerRingCallback((world, player, hand) -> {
-            //if (world.isClient) {
                 renderingWarp = !renderingWarp;
-            //}
+        });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            renderingWarp = false;
         });
     }
 }

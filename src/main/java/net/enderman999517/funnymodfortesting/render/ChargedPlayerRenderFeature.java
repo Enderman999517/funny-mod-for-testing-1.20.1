@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class ChargedPlayerRenderFeature extends FeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
-    private static final Identifier SKIN = new Identifier("funnymodfortesting:textures/entity/player/player_charge.png"); //textures/entity/creeper/creeper_armor.png funnymodfortesting:textures/entity/player/player_charge.png
+    private static final Identifier SKIN = new Identifier("funnymodfortesting:textures/entity/player/player_charge.png");
     private final PlayerEntityModel<AbstractClientPlayerEntity> chargedModel;
 
     public ChargedPlayerRenderFeature(FeatureRendererContext<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> context, EntityModelLoader loader) {

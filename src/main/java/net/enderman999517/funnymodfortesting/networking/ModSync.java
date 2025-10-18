@@ -1,10 +1,15 @@
 package net.enderman999517.funnymodfortesting.networking;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -90,8 +95,8 @@ public class ModSync {
             ServerPlayerEntity player = handler.getPlayer();
 
             if (player instanceof ModEntityData modEntityData) {
-                modEntityData.setHidden(false);
-                modEntityData.setRenderingOverlay(false);
+                modEntityData.setHidden(modEntityData.isHidden());
+                modEntityData.setRenderingOverlay(modEntityData.isRenderingOverlay());
             }
         });
 
@@ -111,6 +116,9 @@ public class ModSync {
                 if (ticks >= 0) {
                     ServerPlayerEntity joiningPlayer = server.getPlayerManager().getPlayer(uuid);
                     if (joiningPlayer != null) {
+                        ModEntityData entityData = ((ModEntityData) joiningPlayer);
+                        syncHiddenFlag(joiningPlayer, entityData.isHidden(), joiningPlayer);
+                        syncOverlayFlag(joiningPlayer, entityData.isRenderingOverlay(), joiningPlayer);
                         reSyncAllVisibilityFor(joiningPlayer);
                         reSyncAllOverlayFor(joiningPlayer);
                     }
@@ -118,6 +126,27 @@ public class ModSync {
                 } else {
                     entry.setValue(ticks + 1);
                 }
+            }
+        });
+
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
+            if (player != null) {
+                ModEntityData entityData = ((ModEntityData) player);
+                syncHiddenFlag(player, entityData.isHidden(), player);
+                syncOverlayFlag(player, entityData.isRenderingOverlay(), player);
+            }
+        });
+
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+            if (newPlayer != null) {
+                ModEntityData oldData = ((ModEntityData) oldPlayer);
+                ModEntityData newData = ((ModEntityData) newPlayer);
+                newData.setHidden(oldData.isHidden());
+                newData.setRenderingOverlay(oldData.isRenderingOverlay());
+
+                ModEntityData entityData = ((ModEntityData) oldPlayer);
+                syncHiddenFlag(newPlayer, entityData.isHidden(), newPlayer);
+                syncOverlayFlag(newPlayer, entityData.isRenderingOverlay(), newPlayer);
             }
         });
     }
