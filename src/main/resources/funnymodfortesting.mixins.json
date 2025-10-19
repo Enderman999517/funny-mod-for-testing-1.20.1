@@ -6,7 +6,8 @@
 		"EnchantmentTargetWeaponMixin",
 		"EntityNbtMixin",
 		"ClientPlayerEntityMixin",
-		"ActiveTargetGoalMixin"
+		"MobEntityAccessor",
+		"ActiveTargetGoalAccessor"
 	],
 	"client": [
 		"ItemRendererAccessor",
