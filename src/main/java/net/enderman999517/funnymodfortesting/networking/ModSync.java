@@ -1,20 +1,12 @@
 package net.enderman999517.funnymodfortesting.networking;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
-import net.enderman999517.funnymodfortesting.mixin.ActiveTargetGoalAccessor;
-import net.enderman999517.funnymodfortesting.mixin.MobEntityAccessor;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -94,14 +86,14 @@ public class ModSync {
         });
     }
 
-    public static void checkFlags() {
+    public static void init() {
         final Map<UUID, Integer> resyncWaitTicks = new HashMap<>();
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
 
             if (player instanceof ModEntityData modEntityData) {
-                modEntityData.setHidden(modEntityData.isHidden());
-                modEntityData.setRenderingOverlay(modEntityData.isRenderingOverlay());
+                modEntityData.setHidden(false);
+                modEntityData.setRenderingOverlay(false);
             }
         });
 
@@ -155,72 +147,7 @@ public class ModSync {
                 syncOverlayFlag(newPlayer, entityData.isRenderingOverlay(), newPlayer);
             }
         });
-
-        //ServerTickEvents.END_WORLD_TICK.register(world -> {
-        //    for (MobEntity mob : world.getEntitiesByClass(MobEntity.class, world.getWorldBorder().asVoxelShape().getBoundingBox(), m -> m.getTarget() instanceof ServerPlayerEntity)) {
-        //        ServerPlayerEntity player = ((ServerPlayerEntity) mob.getTarget());
-        //        if (player instanceof ModEntityData modEntityData && modEntityData.isRenderingOverlay()) {
-        //            mob.setTarget(null);
-        //            FunnyModForTesting.LOGGER.error(String.valueOf(mob.getTarget()));
-        //        }
-        //    }
-        //});
-
-        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (!world.isClient && entity instanceof MobEntity mob) {
-                GoalSelector selector = ((MobEntityAccessor) mob).getTargetSelector();
-                selector.getGoals().removeIf(prioritizedGoal -> {
-                   if (prioritizedGoal.getGoal() instanceof ActiveTargetGoal<?> goal) {
-                       Class<?> target = ((ActiveTargetGoalAccessor<?>) goal).getTargetClass();
-                       return PlayerEntity.class.equals(target);
-                   }
-                   return false;
-                });
-                selector.add(2, new ActiveTargetGoal<PlayerEntity>(mob, PlayerEntity.class, true) {
-                    @Override
-                    public boolean canStart() {
-                        if (super.canStart()) {
-                            if (this.targetClass.equals(PlayerEntity.class)) {
-                                if (this.mob.getTarget() instanceof ServerPlayerEntity /*player && player instanceof ModEntityData modEntityData && modEntityData.isHidden()*/) {
-                                    FunnyModForTesting.LOGGER.error("a");
-                                    return false;
-                                }
-                            }
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-            }
-        });
-
-        //ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-        //    if (!world.isClient && entity instanceof HostileEntity hostile) {
-        //        GoalSelector selector = ((MobEntityAccessor) hostile).getTargetSelector();
-        //        selector.getGoals().removeIf(goal -> {
-        //            if (goal.getGoal() instanceof ActiveTargetGoal<?> goal1) {
-        //                Class<?> targetClass = ((ActiveTargetGoalAccessor<?>) goal1).getTargetClass();
-        //                FunnyModForTesting.LOGGER.error(String.valueOf(targetClass));
-        //                return targetClass == PlayerEntity.class;
-        //            } else return false;
-        //        });
-        //        selector.add(2, new CancelTargetGoal<>(hostile, PlayerEntity.class, true));
-        //    }
-        //});
     }
-
-    //public static void clearMobTarget(ServerPlayerEntity player) {
-    //    World world = player.getWorld();
-    //    Box range = player.getBoundingBox().expand(16);
-    //    List<MobEntity> mobs = world.getEntitiesByClass(MobEntity.class, range, mobEntity ->
-    //        mobEntity.getTarget() == player && player instanceof ModEntityData modEntityData && modEntityData.isHidden()
-    //    );
-    //    for (MobEntity mob : mobs) {
-    //        mob.setTarget(null);
-    //        FunnyModForTesting.LOGGER.error("a");
-    //    }
-    //}
-
 
     private static void reSyncAllVisibilityFor(ServerPlayerEntity joiningPlayer) {
         ServerWorld serverWorld = joiningPlayer.getServerWorld();

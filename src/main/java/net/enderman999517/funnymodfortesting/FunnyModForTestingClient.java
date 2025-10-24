@@ -11,7 +11,6 @@ import net.enderman999517.funnymodfortesting.entity.client.AmoghRenderer;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
-import net.enderman999517.funnymodfortesting.item.custom.RingItem;
 import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
 import net.enderman999517.funnymodfortesting.networking.ModNetworking;
 import net.enderman999517.funnymodfortesting.render.ChargedPlayerRenderFeature;
@@ -121,7 +120,9 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             }
         });
         ModItems.RING.registerRingCallback((world, player, hand) -> {
+            if (world.isClient) {
                 renderingWarp = !renderingWarp;
+            }
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {

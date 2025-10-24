@@ -24,11 +24,13 @@ public class RingItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if (world.isClient) {
+            this.callbacks.get(shaderMode).use(world, user, hand);
+        }
         if (!world.isClient) {
             if (user instanceof ModEntityData modEntityData) {
                 modEntityData.setHidden(!modEntityData.isHidden());
                 modEntityData.setRenderingOverlay(!modEntityData.isRenderingOverlay());
-                this.callbacks.get(shaderMode).use(world, user, hand);
             }
             return TypedActionResult.success(user.getStackInHand(hand), false);
         } return TypedActionResult.success(user.getStackInHand(hand), true);

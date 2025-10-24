@@ -40,7 +40,7 @@ public class FunnyModForTesting implements ModInitializer {
 		ModCommands.registerCommands();
 		ModDamageSources.registerDamageSources();
 		ModEnchantments.registerModEnchantments();
-		ModSync.checkFlags();
+		ModSync.init();
 		EntityMovementTracker.register();
 
 	}
