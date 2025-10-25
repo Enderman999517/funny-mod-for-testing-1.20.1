@@ -1,36 +1,20 @@
 package net.enderman999517.funnymodfortesting.block.entity;
 
-import com.mojang.serialization.Dynamic;
+import net.enderman999517.funnymodfortesting.FunnyModForTestingClient;
+import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SculkShriekerBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.event.Vibrations;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 public class GongBlockEntity extends BlockEntity {
-    private static final int MAX_RINGING_TICKS = 50;
-    private static final int MAX_RESONATING_TICKS = 40;
-    private static final int MAX_BELL_HEARING_DISTANCE = 32;
-    private long lastRingTime;
-    public int ringTicks;
-    public boolean ringing;
-    public Direction lastSideHit;
-    private boolean resonating;
-    private int resonateTime;
     private final int MAX_RING_TIMES = 3;
-    private int ringTimes = 0;
+    private final HashMap<UUID, Integer> ringTimes = new HashMap<>();
 
     public GongBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GONG_BLOCK_ENTITY, pos, state);
@@ -108,30 +92,23 @@ public class GongBlockEntity extends BlockEntity {
     //}
 
     public void incrementRings(World world, BlockPos pos, PlayerEntity player) {
-        ringTimes++;
-        if (ringTimes <= 2) {
-            world.playSound(null, pos, SoundEvents.ENTITY_EVOKER_CAST_SPELL, SoundCategory.BLOCKS);
-        }
-        if (ringTimes >= MAX_RING_TIMES) {
+        UUID id = player.getUuid();
+        int count = ringTimes.getOrDefault(id, 0) +1;
+
+        if (count < MAX_RING_TIMES) {
+            ringTimes.put(id, count);
+            player.sendMessage(Text.literal("a"));
+        } else {
             triggerEvent(world, pos, player);
-            ringTimes = 0;
+            ringTimes.put(id, 0);
         }
-        markDirty();
     }
 
     private void triggerEvent(World world, BlockPos pos, PlayerEntity player) {
-        world.playSound(null, pos, SoundEvents.ITEM_TRIDENT_THUNDER, SoundCategory.BLOCKS);
-    }
-
-    @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putInt("ringTimes", ringTimes);
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        ringTimes = nbt.getInt("ringTimes");
+        //player.playSound(SoundEvents.ITEM_TRIDENT_THUNDER, SoundCategory.BLOCKS, 1f, 1f);
+        if (player instanceof ModEntityData modEntityData) {
+            modEntityData.setHidden(true);
+            modEntityData.setRenderingOverlay(true);
+        }
     }
 }

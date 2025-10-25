@@ -128,5 +128,11 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             renderingWarp = false;
         });
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player instanceof ModEntityData modEntityData) {
+                renderingWarp = modEntityData.isRenderingOverlay();
+            }
+        });
     }
 }
