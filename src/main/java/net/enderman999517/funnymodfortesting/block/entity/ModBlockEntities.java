@@ -17,6 +17,10 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(FunnyModForTesting.MOD_ID, "compactor_be"),
                     FabricBlockEntityTypeBuilder.create(CompactorBlockEntity::new,
                             ModBlocks.COMPACTOR).build());
+    public static final BlockEntityType<GongBlockEntity> GONG_BLOCK_ENTITY =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(FunnyModForTesting.MOD_ID, "gong_be"),
+                    FabricBlockEntityTypeBuilder.create(GongBlockEntity::new,
+                            ModBlocks.GONG).build());
 
 
     public static void registerBlockEntities() {

@@ -1,10 +1,7 @@
 package net.enderman999517.funnymodfortesting.block;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
-import net.enderman999517.funnymodfortesting.block.custom.BrainrotifierBlock;
-import net.enderman999517.funnymodfortesting.block.custom.CompactorBlock;
-import net.enderman999517.funnymodfortesting.block.custom.HappyMelonBlock;
-import net.enderman999517.funnymodfortesting.block.custom.LtfBlock;
+import net.enderman999517.funnymodfortesting.block.custom.*;
 import net.enderman999517.funnymodfortesting.sound.ModSounds;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -43,6 +40,8 @@ public class ModBlocks {
             new BrainrotifierBlock(FabricBlockSettings.copyOf(Blocks.SLIME_BLOCK).nonOpaque()));
     public static final Block COMPACTOR = registerBlock("compactor",
             new CompactorBlock(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK).nonOpaque()));
+    public static final Block GONG = registerBlock("gong",
+            new GongBlock(FabricBlockSettings.copyOf(Blocks.BELL).nonOpaque()));
 
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);
