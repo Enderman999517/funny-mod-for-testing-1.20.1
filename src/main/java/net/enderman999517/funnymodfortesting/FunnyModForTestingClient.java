@@ -5,6 +5,8 @@ import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
 import ladysnake.satin.api.managed.uniform.Uniform4f;
+import net.enderman999517.funnymodfortesting.block.entity.ModBlockEntities;
+import net.enderman999517.funnymodfortesting.block.entity.renderer.GongBlockEntityRenderer;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.client.AmoghModel;
 import net.enderman999517.funnymodfortesting.entity.client.AmoghRenderer;
@@ -27,6 +29,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRe
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -80,6 +83,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(DepthFx.INSTANCE);
         ShaderEffectRenderCallback.EVENT.register(DepthFx.INSTANCE);
         PostWorldRenderCallback.EVENT.register(DepthFx.INSTANCE);
+
+        BlockEntityRendererFactories.register(ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntityRenderer::new);
 
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {

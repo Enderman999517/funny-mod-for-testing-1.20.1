@@ -1,4 +1,4 @@
-// 1.20.1	2025-10-25T02:28:30.5347073	Funny Mod For Testing/Model Definitions
+// 1.20.1	2025-10-26T01:02:27.5510121	Funny Mod For Testing/Model Definitions
 0449566660d83c9ae4fc2bb4edd48c3975504977 assets\funnymodfortesting\blockstates\showcase_block_w.json
 0fef1fc6eaa82df73ad096f75fd67f958d7013d0 assets\funnymodfortesting\models\item\overpowered.json
 322c26622c74bf626645b7fd9978b96d08602dfc assets\funnymodfortesting\models\item\ring.json
@@ -8,8 +8,8 @@ a14ab8bce7a869731fe0b6bb467793e8cbb1d4ac assets\funnymodfortesting\blockstates\l
 52f6251ab871e279122e40fe7ac3792505bdb6a5 assets\funnymodfortesting\models\item\brainrotifier.json
 ae217626eb5be0d9fa032becc72e85ed0534e7c7 assets\funnymodfortesting\models\item\amogh_essence.json
 8a2108ceeca5265f93950d898b2bcf1b80fcdd01 assets\funnymodfortesting\models\item\showcase_block_w.json
-abb3b3a8d32ae2bafe90ddb077588db0d9b7a740 assets\funnymodfortesting\blockstates\brainrotifier.json
 ebde2130c226c8a664f2ae49e3367d21facb1b6d assets\funnymodfortesting\blockstates\gong.json
+abb3b3a8d32ae2bafe90ddb077588db0d9b7a740 assets\funnymodfortesting\blockstates\brainrotifier.json
 f22c7aa9da68a684a2f91f3eff611a5bf01e26be assets\funnymodfortesting\models\item\torch_gun.json
 756b9d4d3e7a10814259752da9ed87d0bee1b089 assets\funnymodfortesting\models\item\compactor.json
 3f998b0fc0763cf4f13da7c15e02606c6432df0b assets\funnymodfortesting\models\item\stim.json
