@@ -44,7 +44,7 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof GongBlockEntity gong) {
                 gong.incrementRings(world, pos, player);
-                gong.swing();
+                gong.startSwing();
             }
         }
         return ActionResult.SUCCESS;

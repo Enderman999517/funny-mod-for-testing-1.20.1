@@ -36,14 +36,14 @@ public class GongBlockEntity extends BlockEntity {
         }
     }
 
-    public void swing() {
+    public void startSwing() {
         swinging = true;
         swingTicks = 0;
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, GongBlockEntity be) {
         if (be.swinging) {
-            FunnyModForTesting.LOGGER.error("swingticks: " + be.swingTicks);
+            //FunnyModForTesting.LOGGER.error("swingticks: " + be.swingTicks);
             be.swingTicks ++;
             if (be.swingTicks > MAX_SWING_TICKS) {
                 be.swinging = false;
@@ -60,9 +60,9 @@ public class GongBlockEntity extends BlockEntity {
         }
     }
 
-    public float getSwingAngle(float tickDelta) {
-        if (!swinging) return 0f;
-        FunnyModForTesting.LOGGER.error("swingTicks: " + swingTicks);
-        return (float) Math.sin((swingTicks + tickDelta) / 4.0) * 150.0f;
+    public float getSwingAngle(float tickDelta, GongBlockEntity entity) {
+        //if (!entity.swinging) return 0f;
+        FunnyModForTesting.LOGGER.error("swingTicks + tickdelta : " + entity.swingTicks);
+        return (float) Math.sin((entity.swingTicks + tickDelta) / 4.0) * 20.0f;
     }
 }
