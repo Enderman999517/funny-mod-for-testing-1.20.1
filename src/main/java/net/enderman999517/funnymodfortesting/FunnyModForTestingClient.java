@@ -23,6 +23,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
@@ -74,7 +75,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.STATUS_EFFECT_PROJECTILE, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.BLOCK_PLACING_PROJECTILE, FlyingItemEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.AMOGH, AmoghModel::getTexturedModelData);
-        EntityModelLayerRegistry.registerModelLayer(ModModelLayers.GONG, GongBlockEntityRenderer::getTexturedModelData);
+        //EntityModelLayerRegistry.registerModelLayer(ModModelLayers.GONG, GongBlockEntityRenderer::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.AMOGH, AmoghRenderer::new);
         HandledScreens.register(ModScreenHandlers.BRAINROTTING_SCREEN_HANDLER, BrainrottingScreen::new);
         HandledScreens.register(ModScreenHandlers.COMPACTING_SCREEN_HANDLER, CompactingScreen::new);

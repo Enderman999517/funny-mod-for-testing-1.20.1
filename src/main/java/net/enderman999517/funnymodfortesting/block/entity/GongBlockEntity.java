@@ -2,11 +2,14 @@ package net.enderman999517.funnymodfortesting.block.entity;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -15,9 +18,10 @@ import java.util.UUID;
 public class GongBlockEntity extends BlockEntity {
     private final int MAX_RING_TIMES = 3;
     private final HashMap<UUID, Integer> ringTimes = new HashMap<>();
-    private int swingTicks = 0;
+    public int swingTicks = 0;
+    public static final int MAX_SWING_TICKS = 40;
+    public Direction swingDir = Direction.NORTH;
     private boolean swinging = false;
-    private static final int MAX_SWING_TICKS = 40;
 
     public GongBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GONG_BLOCK_ENTITY, pos, state);
@@ -36,20 +40,47 @@ public class GongBlockEntity extends BlockEntity {
         }
     }
 
-    public void startSwing() {
-        swinging = true;
-        swingTicks = 0;
+    public void startSwing(Direction dir) {
+        this.swinging = true;
+        this.swingDir = dir;
+        this.swingTicks = 0;
+        if (!world.isClient) {
+            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+        }
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, GongBlockEntity be) {
-        if (be.swinging) {
-            //FunnyModForTesting.LOGGER.error("swingticks: " + be.swingTicks);
-            be.swingTicks ++;
-            if (be.swingTicks > MAX_SWING_TICKS) {
-                be.swinging = false;
-                be.swingTicks = 0;
+    public static void clientTick(World world, BlockPos pos, BlockState state, GongBlockEntity be) {
+        if (be.swingTicks < MAX_SWING_TICKS) {
+            if (be.swinging) {
+                FunnyModForTesting.LOGGER.error("cswt: {}", be.swingTicks);
+                be.swingTicks++;
+                FunnyModForTesting.LOGGER.error("asdklfh");
+                markDirty(world, pos, state);
             }
         }
+    }
+
+    public static void serverTick(World world, BlockPos pos, BlockState state, GongBlockEntity be) {
+        if (be.swingTicks < MAX_SWING_TICKS) {
+            if (be.swinging) {
+                FunnyModForTesting.LOGGER.error("sswt: {}", be.swingTicks);
+                be.swingTicks++;
+            }
+        }
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        nbt.putInt("SwingTicks", swingTicks);
+        nbt.putInt("Dir", swingDir.getId());
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        swingTicks = nbt.getInt("SwingTicks");
+        swingDir = Direction.byId(nbt.getInt("Dir"));
     }
 
     private void triggerEvent(World world, BlockPos pos, PlayerEntity player) {
