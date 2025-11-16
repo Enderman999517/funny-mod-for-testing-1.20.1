@@ -35,7 +35,7 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
@@ -53,8 +53,6 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
 
-        return world.isClient
-                ? checkType(type, ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntity::clientTick)
-                : checkType(type, ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntity::serverTick);
+        return checkType(type, ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntity::tick);
     }
 }

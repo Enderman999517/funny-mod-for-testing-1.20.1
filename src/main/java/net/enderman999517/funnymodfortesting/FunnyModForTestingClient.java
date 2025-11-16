@@ -11,6 +11,7 @@ import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.client.AmoghModel;
 import net.enderman999517.funnymodfortesting.entity.client.AmoghRenderer;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
+import net.enderman999517.funnymodfortesting.entity.client.ModModels;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
@@ -75,7 +76,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.STATUS_EFFECT_PROJECTILE, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.BLOCK_PLACING_PROJECTILE, FlyingItemEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.AMOGH, AmoghModel::getTexturedModelData);
-        //EntityModelLayerRegistry.registerModelLayer(ModModelLayers.GONG, GongBlockEntityRenderer::getTexturedModelData);
+        //EntityModelLayerRegistry.registerModelLayer(ModModelLayers.GONG, ModModels::getGongexturedModelData);
         EntityRendererRegistry.register(ModEntities.AMOGH, AmoghRenderer::new);
         HandledScreens.register(ModScreenHandlers.BRAINROTTING_SCREEN_HANDLER, BrainrottingScreen::new);
         HandledScreens.register(ModScreenHandlers.COMPACTING_SCREEN_HANDLER, CompactingScreen::new);

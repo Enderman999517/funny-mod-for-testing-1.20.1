@@ -41,47 +41,44 @@ public class GongBlockEntity extends BlockEntity {
     }
 
     public void startSwing(Direction dir) {
-        this.swinging = true;
-        this.swingDir = dir;
-        this.swingTicks = 0;
+        swinging = true;
+        swingDir = dir;
+        swingTicks = 0;
+        markDirty();
         if (!world.isClient) {
             world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
         }
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, GongBlockEntity be) {
-        if (be.swingTicks < MAX_SWING_TICKS) {
-            if (be.swinging) {
-                FunnyModForTesting.LOGGER.error("cswt: {}", be.swingTicks);
-                be.swingTicks++;
-                FunnyModForTesting.LOGGER.error("asdklfh");
-                markDirty(world, pos, state);
+    //public static void clientTick(World world, BlockPos pos, BlockState state, GongBlockEntity be) {
+    //    if (be.swingTicks < MAX_SWING_TICKS) {
+    //        if (be.swinging) {
+    //            FunnyModForTesting.LOGGER.error("cswt: {}", be.swingTicks);
+    //            be.swingTicks++;
+    //            FunnyModForTesting.LOGGER.error("asdklfh");
+    //            markDirty(world, pos, state);
+    //        }
+    //    }
+    //}
+//
+    //public static void serverTick(World world, BlockPos pos, BlockState state, GongBlockEntity be) {
+    //    if (be.swingTicks < MAX_SWING_TICKS) {
+    //        if (be.swinging) {
+    //            FunnyModForTesting.LOGGER.error("sswt: {}", be.swingTicks);
+    //            be.swingTicks++;
+    //        }
+    //    }
+    //}
+
+    public static void tick(World world, BlockPos pos, BlockState state, GongBlockEntity blockEntity) {
+        if (blockEntity.swinging) {
+            if (blockEntity.swingTicks < MAX_SWING_TICKS) {
+                blockEntity.swingTicks++;
+                blockEntity.markDirty();
             }
         }
     }
 
-    public static void serverTick(World world, BlockPos pos, BlockState state, GongBlockEntity be) {
-        if (be.swingTicks < MAX_SWING_TICKS) {
-            if (be.swinging) {
-                FunnyModForTesting.LOGGER.error("sswt: {}", be.swingTicks);
-                be.swingTicks++;
-            }
-        }
-    }
-
-    @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putInt("SwingTicks", swingTicks);
-        nbt.putInt("Dir", swingDir.getId());
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        swingTicks = nbt.getInt("SwingTicks");
-        swingDir = Direction.byId(nbt.getInt("Dir"));
-    }
 
     private void triggerEvent(World world, BlockPos pos, PlayerEntity player) {
         //player.playSound(SoundEvents.ITEM_TRIDENT_THUNDER, SoundCategory.BLOCKS, 1f, 1f);

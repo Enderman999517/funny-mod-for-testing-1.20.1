@@ -13,12 +13,13 @@ public class ModModelLayers {
             new EntityModelLayer(new Identifier(FunnyModForTesting.MOD_ID, "amogh"), "main");
     public static final EntityModelLayer PLAYER_CHARGED =
             new EntityModelLayer(new Identifier(FunnyModForTesting.MOD_ID, "player_charged"), "main");
-    //public static final EntityModelLayer GONG =
-    //        new EntityModelLayer(new Identifier(FunnyModForTesting.MOD_ID, "bell"), "main");
+    public static final EntityModelLayer GONG =
+            new EntityModelLayer(new Identifier(FunnyModForTesting.MOD_ID, "gong"), "main");
 
     public static void registerModelLayers() {
         EntityModelLayerRegistry.registerModelLayer(PLAYER_CHARGED, () ->
                 TexturedModelData.of(PlayerEntityModel.getTexturedModelData(new Dilation(2f), false), 64, 64)
         );
+        EntityModelLayerRegistry.registerModelLayer(GONG, ModModels::getGongexturedModelData);
     }
 }
