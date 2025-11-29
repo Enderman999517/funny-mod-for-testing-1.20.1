@@ -29,7 +29,7 @@ public class ModModelProvider extends FabricModelProvider {
         //block entities
         blockStateModelGenerator.registerSimpleState(ModBlocks.BRAINROTIFIER);
         blockStateModelGenerator.registerSimpleState(ModBlocks.COMPACTOR);
-        blockStateModelGenerator.registerSimpleState(ModBlocks.GONG);
+        //blockStateModelGenerator.registerSimpleState(ModBlocks.GONG);
     }
 
     @Override

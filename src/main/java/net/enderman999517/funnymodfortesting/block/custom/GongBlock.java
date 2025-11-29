@@ -44,7 +44,7 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof GongBlockEntity gong) {
                 gong.incrementRings(world, pos, player);
-                gong.startSwing(hit.getSide());
+                gong.startSwing();
             }
         }
         return ActionResult.SUCCESS;
@@ -52,7 +52,6 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-
-        return checkType(type, ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntity::tick);
+        return world.isClient ? null : checkType(type, ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntity::tick);
     }
 }

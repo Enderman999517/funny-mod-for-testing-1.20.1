@@ -2,70 +2,42 @@ package net.enderman999517.funnymodfortesting.block.entity.renderer;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
-import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelPart;
+import net.enderman999517.funnymodfortesting.entity.client.GongModel;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
 public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEntity> {
-    private static final String GONG_BODY = "gong_body";
-    private static final String GONG_BASE = "gong_base";
-    private final ModelPart gongBody;
-    private final ModelPart gongBase;
-    private static final Identifier TEXTURE = new Identifier(FunnyModForTesting.MOD_ID, "textures/block/gong.png");
-    private static final RenderLayer LAYER = RenderLayer.getEntityCutout(TEXTURE);
+    private final GongModel model;
 
 
     public GongBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
-        ModelPart root = context.getLayerModelPart(ModModelLayers.GONG);
-        this.gongBody = root.getChild(GONG_BODY);
-        this.gongBase = root.getChild(GONG_BASE);
+        this.model = new GongModel(GongModel.getTexturedModelData().createModel());
     }
 
     @Override
     public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        MinecraftClient client = MinecraftClient.getInstance();
-
-        BakedModel model = client.getBakedModelManager().getModel(new ModelIdentifier(new Identifier(FunnyModForTesting.MOD_ID), "block/gong_body"));
+        float ticks = (float) entity.swingTicks + tickDelta/2;
+        float angle = MathHelper.sin(ticks / (float) Math.PI) / (4f + ticks / 0.3f);
         if (model == null) return;
 
-        int ticks = entity.swingTicks;
-        VertexConsumer vc = vertexConsumers.getBuffer(LAYER);
+        matrices.push();
 
-        float swingProgress = 0;
-        //if (ticks > 0) {
-            swingProgress = MathHelper.sin((ticks + tickDelta) / 30f * MathHelper.PI) * 0.5f;
-        //}
+        model.getBase().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
 
         matrices.push();
-        gongBase.render(matrices, vc, light, overlay);
-        matrices.push();
-        matrices.translate(0.5, 0.5, 0.5);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotation(swingProgress));
-        matrices.translate(-0.5, -0.5, -0.5);
+        if (entity.swingTicks > 0) {
+            //matrices.translate(0.5, 0.5, 0.5);
+            matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
+            //matrices.translate(-0.5, -0.5, -0.5);
+        }
 
-        //Direction dir = entity.swingDir;
-        //if (dir == Direction.NORTH || dir == Direction.SOUTH) {
-        //    matrices.multiply(RotationAxis.POSITIVE_X.rotation(swingProgress));
-        //} else matrices.multiply(RotationAxis.POSITIVE_Z.rotation(swingProgress));
-//
-        //MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(
-        //        entity.getCachedState(), matrices, vertexConsumers, light, overlay
-        //);
-
-        gongBody.render(matrices, vc, light, overlay);
+        model.getSwing().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
         matrices.pop();
         matrices.pop();
-        //}
     }
 }
