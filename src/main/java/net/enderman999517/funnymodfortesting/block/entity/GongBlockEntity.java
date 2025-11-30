@@ -28,7 +28,7 @@ public class GongBlockEntity extends BlockEntity {
     public GongBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GONG_BLOCK_ENTITY, pos, state);
     }
-
+    
     public void incrementRings(World world, BlockPos pos, PlayerEntity player) {
         UUID id = player.getUuid();
         int count = ringTimes.getOrDefault(id, 0) +1;
@@ -48,6 +48,7 @@ public class GongBlockEntity extends BlockEntity {
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, GongBlockEntity blockEntity) {
+
         if (blockEntity.swinging) {
             blockEntity.swingTicks++;
         }

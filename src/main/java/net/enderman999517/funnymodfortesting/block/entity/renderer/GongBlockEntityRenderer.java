@@ -19,25 +19,50 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
         this.model = new GongModel(GongModel.getTexturedModelData().createModel());
     }
 
+    //@Override
+    //public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    //    float ticks = (float) entity.swingTicks + tickDelta;
+//
+    //    float angle = MathHelper.sin(ticks / (float) Math.PI) / (4f + ticks / 3f);
+    //    //if (model == null) return;
+//
+    //    matrices.push();
+//
+    //    model.getBase().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
+//
+    //    matrices.push();
+    //    if (entity.swingTicks > 0) {
+    //        //matrices.translate(0.5, 0.5, 0.5);
+    //        matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
+    //        //matrices.translate(-0.5, -0.5, -0.5);
+    //    }
+//
+    //    model.getSwing().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
+    //    matrices.pop();
+    //    matrices.pop();
+    //}
+
     @Override
     public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        float ticks = (float) entity.swingTicks + tickDelta/2;
-        float angle = MathHelper.sin(ticks / (float) Math.PI) / (4f + ticks / 0.3f);
-        if (model == null) return;
+        float ticks = (float) entity.swingTicks + tickDelta;
 
         matrices.push();
-
         model.getBase().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
+        matrices.pop();
 
         matrices.push();
         if (entity.swingTicks > 0) {
+            float angle = MathHelper.sin(ticks / (float) Math.PI) / (4f + ticks / 3f);
+            //matrices.push();
             //matrices.translate(0.5, 0.5, 0.5);
             matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
             //matrices.translate(-0.5, -0.5, -0.5);
+            //matrices.pop();
         }
+        //if (model == null) return;
 
         model.getSwing().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
         matrices.pop();
-        matrices.pop();
+        //matrices.pop();
     }
 }

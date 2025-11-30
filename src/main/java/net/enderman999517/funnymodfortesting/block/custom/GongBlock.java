@@ -52,6 +52,6 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? null : checkType(type, ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntity::tick);
+        return checkType(type, ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntity::tick);
     }
 }
