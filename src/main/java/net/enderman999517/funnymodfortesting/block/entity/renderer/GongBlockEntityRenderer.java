@@ -1,22 +1,31 @@
 package net.enderman999517.funnymodfortesting.block.entity.renderer;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
 import net.enderman999517.funnymodfortesting.entity.client.GongModel;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
 public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEntity> {
+    public static final SpriteIdentifier GONG_BODY_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/gong/gong"));
     private final GongModel model;
+    private final ModelPart gongBody;
 
 
     public GongBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         this.model = new GongModel(GongModel.getTexturedModelData().createModel());
+        ModelPart modelPart = GongModel.getTexturedModelData().createModel();
+        this.gongBody = modelPart.getChild("swing");
     }
 
     //@Override
@@ -47,22 +56,38 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
         float ticks = (float) entity.swingTicks + tickDelta;
 
         matrices.push();
+        matrices.translate(1,1.5,1);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotation(MathHelper.PI));
         model.getBase().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
         matrices.pop();
 
         matrices.push();
-        if (entity.swingTicks > 0) {
-            float angle = MathHelper.sin(ticks / (float) Math.PI) / (4f + ticks / 3f);
-            //matrices.push();
-            //matrices.translate(0.5, 0.5, 0.5);
-            matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
-            //matrices.translate(-0.5, -0.5, -0.5);
-            //matrices.pop();
-        }
-        //if (model == null) return;
+        matrices.translate(1, 1.5, 1);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotation(MathHelper.PI));
 
-        model.getSwing().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
+        float pitch = 0f;
+        float roll = 0f;
+        if (entity.swingTicks > 0) {
+            float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.0F + ticks / 3.0F);
+            if (entity.lastSideHit == Direction.NORTH) {
+                pitch = -angle;
+            } else if (entity.lastSideHit == Direction.SOUTH) {
+                pitch = angle;
+            } else if (entity.lastSideHit == Direction.EAST) {
+                roll = -angle;
+            } else if (entity.lastSideHit == Direction.WEST) {
+                roll = angle;
+            }
+            matrices.translate(0.5,0.5,0.5);
+            matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
+            matrices.translate(-0.5,-0.5,-0.5);
+        }
+
+        this.gongBody.pitch = pitch;
+        this.gongBody.roll = roll;
+        VertexConsumer vertexConsumer = GONG_BODY_TEXTURE.getVertexConsumer(vertexConsumers, RenderLayer::getEntitySolid);
+
+        model.getSwing().render(matrices, vertexConsumer, light, overlay);
         matrices.pop();
-        //matrices.pop();
     }
 }

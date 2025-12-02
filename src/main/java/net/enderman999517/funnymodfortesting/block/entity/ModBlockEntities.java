@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.block.entity;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.ModBlocks;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
@@ -25,5 +26,10 @@ public class ModBlockEntities {
 
     public static void registerBlockEntities() {
         FunnyModForTesting.LOGGER.info("Registering block entities for " + FunnyModForTesting.MOD_ID);
+        ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, world) -> {
+            if (blockEntity instanceof GongBlockEntity gongBlockEntity) {
+                gongBlockEntity.swingTicks = 0;
+            }
+        });
     }
 }

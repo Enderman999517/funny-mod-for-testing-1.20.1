@@ -1,6 +1,5 @@
 package net.enderman999517.funnymodfortesting.block.entity;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -19,11 +18,11 @@ import java.util.UUID;
 
 public class GongBlockEntity extends BlockEntity {
     private final int MAX_RING_TIMES = 3;
-    private final HashMap<UUID, Integer> ringTimes = new HashMap<>();
-    public int swingTicks = 0;
+    private final HashMap<UUID, Integer> playerRingTimes = new HashMap<>();
+    public int swingTicks;
     public static final int MAX_SWING_TICKS = 50;
-    public Direction swingDir = Direction.NORTH;
-    private boolean swinging = false;
+    public Direction lastSideHit;
+    public boolean swinging;
 
     public GongBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GONG_BLOCK_ENTITY, pos, state);
@@ -31,20 +30,33 @@ public class GongBlockEntity extends BlockEntity {
     
     public void incrementRings(World world, BlockPos pos, PlayerEntity player) {
         UUID id = player.getUuid();
-        int count = ringTimes.getOrDefault(id, 0) +1;
+        int count = playerRingTimes.getOrDefault(id, 0) +1;
 
         if (count < MAX_RING_TIMES) {
-            ringTimes.put(id, count);
+            playerRingTimes.put(id, count);
         } else {
             triggerEvent(world, pos, player);
-            ringTimes.put(id, 0);
+            playerRingTimes.put(id, 0);
         }
     }
 
     public void startSwing() {
-        this.swingTicks = 0;
-        this.swinging = true;
+        if (this.swinging) {
+            this.swingTicks = 0;
+        } else this.swinging = true;
         markDirty();
+    }
+
+    @Override
+    public boolean onSyncedBlockEvent(int type, int data) {
+        if (type == 1) {
+            this.lastSideHit = Direction.byId(data);
+            this.swingTicks = 0;
+            this.swinging = true;
+            return true;
+        } else {
+            return super.onSyncedBlockEvent(type, data);
+        }
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, GongBlockEntity blockEntity) {
@@ -82,13 +94,13 @@ public class GongBlockEntity extends BlockEntity {
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        nbt.putInt("Ticks", swingTicks);
+        nbt.putInt("ticks", swingTicks);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        swingTicks = nbt.getInt("Ticks");
+        swingTicks = nbt.getInt("ticks");
     }
 
     public void sync() {

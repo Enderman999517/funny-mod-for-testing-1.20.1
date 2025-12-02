@@ -22,23 +22,20 @@ public class GongModel {
 
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
-        ModelPartData root = modelData.getRoot();
+        ModelPartData modelPartData = modelData.getRoot();
+        ModelPartData swing = modelPartData.addChild("swing", ModelPartBuilder.create().uv(0, 0).cuboid(2.0F, -5.0F, 0.5F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(-5.0F, -5.0F, 0.5F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(-6.0F, -2.0F, 0.5F, 10.0F, 2.0F, 1.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(2.0F, 0.0F, 0.5F, 2.0F, 6.0F, 1.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(-4.0F, 0.0F, 0.75F, 6.0F, 6.0F, 0.5F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(-6.0F, 0.0F, 0.5F, 2.0F, 6.0F, 1.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(-6.0F, 6.0F, 0.5F, 10.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-7.0F, 13.0F, 7.0F));
 
-        ModelPartData base = root.addChild("base", ModelPartBuilder.create().uv(0, 0).cuboid(-2.0F, -16.0F, 0.0F, 1.0F, 15.0F, 2.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-16.0F, -17.0F, 0.0F, 16.0F, 1.0F, 2.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-15.0F, -16.0F, 0.0F, 1.0F, 15.0F, 2.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-16.0F, -1.0F, -1.0F, 3.0F, 1.0F, 4.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-3.0F, -1.0F, -1.0F, 3.0F, 1.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, 24.0F, -1.0F));
-
-
-        ModelPartData swing = root.addChild("swing", ModelPartBuilder.create().uv(0, 0).cuboid(-1.0F, 2.0F, 0.5F, 10.0F, 2.0F, 1.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(7.0F, 4.0F, 0.5F, 2.0F, 6.0F, 1.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(1.0F, 4.0F, 0.75F, 6.0F, 6.0F, 0.5F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-1.0F, 4.0F, 0.5F, 2.0F, 6.0F, 1.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-1.0F, 10.0F, 0.5F, 10.0F, 2.0F, 1.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(7.0F, -1.0F, 0.5F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(0.0F, -1.0F, 0.5F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-4.0F, 9.0F, -1.0F));
-
-        return TexturedModelData.of(modelData, 64, 64);
+        ModelPartData base = modelPartData.addChild("base", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -17.0F, 0.0F, 16.0F, 1.0F, 2.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(13.0F, -1.0F, -1.0F, 3.0F, 1.0F, 4.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(14.0F, -16.0F, 0.0F, 1.0F, 15.0F, 2.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(1.0F, -16.0F, 0.0F, 1.0F, 15.0F, 2.0F, new Dilation(0.0F))
+                .uv(0, 0).cuboid(0.0F, -1.0F, -1.0F, 3.0F, 1.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-16.0F, 24.0F, 7.0F));
+        return TexturedModelData.of(modelData, 16, 16);
     }
 }
