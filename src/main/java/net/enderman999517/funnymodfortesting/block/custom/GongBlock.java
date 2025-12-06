@@ -6,11 +6,13 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.enums.Attachment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +20,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
@@ -64,32 +67,27 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
 
-        Direction direction = ctx.getSide();
-        BlockPos blockPos = ctx.getBlockPos();
-        World world = ctx.getWorld();
-        Direction.Axis axis = direction.getAxis();
-        if (axis == Direction.Axis.Y) {
-            BlockState blockState = this.getDefaultState()
-                    .with(FACING, ctx.getHorizontalPlayerFacing());
-            if (blockState.canPlaceAt(ctx.getWorld(), blockPos)) {
-                return blockState;
-            }
-        } else {
-            boolean bl = axis == Direction.Axis.X
-                    && world.getBlockState(blockPos.west()).isSideSolidFullSquare(world, blockPos.west(), Direction.EAST)
-                    && world.getBlockState(blockPos.east()).isSideSolidFullSquare(world, blockPos.east(), Direction.WEST)
-                    || axis == Direction.Axis.Z
-                    && world.getBlockState(blockPos.north()).isSideSolidFullSquare(world, blockPos.north(), Direction.SOUTH)
-                    && world.getBlockState(blockPos.south()).isSideSolidFullSquare(world, blockPos.south(), Direction.NORTH);
-            BlockState blockState = this.getDefaultState().with(FACING, direction.getOpposite());
-            if (blockState.canPlaceAt(ctx.getWorld(), ctx.getBlockPos())) {
-                return blockState;
-            }
+        //Direction direction = ctx.getSide();
+        //BlockPos blockPos = ctx.getBlockPos();
+        //Direction.Axis axis = direction.getAxis();
+        //if (axis == Direction.Axis.Y) {
+        //    BlockState blockState = this.getDefaultState()
+        //            .with(FACING, ctx.getHorizontalPlayerFacing());
+        //    if (blockState.canPlaceAt(ctx.getWorld(), blockPos)) {
+        //        return blockState;
+        //    }
+        //} else {
+        //    BlockState blockState = this.getDefaultState().with(FACING, direction.getOpposite());
+        //    if (blockState.canPlaceAt(ctx.getWorld(), ctx.getBlockPos())) {
+        //        return blockState;
+        //    }
+        //}
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+        //return null;
+    }
 
-            if (blockState.canPlaceAt(ctx.getWorld(), ctx.getBlockPos())) {
-                return blockState;
-            }
-        }
-        return null;
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 }
