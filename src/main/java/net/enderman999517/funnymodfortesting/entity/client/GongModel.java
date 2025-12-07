@@ -6,6 +6,8 @@ import net.minecraft.util.Identifier;
 
 public class GongModel {
     public static final Identifier TEXTURE = new Identifier(FunnyModForTesting.MOD_ID, "textures/block/gong.png");
+    public static final Identifier SWING_TEXTURE = new Identifier(FunnyModForTesting.MOD_ID, "textures/block/gong.png");
+    public static final Identifier BASE_TEXTURE = new Identifier(FunnyModForTesting.MOD_ID, "textures/block/gong.png");
 
     private final ModelPart root;
     private final ModelPart base;

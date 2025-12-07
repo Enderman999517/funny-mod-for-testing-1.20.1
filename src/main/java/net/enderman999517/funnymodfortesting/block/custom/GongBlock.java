@@ -76,7 +76,6 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-
         Direction direction = ctx.getSide();
         BlockPos blockPos = ctx.getBlockPos();
         Direction.Axis axis = direction.getAxis();
@@ -92,7 +91,6 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
                 return blockState;
             }
         }
-        //return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
         return null;
     }
 
