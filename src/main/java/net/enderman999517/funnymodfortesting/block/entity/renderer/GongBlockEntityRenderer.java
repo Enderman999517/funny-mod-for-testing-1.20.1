@@ -28,29 +28,6 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
         this.gongBody = modelPart.getChild("swing");
     }
 
-    //@Override
-    //public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-    //    float ticks = (float) entity.swingTicks + tickDelta;
-//
-    //    float angle = MathHelper.sin(ticks / (float) Math.PI) / (4f + ticks / 3f);
-    //    //if (model == null) return;
-//
-    //    matrices.push();
-//
-    //    model.getBase().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
-//
-    //    matrices.push();
-    //    if (entity.swingTicks > 0) {
-    //        //matrices.translate(0.5, 0.5, 0.5);
-    //        matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
-    //        //matrices.translate(-0.5, -0.5, -0.5);
-    //    }
-//
-    //    model.getSwing().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
-    //    matrices.pop();
-    //    matrices.pop();
-    //}
-
     @Override
     public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         float ticks = (float) entity.swingTicks + tickDelta;
@@ -70,17 +47,25 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
         if (entity.swingTicks > 0) {
             float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.0F + ticks / 3.0F);
             if (entity.lastSideHit == Direction.NORTH) {
-                pitch = -angle;
+                matrices.translate(0.5,0.5,0.5);
+                matrices.multiply(RotationAxis.POSITIVE_X.rotation(angle));
+                matrices.translate(-0.5,-0.5,-0.5);
+
             } else if (entity.lastSideHit == Direction.SOUTH) {
-                pitch = angle;
+                matrices.translate(0.5,0.5,0.5);
+                matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
+                matrices.translate(-0.5,-0.5,-0.5);
+
             } else if (entity.lastSideHit == Direction.EAST) {
-                roll = -angle;
+                matrices.translate(0.5,0.5,0.5);
+                matrices.multiply(RotationAxis.NEGATIVE_Z.rotation(angle));
+                matrices.translate(-0.5,-0.5,-0.5);
+
             } else if (entity.lastSideHit == Direction.WEST) {
-                roll = angle;
+                matrices.translate(0.5,0.5,0.5);
+                matrices.multiply(RotationAxis.POSITIVE_Z.rotation(angle));
+                matrices.translate(-0.5,-0.5,-0.5);
             }
-            matrices.translate(0.5,0.5,0.5);
-            matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
-            matrices.translate(-0.5,-0.5,-0.5);
         }
 
         this.gongBody.pitch = pitch;

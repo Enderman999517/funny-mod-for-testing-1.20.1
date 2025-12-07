@@ -11,8 +11,6 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -20,12 +18,14 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    private static final VoxelShape SHAPE = Block.createCuboidShape(0,0,6, 16,17,10);
+    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0,0,6, 16,17,10);
+    private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0,0,6, 16,17,10);
+    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(6,0,0, 9,17,16);
+    private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(6,0,0, 9,17,16);
 
     public GongBlock(Settings settings) {
         super(settings);
@@ -34,7 +34,13 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
+        Direction direction = state.get(FACING);
+        return switch (direction) {
+            case SOUTH -> SOUTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case WEST -> WEST_SHAPE;
+            default -> NORTH_SHAPE;
+        };
     }
 
     @Override
@@ -49,12 +55,10 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof GongBlockEntity gong) {
-                gong.incrementRings(world, pos, player);
-                gong.startSwing();
-            }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof GongBlockEntity gong) {
+            gong.incrementRings(world, pos, player);
+            gong.startSwing(player.getHorizontalFacing());
         }
         return ActionResult.SUCCESS;
     }
@@ -67,23 +71,23 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
 
-        //Direction direction = ctx.getSide();
-        //BlockPos blockPos = ctx.getBlockPos();
-        //Direction.Axis axis = direction.getAxis();
-        //if (axis == Direction.Axis.Y) {
-        //    BlockState blockState = this.getDefaultState()
-        //            .with(FACING, ctx.getHorizontalPlayerFacing());
-        //    if (blockState.canPlaceAt(ctx.getWorld(), blockPos)) {
-        //        return blockState;
-        //    }
-        //} else {
-        //    BlockState blockState = this.getDefaultState().with(FACING, direction.getOpposite());
-        //    if (blockState.canPlaceAt(ctx.getWorld(), ctx.getBlockPos())) {
-        //        return blockState;
-        //    }
-        //}
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
-        //return null;
+        Direction direction = ctx.getSide();
+        BlockPos blockPos = ctx.getBlockPos();
+        Direction.Axis axis = direction.getAxis();
+        if (axis == Direction.Axis.Y) {
+            BlockState blockState = this.getDefaultState()
+                    .with(FACING, ctx.getHorizontalPlayerFacing());
+            if (blockState.canPlaceAt(ctx.getWorld(), blockPos)) {
+                return blockState;
+            }
+        } else {
+            BlockState blockState = this.getDefaultState().with(FACING, direction.getOpposite());
+            if (blockState.canPlaceAt(ctx.getWorld(), ctx.getBlockPos())) {
+                return blockState;
+            }
+        }
+        //return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+        return null;
     }
 
     @Override
