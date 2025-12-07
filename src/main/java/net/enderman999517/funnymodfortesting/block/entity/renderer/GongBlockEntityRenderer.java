@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.block.entity.renderer;
 
+import net.enderman999517.funnymodfortesting.block.custom.GongBlock;
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
 import net.enderman999517.funnymodfortesting.entity.client.GongModel;
 import net.minecraft.client.model.ModelPart;
@@ -44,6 +45,7 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
 
         float pitch = 0f;
         float roll = 0f;
+
         if (entity.swingTicks > 0) {
             float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.0F + ticks / 3.0F);
             if (entity.lastSideHit == Direction.NORTH) {

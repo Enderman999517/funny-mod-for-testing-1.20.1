@@ -40,10 +40,6 @@ public class GongBlockEntity extends BlockEntity {
         }
     }
 
-    public Direction getDir() {
-        return this.lastSideHit;
-    }
-
     public void startSwing(Direction lastSideHit) {
         if (this.swinging) {
             this.swingTicks = 0;
@@ -55,13 +51,10 @@ public class GongBlockEntity extends BlockEntity {
     @Override
     public boolean onSyncedBlockEvent(int type, int data) {
         if (type == 1) {
-            //this.lastSideHit = Direction.byId(data);
-            //FunnyModForTesting.LOGGER.error("side {}", this.lastSideHit);
             this.swingTicks = 0;
             this.swinging = true;
             return true;
         } else {
-            //this.lastSideHit = Direction.byId(data);
             return super.onSyncedBlockEvent(type, data);
         }
     }

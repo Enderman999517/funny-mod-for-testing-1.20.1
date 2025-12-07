@@ -23,9 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0,0,6, 16,17,10);
-    private static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0,0,6, 16,17,10);
     private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(6,0,0, 9,17,16);
-    private static final VoxelShape WEST_SHAPE = Block.createCuboidShape(6,0,0, 9,17,16);
 
     public GongBlock(Settings settings) {
         super(settings);
@@ -36,9 +34,7 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction direction = state.get(FACING);
         return switch (direction) {
-            case SOUTH -> SOUTH_SHAPE;
-            case EAST -> EAST_SHAPE;
-            case WEST -> WEST_SHAPE;
+            case EAST, WEST -> EAST_SHAPE;
             default -> NORTH_SHAPE;
         };
     }
@@ -55,12 +51,22 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof GongBlockEntity gong) {
-            gong.incrementRings(world, pos, player);
-            gong.startSwing(player.getHorizontalFacing());
-        }
-        return ActionResult.SUCCESS;
+        return this.ring(world, state, hit, player, pos) ? ActionResult.success(world.isClient) : ActionResult.PASS;
+    }
+
+    private boolean ring(World world, BlockState state, BlockHitResult hitResult, PlayerEntity player, BlockPos pos) {
+        Direction hitSide = hitResult.getSide();
+        Direction facing = state.get(FACING);
+        Direction facingOpposite = state.get(FACING).getOpposite();
+
+        if (hitSide == facing || hitSide == facingOpposite) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof GongBlockEntity gong) {
+                gong.incrementRings(world, pos, player);
+                gong.startSwing(hitSide.getOpposite());
+            }
+            return true;
+        } else return false;
     }
 
     @Override
