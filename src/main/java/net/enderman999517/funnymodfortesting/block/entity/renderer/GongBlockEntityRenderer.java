@@ -29,19 +29,11 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
     public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         float ticks = (float) entity.swingTicks + tickDelta;
 
-        if (entity.getCachedState().get(GongBlock.FACING) == Direction.EAST) {
-            matrices.push();
-            matrices.multiply(RotationAxis.NEGATIVE_Y.rotation(MathHelper.PI/2));
-            FunnyModForTesting.LOGGER.error("sla;dhfg");
-            matrices.pop();
-            } else {
-
-            matrices.push();
-            matrices.translate(0.5, 1.5, 0.5);
-            matrices.multiply(RotationAxis.POSITIVE_X.rotation(MathHelper.PI));
-            model.getBase().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
-            matrices.pop();
-        }
+        matrices.push();
+        matrices.translate(0.5, 1.5, 0.5);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotation(MathHelper.PI));
+        model.getBase().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
+        matrices.pop();
 
         matrices.push();
         matrices.translate(0.5, 1.5, 0.5);
