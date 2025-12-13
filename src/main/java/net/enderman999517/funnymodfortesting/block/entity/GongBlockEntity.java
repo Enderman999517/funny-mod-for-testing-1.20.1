@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.block.entity;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -21,7 +22,7 @@ public class GongBlockEntity extends BlockEntity {
     private final HashMap<UUID, Integer> playerRingTimes = new HashMap<>();
     public int swingTicks;
     public static final int MAX_SWING_TICKS = 50;
-    public Direction lastSideHit;
+    public Direction dir;
     public boolean swinging;
 
     public GongBlockEntity(BlockPos pos, BlockState state) {
@@ -40,11 +41,27 @@ public class GongBlockEntity extends BlockEntity {
         }
     }
 
+    public int getSwingTicks() {
+        return this.swingTicks;
+    }
+
+    public Direction getDir() {
+        return this.dir;
+    }
+
+    public void setSwingTicks(int swingTicks) {
+        this.swingTicks = swingTicks;
+    }
+
+    public void setDir(Direction dir) {
+        this.dir = dir;
+    }
+
     public void startSwing(Direction lastSideHit) {
         if (this.swinging) {
             this.swingTicks = 0;
         } else this.swinging = true;
-        this.lastSideHit = lastSideHit;
+        this.dir = lastSideHit;
         markDirty();
     }
 
@@ -94,13 +111,20 @@ public class GongBlockEntity extends BlockEntity {
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        nbt.putInt("ticks", swingTicks);
+        nbt.putInt("ticks", this.swingTicks);
+        if (this.dir != null) {
+            nbt.putString("dir", this.dir.asString());
+        }
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        swingTicks = nbt.getInt("ticks");
+        this.swingTicks = nbt.getInt("ticks");
+        if (nbt.contains("dir")) {
+            dir = Direction.valueOf(nbt.getString("dir"));
+            //FunnyModForTesting.LOGGER.error("dir: {}", this.dir);
+        }
     }
 
     public void sync() {

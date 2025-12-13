@@ -1,7 +1,5 @@
 package net.enderman999517.funnymodfortesting.block.entity.renderer;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
-import net.enderman999517.funnymodfortesting.block.custom.GongBlock;
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
 import net.enderman999517.funnymodfortesting.entity.client.GongModel;
 import net.minecraft.client.model.ModelPart;
@@ -41,22 +39,22 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
 
         if (entity.swingTicks > 0) {
             float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.0F + ticks / 3.0F);
-            if (entity.lastSideHit == Direction.NORTH) {
+            if (entity.dir == Direction.NORTH) {
                 matrices.translate(0,0.5,0);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation(angle));
                 matrices.translate(-0,-0.5,-0);
 
-            } else if (entity.lastSideHit == Direction.SOUTH) {
+            } else if (entity.dir == Direction.SOUTH) {
                 matrices.translate(0,0.5,0);
                 matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
                 matrices.translate(-0,-0.5,-0);
 
-            } else if (entity.lastSideHit == Direction.EAST) {
+            } else if (entity.dir == Direction.EAST) {
                 matrices.translate(0,0.5,0);
                 matrices.multiply(RotationAxis.NEGATIVE_Z.rotation(angle));
                 matrices.translate(-0,-0.5,-0);
 
-            } else if (entity.lastSideHit == Direction.WEST) {
+            } else if (entity.dir == Direction.WEST) {
                 matrices.translate(0,0.5,0);
                 matrices.multiply(RotationAxis.POSITIVE_Z.rotation(angle));
                 matrices.translate(-0,-0.5,-0);

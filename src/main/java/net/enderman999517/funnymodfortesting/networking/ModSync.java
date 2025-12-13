@@ -87,7 +87,7 @@ public class ModSync {
     }
 
     public static void init() {
-        final Map<UUID, Integer> resyncWaitTicks = new HashMap<>();
+        final Map<UUID, Integer> resyncPlayerInvisWaitTicks = new HashMap<>();
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
 
@@ -99,12 +99,12 @@ public class ModSync {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
-            resyncWaitTicks.put(player.getUuid(), 0);
+            resyncPlayerInvisWaitTicks.put(player.getUuid(), 0);
         });
 
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
-            Iterator<Map.Entry<UUID, Integer>> iterator = resyncWaitTicks.entrySet().iterator();
+            Iterator<Map.Entry<UUID, Integer>> iterator = resyncPlayerInvisWaitTicks.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<UUID, Integer> entry = iterator.next();
                 UUID uuid = entry.getKey();
@@ -147,6 +147,10 @@ public class ModSync {
                 syncOverlayFlag(newPlayer, entityData.isRenderingOverlay(), newPlayer);
             }
         });
+
+        //ServerTickEvents.END_SERVER_TICK.register(server -> {
+        //    syncGongSwing();
+        //});
     }
 
     private static void reSyncAllVisibilityFor(ServerPlayerEntity joiningPlayer) {
@@ -196,4 +200,8 @@ public class ModSync {
         CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.DISPLAY_OVERLAY_SYNC, buf);
         target.networkHandler.sendPacket(packet);
     }
+
+    //public static void syncGongSwing() {
+    //
+    //}
 }
