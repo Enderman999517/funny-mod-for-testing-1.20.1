@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.block.entity.renderer;
 
+import net.enderman999517.funnymodfortesting.block.custom.GongBlock;
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
 import net.enderman999517.funnymodfortesting.entity.client.GongModel;
 import net.minecraft.client.model.ModelPart;
@@ -26,8 +27,16 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
     @Override
     public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         float ticks = (float) entity.swingTicks + tickDelta;
+        Direction dir = entity.getDir();
+        Direction cachedDir = entity.getCachedState().get(GongBlock.FACING);
 
         matrices.push();
+
+        if (cachedDir == Direction.EAST || cachedDir == Direction.WEST) {
+            matrices.multiply(RotationAxis.NEGATIVE_Y.rotation(MathHelper.PI/2));
+            matrices.translate(0,0,-1);
+        }
+
         matrices.translate(0.5, 1.5, 0.5);
         matrices.multiply(RotationAxis.POSITIVE_X.rotation(MathHelper.PI));
         model.getBase().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(GongModel.TEXTURE)), light, overlay);
@@ -37,26 +46,30 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
         matrices.translate(0.5, 1.5, 0.5);
         matrices.multiply(RotationAxis.POSITIVE_X.rotation(MathHelper.PI));
 
+        if (cachedDir == Direction.EAST || cachedDir == Direction.WEST) {
+            matrices.multiply(RotationAxis.NEGATIVE_Y.rotation(MathHelper.PI/2));
+        }
+
         if (entity.swingTicks > 0) {
-            float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.0F + ticks / 3.0F);
-            if (entity.dir == Direction.NORTH) {
+            float angle = MathHelper.sin(ticks / MathHelper.PI) / (4.0F + ticks / 3.0F);
+            if (dir == Direction.NORTH) {
                 matrices.translate(0,0.5,0);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation(angle));
                 matrices.translate(-0,-0.5,-0);
 
-            } else if (entity.dir == Direction.SOUTH) {
+            } else if (dir == Direction.SOUTH) {
                 matrices.translate(0,0.5,0);
                 matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
                 matrices.translate(-0,-0.5,-0);
 
-            } else if (entity.dir == Direction.EAST) {
+            } else if (dir == Direction.EAST) {
                 matrices.translate(0,0.5,0);
-                matrices.multiply(RotationAxis.NEGATIVE_Z.rotation(angle));
+                matrices.multiply(RotationAxis.NEGATIVE_X.rotation(angle));
                 matrices.translate(-0,-0.5,-0);
 
-            } else if (entity.dir == Direction.WEST) {
+            } else if (dir == Direction.WEST) {
                 matrices.translate(0,0.5,0);
-                matrices.multiply(RotationAxis.POSITIVE_Z.rotation(angle));
+                matrices.multiply(RotationAxis.POSITIVE_X.rotation(angle));
                 matrices.translate(-0,-0.5,-0);
             }
         }

@@ -27,6 +27,7 @@ public class ModItemGroups {
                         //items
                         entries.add(ModItems.AMOGH_ESSENCE);
                         entries.add(ModItems.HAPPY_MELON_SLICE);
+                        entries.add(ModItems.RING);
 
                         //blocks
                         entries.add(ModBlocks.LTF_BLOCK);
@@ -34,6 +35,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.SHOWCASE_BLOCK_W);
                         entries.add(ModBlocks.SHOWCASE_BLOCK_B);
                         entries.add(ModBlocks.HAPPY_MELON_BLOCK);
+                        entries.add(ModBlocks.GONG);
 
                         ////armor
                         //entries.add(ModItems.LTF_HAIR);
