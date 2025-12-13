@@ -23,8 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0,0,6, 16,17,10);
-    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(6,0,0, 9,17,16);
+    private static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0,0,6, 16,16,10);
+    private static final VoxelShape EAST_SHAPE = Block.createCuboidShape(6,0,0, 10,16,16);
 
     public GongBlock(Settings settings) {
         super(settings);
