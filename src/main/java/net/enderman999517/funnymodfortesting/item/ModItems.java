@@ -47,6 +47,8 @@ public class ModItems {
             new Item(new FabricItemSettings()));
     public static final Item HAPPY_MELON_SLICE = registerItem("happy_melon_slice",
             new Item(new FabricItemSettings().food(new FoodComponent.Builder().alwaysEdible().hunger(2).statusEffect(new StatusEffectInstance(ModStatusEffects.BRAINROT, 1), 1).build())));
+    public static final Item GONG_MALLET = registerItem("gong_mallet",
+            new Item(new FabricItemSettings()));
 
     //spawn eggs
     public static final Item AMOGH_SPAWN_EGG = registerItem("amogh_spawn_egg",

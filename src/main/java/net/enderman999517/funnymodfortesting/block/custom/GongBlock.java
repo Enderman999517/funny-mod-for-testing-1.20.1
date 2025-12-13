@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.block.custom;
 
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
 import net.enderman999517.funnymodfortesting.block.entity.ModBlockEntities;
+import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -55,17 +56,19 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
     }
 
     private boolean ring(World world, BlockState state, BlockHitResult hitResult, PlayerEntity player, BlockPos pos) {
-        Direction hitSide = hitResult.getSide();
-        Direction facing = state.get(FACING);
-        Direction facingOpposite = state.get(FACING).getOpposite();
+        if (player.getStackInHand(Hand.MAIN_HAND).isOf(ModItems.GONG_MALLET) /* || player.getStackInHand(Hand.OFF_HAND).isOf(ModItems.GONG_MALLET) */) {
+            Direction hitSide = hitResult.getSide();
+            Direction facing = state.get(FACING);
+            Direction facingOpposite = state.get(FACING).getOpposite();
 
-        if (hitSide == facing || hitSide == facingOpposite) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof GongBlockEntity gong) {
-                gong.incrementRings(world, pos, player);
-                gong.startSwing(hitSide.getOpposite());
-            }
-            return true;
+            if (hitSide == facing || hitSide == facingOpposite) {
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                if (blockEntity instanceof GongBlockEntity gong) {
+                    gong.incrementRings(world, pos, player);
+                    gong.startSwing(hitSide.getOpposite());
+                }
+                return true;
+            } else return false;
         } else return false;
     }
 
