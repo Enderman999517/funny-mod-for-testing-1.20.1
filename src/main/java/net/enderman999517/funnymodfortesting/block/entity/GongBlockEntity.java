@@ -1,6 +1,5 @@
 package net.enderman999517.funnymodfortesting.block.entity;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -122,8 +121,7 @@ public class GongBlockEntity extends BlockEntity {
         super.readNbt(nbt);
         this.swingTicks = nbt.getInt("ticks");
         if (nbt.contains("dir")) {
-            dir = Direction.valueOf(nbt.getString("dir"));
-            //FunnyModForTesting.LOGGER.error("dir: {}", this.dir);
+            dir = Direction.byName(nbt.getString("dir"));
         }
     }
 

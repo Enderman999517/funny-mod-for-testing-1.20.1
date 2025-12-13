@@ -147,10 +147,6 @@ public class ModSync {
                 syncOverlayFlag(newPlayer, entityData.isRenderingOverlay(), newPlayer);
             }
         });
-
-        //ServerTickEvents.END_SERVER_TICK.register(server -> {
-        //    syncGongSwing();
-        //});
     }
 
     private static void reSyncAllVisibilityFor(ServerPlayerEntity joiningPlayer) {
@@ -200,8 +196,4 @@ public class ModSync {
         CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.DISPLAY_OVERLAY_SYNC, buf);
         target.networkHandler.sendPacket(packet);
     }
-
-    //public static void syncGongSwing() {
-    //
-    //}
 }
