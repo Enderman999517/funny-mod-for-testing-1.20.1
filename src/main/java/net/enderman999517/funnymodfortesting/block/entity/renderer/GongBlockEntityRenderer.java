@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.block.entity.renderer;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.custom.GongBlock;
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
 import net.enderman999517.funnymodfortesting.entity.client.GongModel;
@@ -27,6 +28,7 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
     @Override
     public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         float ticks = (float) entity.swingTicks + tickDelta;
+        //FunnyModForTesting.LOGGER.error("ticsk: {}", ticks);
         Direction dir = entity.getDir();
         Direction cachedDir = entity.getCachedState().get(GongBlock.FACING);
 
@@ -52,6 +54,8 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
 
         if (entity.swingTicks > 0) {
             float angle = MathHelper.sin(ticks / MathHelper.PI) / (4.0F + ticks / 3.0F);
+            //FunnyModForTesting.LOGGER.error("angle: {}", angle);
+            //FunnyModForTesting.LOGGER.error("ticks: {}", ticks);
             if (dir == Direction.NORTH) {
                 matrices.translate(0,0.5,0);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation(angle));

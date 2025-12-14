@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.block.entity;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

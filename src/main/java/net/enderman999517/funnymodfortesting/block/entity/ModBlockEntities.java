@@ -29,6 +29,7 @@ public class ModBlockEntities {
         ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, world) -> {
             if (blockEntity instanceof GongBlockEntity gongBlockEntity) {
                 gongBlockEntity.swingTicks = 0;
+                gongBlockEntity.swinging = false;
             }
         });
     }
