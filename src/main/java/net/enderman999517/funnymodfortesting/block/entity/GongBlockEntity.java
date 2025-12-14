@@ -77,7 +77,7 @@ public class GongBlockEntity extends BlockEntity {
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, GongBlockEntity blockEntity) {
-        if (blockEntity.swinging) {
+        if (blockEntity.swinging  || blockEntity.swingTicks > 0) {
             blockEntity.swingTicks++;
         }
 
