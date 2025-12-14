@@ -1,6 +1,5 @@
 package net.enderman999517.funnymodfortesting.block.entity;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -58,22 +57,11 @@ public class GongBlockEntity extends BlockEntity {
     }
 
     public void startSwing(Direction lastSideHit) {
-        if (this.swinging) {
+        if (this.swinging && this.swingTicks > 5) {
             this.swingTicks = 0;
         } else this.swinging = true;
         this.dir = lastSideHit;
         markDirty();
-    }
-
-    @Override
-    public boolean onSyncedBlockEvent(int type, int data) {
-        if (type == 1) {
-            this.swingTicks = 0;
-            this.swinging = true;
-            return true;
-        } else {
-            return super.onSyncedBlockEvent(type, data);
-        }
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, GongBlockEntity blockEntity) {
@@ -81,7 +69,7 @@ public class GongBlockEntity extends BlockEntity {
             blockEntity.swingTicks++;
         }
 
-        if (blockEntity.swingTicks >= MAX_SWING_TICKS) {
+        if (blockEntity.swingTicks >= MAX_SWING_TICKS + 1) {
             blockEntity.swinging = false;
             blockEntity.swingTicks = 0;
         }
