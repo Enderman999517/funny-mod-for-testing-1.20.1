@@ -10,6 +10,7 @@ import net.enderman999517.funnymodfortesting.block.entity.renderer.GongBlockEnti
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.client.AmoghModel;
 import net.enderman999517.funnymodfortesting.entity.client.AmoghRenderer;
+import net.enderman999517.funnymodfortesting.entity.client.GongModel;
 import net.enderman999517.funnymodfortesting.entity.client.ModModelLayers;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
@@ -85,6 +86,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         PostWorldRenderCallback.EVENT.register(DepthFx.INSTANCE);
 
         BlockEntityRendererFactories.register(ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntityRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(ModModelLayers.GONG, GongModel::getTexturedModelData);
 
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
