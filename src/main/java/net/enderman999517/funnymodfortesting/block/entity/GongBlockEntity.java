@@ -112,12 +112,20 @@ public class GongBlockEntity extends BlockEntity {
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putInt("ticks", this.swingTicks);
+        nbt.putBoolean("swinging", this.swinging);
+        if (this.dir != null) {
+            nbt.putString("dir", this.dir.asString());
+        }
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.swingTicks = nbt.getInt("ticks");
+        if (nbt.contains("dir")) {
+            dir = Direction.byName(nbt.getString("dir"));
+        }
+        this.swinging = nbt.getBoolean("swinging");
     }
 
     public void sync() {
