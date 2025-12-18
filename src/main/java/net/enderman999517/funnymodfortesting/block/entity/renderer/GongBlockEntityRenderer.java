@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.block.entity.renderer;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.custom.GongBlock;
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
 import net.enderman999517.funnymodfortesting.entity.client.GongModel;
@@ -24,7 +25,7 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
 
     @Override
     public void render(GongBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        float ticks = (float) entity.swingTicks + tickDelta;
+        float ticks = (float) entity.getSwingTicks() + tickDelta;
         float pitch = 0.0f;
         float roll = 0.0f;
         Direction dir = entity.getDir();
@@ -39,12 +40,11 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
             matrices.multiply(RotationAxis.NEGATIVE_Y.rotation(MathHelper.PI/2));
         }
 
-        //swing
-        if (entity.swingTicks > 0) {
+        if (entity.swinging) {
             float angle = MathHelper.sin(ticks / MathHelper.PI) / (4.0F + ticks / 3.0F);
-            //FunnyModForTesting.LOGGER.error("angle: {}", angle);
-            //FunnyModForTesting.LOGGER.error("tickDelta: {}", tickDelta);
-            //FunnyModForTesting.LOGGER.error("tick: {}", entity.swingTicks);
+            FunnyModForTesting.LOGGER.error("angle: {}", angle);
+            FunnyModForTesting.LOGGER.error("tickDelta: {}", tickDelta);
+            FunnyModForTesting.LOGGER.error("tick: {}", entity.swingTicks);
             if (dir == Direction.NORTH) {
                 pitch = angle;
             } else if (dir == Direction.SOUTH) {

@@ -20,7 +20,7 @@ public class GongBlockEntity extends BlockEntity {
     private final int MAX_RING_TIMES = 3;
     private final HashMap<UUID, Integer> playerRingTimes = new HashMap<>();
     public int swingTicks;
-    public static final int MAX_SWING_TICKS = 50;
+    public static final int MAX_SWING_TICKS = 30;
     public Direction dir;
     public boolean swinging;
 
@@ -57,11 +57,24 @@ public class GongBlockEntity extends BlockEntity {
     }
 
     public void startSwing(Direction lastSideHit) {
-        if (this.swinging && this.swingTicks > 5) {
-            this.swingTicks = 0;
-        } else this.swinging = true;
+        BlockPos blockPos = this.getPos();
         this.dir = lastSideHit;
-        markDirty();
+        if (!this.swinging) {
+            this.swinging = true;
+        }
+        this.world.addSyncedBlockEvent(blockPos, this.getCachedState().getBlock(), 1, dir.getId());
+    }
+
+    @Override
+    public boolean onSyncedBlockEvent(int type, int data) {
+        if (type == 1 && !this.swinging) {
+            this.dir = Direction.byId(data);
+            this.swingTicks = 0;
+            this.swinging = true;
+            return true;
+        } else {
+            return super.onSyncedBlockEvent(type, data);
+        }
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, GongBlockEntity blockEntity) {
@@ -69,7 +82,7 @@ public class GongBlockEntity extends BlockEntity {
             blockEntity.swingTicks++;
         }
 
-        if (blockEntity.swingTicks >= MAX_SWING_TICKS + 1) {
+        if (blockEntity.swingTicks >= MAX_SWING_TICKS) {
             blockEntity.swinging = false;
             blockEntity.swingTicks = 0;
         }
@@ -99,18 +112,12 @@ public class GongBlockEntity extends BlockEntity {
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putInt("ticks", this.swingTicks);
-        if (this.dir != null) {
-            nbt.putString("dir", this.dir.asString());
-        }
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.swingTicks = nbt.getInt("ticks");
-        if (nbt.contains("dir")) {
-            dir = Direction.byName(nbt.getString("dir"));
-        }
     }
 
     public void sync() {
