@@ -64,7 +64,7 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
             if (hitSide == facing || hitSide == facingOpposite) {
                 BlockEntity blockEntity = world.getBlockEntity(pos);
                 if (blockEntity instanceof GongBlockEntity gong) {
-                    //gong.incrementRings(world, pos, player);
+                    gong.incrementRings(world, pos, player);
                     gong.startSwing(hitSide.getOpposite());
                 }
                 return true;

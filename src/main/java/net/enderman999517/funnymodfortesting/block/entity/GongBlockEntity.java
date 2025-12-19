@@ -48,14 +48,6 @@ public class GongBlockEntity extends BlockEntity {
         return this.dir;
     }
 
-    public void setSwingTicks(int swingTicks) {
-        this.swingTicks = swingTicks;
-    }
-
-    public void setDir(Direction dir) {
-        this.dir = dir;
-    }
-
     public void startSwing(Direction lastSideHit) {
         BlockPos blockPos = this.getPos();
         this.dir = lastSideHit;
