@@ -9,6 +9,8 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
@@ -64,12 +66,18 @@ public class GongBlock extends BlockWithEntity implements BlockEntityProvider {
             if (hitSide == facing || hitSide == facingOpposite) {
                 BlockEntity blockEntity = world.getBlockEntity(pos);
                 if (blockEntity instanceof GongBlockEntity gong) {
-                    gong.incrementRings(world, pos, player);
-                    gong.startSwing(hitSide.getOpposite());
+                    if (canStart(gong)) {
+                        gong.incrementRings(world, pos, player);
+                        gong.startSwing(hitSide.getOpposite());
+                    } else return false;
                 }
                 return true;
             } else return false;
         } else return false;
+    }
+
+    private boolean canStart(GongBlockEntity blockEntity) {
+        return !blockEntity.swinging;
     }
 
     @Override

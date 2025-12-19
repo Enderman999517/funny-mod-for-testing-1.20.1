@@ -5,4 +5,5 @@ public interface ModEntityData {
     void setHidden(boolean hidden);
     boolean isRenderingOverlay();
     void setRenderingOverlay(boolean renderingOverlay);
+    boolean hasRingInOffhand();
 }

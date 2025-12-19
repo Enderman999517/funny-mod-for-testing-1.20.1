@@ -8,6 +8,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -34,6 +36,7 @@ public class GongBlockEntity extends BlockEntity {
 
         if (count < MAX_RING_TIMES) {
             playerRingTimes.put(id, count);
+            world.playSound(null, pos, SoundEvents.ENTITY_EVOKER_PREPARE_WOLOLO, SoundCategory.BLOCKS,1f,1f);
         } else {
             triggerEvent(world, pos, player);
             playerRingTimes.put(id, 0);
@@ -83,7 +86,7 @@ public class GongBlockEntity extends BlockEntity {
 
 
     private void triggerEvent(World world, BlockPos pos, PlayerEntity player) {
-        //player.playSound(SoundEvents.ITEM_TRIDENT_THUNDER, SoundCategory.BLOCKS, 1f, 1f);
+        world.playSound(null, pos, SoundEvents.ENTITY_EVOKER_CELEBRATE, SoundCategory.BLOCKS,1f,1f);
         if (player instanceof ModEntityData modEntityData) {
             modEntityData.setHidden(true);
             modEntityData.setRenderingOverlay(true);
