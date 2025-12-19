@@ -1,11 +1,13 @@
 package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -23,16 +25,20 @@ public class RingItem extends Item {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient) {
-            this.callbacks.get(shaderMode).use(world, user, hand);
-        }
-        if (!world.isClient) {
-            if (user instanceof ModEntityData modEntityData) {
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        ItemStack stack1;
+        if (entity instanceof PlayerEntity playerEntity) {
+            stack1 = playerEntity.getStackInHand(Hand.OFF_HAND);
+        } else stack1 = Items.AIR.getDefaultStack();
+
+        if (entity instanceof ModEntityData modEntityData && stack1.isOf(ModItems.RING)) {
+            if (world.isClient) {
+                this.callbacks.get(shaderMode).inventoryTick(stack, world, entity, slot, selected);
+            }
+            if (!world.isClient && !modEntityData.isHidden()) {
                 modEntityData.setHidden(!modEntityData.isHidden());
                 modEntityData.setRenderingOverlay(!modEntityData.isRenderingOverlay());
             }
-            return TypedActionResult.success(user.getStackInHand(hand), false);
-        } return TypedActionResult.success(user.getStackInHand(hand), true);
+        }
     }
 }

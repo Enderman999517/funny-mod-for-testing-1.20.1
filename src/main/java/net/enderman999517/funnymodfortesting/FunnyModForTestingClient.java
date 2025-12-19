@@ -127,7 +127,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
                 warpShader.render(tickDelta);
             }
         });
-        ModItems.RING.registerRingCallback((world, player, hand) -> {
+        ModItems.RING.registerRingCallback((stack, world, entity, slot, selected) -> {
             if (world.isClient) {
                 renderingWarp = !renderingWarp;
             }
