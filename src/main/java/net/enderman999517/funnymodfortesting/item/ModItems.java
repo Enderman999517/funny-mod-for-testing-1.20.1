@@ -20,7 +20,7 @@ public class ModItems {
     // for shader stuff triggered by items, add as below and add to registerModItems()
     public static final DebugItem DEBUG_ITEM = new DebugItem(new Item.Settings());
     public static final BlockItem DEBUG_BLOCK = new BlockItem(ModBlocks.DEBUG_BLOCK, new Item.Settings());
-    public static final NvgItem NVG_GOGGLES = new NvgItem(new Item.Settings());
+    public static final NvgItem NVG_GOGGLES = new NvgItem(new Item.Settings().maxCount(1));
     public static final RingItem RING = new RingItem(new Item.Settings());
 
 

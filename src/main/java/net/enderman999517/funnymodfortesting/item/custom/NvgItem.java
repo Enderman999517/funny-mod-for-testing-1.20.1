@@ -57,16 +57,19 @@ public class NvgItem extends Item implements Equipment {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (world.isClient) {
             if (entity.isPlayer() && FunnyModForTestingClient.NVG_TOGGLE.wasPressed()) {
-                // no clue why you need to invert it but it works so i dont really care
-                if (!Objects.requireNonNull(entity.getWorld().getClosestPlayer(entity, 2)).getInventory().main.stream().anyMatch(stack1 -> stack1.isOf(ModItems.NVG_GOGGLES))) {
-                    this.callbacks.get(nvgMode).inventoryTick(stack, world, entity, slot, selected);
-                    if (toggle % 2 == 0) {
-                        entity.playSound(ModSounds.NVG_TURN_ON, 1f, 1f);
-                        toggle++;
-                    } else {
-                        entity.playSound(ModSounds.NVG_TURN_OFF, 1f, 1f);
-                        toggle++;
-                    }
+                if (entity instanceof PlayerEntity player) {
+                    player.getArmorItems().forEach(stack1 -> {
+                        if (stack1.isOf(ModItems.NVG_GOGGLES)) {
+                            this.callbacks.get(nvgMode).inventoryTick(stack, world, entity, slot, selected);
+                            if (toggle % 2 == 0) {
+                                entity.playSound(ModSounds.NVG_TURN_ON, 1f, 1f);
+                                toggle++;
+                            } else {
+                                entity.playSound(ModSounds.NVG_TURN_OFF, 1f, 1f);
+                                toggle++;
+                            }
+                        }
+                    });
                 }
             }
         }
