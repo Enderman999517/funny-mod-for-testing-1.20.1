@@ -32,12 +32,14 @@ public class HiddenEntity extends HostileEntity {
     @Override
     public void tick() {
         if (this instanceof ModEntityData modEntityData) {
-            FunnyModForTesting.LOGGER.error("hidden: {}", modEntityData.isHidden());
-            if (!modEntityData.isHidden()) {
-                modEntityData.setHidden(true);
-                FunnyModForTesting.LOGGER.error("asjkg");
+            if (!getEntityWorld().isClient) {
+                if (!modEntityData.isHidden()) {
+                    modEntityData.setHidden(true);
+                    modEntityData.setRenderingOverlay(true);
+                }
+                ModSync.syncHiddenFlag(this, modEntityData.isHidden());
+                ModSync.syncRenderingOverlayFlag(this, modEntityData.isHidden());
             }
-            ModSync.syncHiddenFlag(this, modEntityData.isHidden());
         }
         super.tick();
     }
