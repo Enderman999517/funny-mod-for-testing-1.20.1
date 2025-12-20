@@ -13,6 +13,13 @@ import net.minecraft.util.Identifier;
 public class ModEntities {
     public static void registerModEntities() {
         FunnyModForTesting.LOGGER.info("Registering Entities for " + FunnyModForTesting.MOD_ID);
+        //ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+        //    if (entity instanceof HiddenEntity) {
+        //        if (entity instanceof ModEntityData modEntityData) {
+        //            modEntityData.setHidden(modEntityData.isHidden());
+        //        }
+        //    }
+        //});
     }
 
     public static final EntityType<ExplosiveProjectileEntity> EXPLOSIVE_PROJECTILE = Registry.register(Registries.ENTITY_TYPE,
