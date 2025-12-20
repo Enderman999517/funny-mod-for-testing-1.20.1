@@ -15,6 +15,8 @@ public class ModModelLayers {
             new EntityModelLayer(new Identifier(FunnyModForTesting.MOD_ID, "player_charged"), "main");
     public static final EntityModelLayer GONG =
             new EntityModelLayer(new Identifier(FunnyModForTesting.MOD_ID, "gong"), "main");
+    public static final EntityModelLayer HIDDEN =
+            new EntityModelLayer(new Identifier(FunnyModForTesting.MOD_ID, "hidden"), "main");
 
     public static void registerModelLayers() {
         EntityModelLayerRegistry.registerModelLayer(PLAYER_CHARGED, () ->

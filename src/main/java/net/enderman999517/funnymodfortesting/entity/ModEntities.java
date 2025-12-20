@@ -1,10 +1,7 @@
 package net.enderman999517.funnymodfortesting.entity;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
-import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
-import net.enderman999517.funnymodfortesting.entity.custom.BlockPlacingProjectileEntity;
-import net.enderman999517.funnymodfortesting.entity.custom.ExplosiveProjectileEntity;
-import net.enderman999517.funnymodfortesting.entity.custom.StatusEffectProjectileEntity;
+import net.enderman999517.funnymodfortesting.entity.custom.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -34,10 +31,14 @@ public class ModEntities {
                     .dimensions(EntityDimensions.fixed(0.4f, 0.4f)).build());
 
 
-
     public static final EntityType<AmoghEntity> AMOGH = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(FunnyModForTesting.MOD_ID, "amogh"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, AmoghEntity::new)
                     .dimensions(EntityDimensions.fixed(3f, 3f)).build());
+
+    public static final EntityType<HiddenEntity> HIDDEN = Registry.register(Registries.ENTITY_TYPE,
+            new Identifier(FunnyModForTesting.MOD_ID, "hidden"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, HiddenEntity::new)
+                    .dimensions(EntityDimensions.fixed(1f, 1f)).build());
 
 }

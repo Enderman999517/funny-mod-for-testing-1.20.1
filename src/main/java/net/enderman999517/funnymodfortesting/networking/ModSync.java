@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -50,20 +51,28 @@ public class ModSync {
                         //both hidden
                         if (modEntityDataP.isHidden()) {
                             player.networkHandler.sendPacket(packetU);
-                            ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                            if (entity instanceof PlayerEntity) {
+                                ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                            }
                             //entity hidden, player not hidden
                         } else {
                             player.networkHandler.sendPacket(packetH);
-                            ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                            if (entity instanceof PlayerEntity) {
+                                ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                            }
                         }
                         //entity not hidden, player hidden
                     } else if (modEntityDataP.isHidden()) {
                         player.networkHandler.sendPacket(packetU);
-                        ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetHp);
+                        if (entity instanceof PlayerEntity) {
+                            ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetHp);
+                        }
                         //entity not hidden, player not hidden
                     } else {
                         player.networkHandler.sendPacket(packetU);
-                        ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                        if (entity instanceof PlayerEntity) {
+                            ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
+                        }
                     }
                 }
             }

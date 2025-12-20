@@ -7,6 +7,7 @@ import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
 import net.enderman999517.funnymodfortesting.enchantment.ModEnchantments;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
+import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItemGroups;
 import net.enderman999517.funnymodfortesting.item.ModItems;
@@ -34,6 +35,7 @@ public class FunnyModForTesting implements ModInitializer {
 		ModEntities.registerModEntities();
 		ModBlockEntities.registerBlockEntities();
 		FabricDefaultAttributeRegistry.register(ModEntities.AMOGH, AmoghEntity.createAmoghAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.HIDDEN, HiddenEntity.createHiddenAttributes());
 		ModSounds.registerSounds();
 		ModStatusEffects.registerModStatusEffects();
 		ModScreenHandlers.registerScreenHandlers();

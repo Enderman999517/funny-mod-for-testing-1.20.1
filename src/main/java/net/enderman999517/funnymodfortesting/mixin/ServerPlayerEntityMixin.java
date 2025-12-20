@@ -20,7 +20,7 @@ public abstract class ServerPlayerEntityMixin implements ModEntityData {
     }
 
     @Inject(method = "playerTick", at = @At("HEAD"))
-    public void playerTick(CallbackInfo ci) {
+    public void setHiddenForRing(CallbackInfo ci) {
         if (serverPlayerEntity instanceof ModEntityData modEntityData) {
             if(wasInOffhandPrevTick) {
                 if(!modEntityData.hasRingInOffhand()) {
