@@ -33,7 +33,11 @@
 
   "commands.funnymodfortesting.kill.success.multiple": "Killed %s entities",
   "commands.funnymodfortesting.kill.success.single": "Killed %s",
+  "commands.hidden.success.single": "Set hidden to %s for %s",
+  "commands.hidden.success.multiple": "Set hidden to %s for %s targets",
 
   "death.attack.scythe": "%1$s drained too much of their blood",
   "death.attack.stim": "%1$s got too stimulated"
+
+
 }

@@ -51,6 +51,7 @@ public class ModSync {
                         //both hidden
                         if (modEntityDataP.isHidden()) {
                             player.networkHandler.sendPacket(packetU);
+                            //FunnyModForTesting.LOGGER.error("lsa;hf");
                             if (entity instanceof PlayerEntity) {
                                 ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetUp);
                             }
@@ -67,7 +68,7 @@ public class ModSync {
                         if (entity instanceof PlayerEntity) {
                             ((ServerPlayerEntity) entity).networkHandler.sendPacket(packetHp);
                         }
-                        //entity not hidden, player not hidden
+                        //both not hidden
                     } else {
                         player.networkHandler.sendPacket(packetU);
                         if (entity instanceof PlayerEntity) {
