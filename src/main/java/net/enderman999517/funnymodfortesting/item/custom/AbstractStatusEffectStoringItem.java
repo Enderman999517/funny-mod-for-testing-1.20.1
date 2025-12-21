@@ -22,7 +22,9 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -100,28 +102,44 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        boolean returnValue = true;
         ItemStack stack = user.getStackInHand(hand);
-        if (!world.isClient) {
-            if (clearable) {
-                if (Screen.hasShiftDown()) {
-                    clearEffectsFromNbt(stack);
-                } else {
-                    if (!user.getStatusEffects().isEmpty()) {
-                        useItem(world, user);
+        if (clearable) {
+            if (Screen.hasShiftDown()) {
+                if (!stack.getNbt().getList("Effects", 10).isEmpty()) {
+                    if (!world.isClient) {
+                        clearEffectsFromNbt(stack);
                     }
-                }
+                } else returnValue = false;
             } else {
-                if (Screen.hasShiftDown() && useOnSelf) {
-                    for (StatusEffectInstance effect : readEffectsFromNbt(stack)) {
-                        user.addStatusEffect(new StatusEffectInstance(effect));
-                    }
-                    clearEffectsFromNbt(stack);
-                } else {
+                if (!user.getStatusEffects().isEmpty()) {
                     useItem(world, user);
-                }
+                } else returnValue = false;
+            }
+        } else {
+            if (Screen.hasShiftDown() && useOnSelf) {
+                if (!stack.getNbt().getList("Effects", 10).isEmpty()) {
+                    for (StatusEffectInstance effect : readEffectsFromNbt(stack)) {
+                        if (!world.isClient) {
+                            user.addStatusEffect(new StatusEffectInstance(effect));
+                        }
+                    }
+                    if (!world.isClient) {
+                        clearEffectsFromNbt(stack);
+                    }
+                } else returnValue = false;
+            } else {
+                if (!user.getStatusEffects().isEmpty()) {
+                    useItem(world, user);
+                } else returnValue = false;
             }
         }
-        return TypedActionResult.success(stack, world.isClient);
+        if (returnValue) {
+            if (!world.isClient) {
+                user.incrementStat(Stats.USED.getOrCreateStat(this));
+            }
+            return TypedActionResult.success(stack, world.isClient);
+        } else return TypedActionResult.fail(stack);
     }
 
     @Override
@@ -162,7 +180,6 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
                     player -> player.sendToolBreakStatus(player.getActiveHand()));
             user.getWorld().playSound(null, user.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_DEATH, SoundCategory.BLOCKS);
         }
-
     }
 
     private static boolean noSwapping(List<StatusEffectInstance> existingEffects, Collection<StatusEffectInstance> effects, boolean found, StatusEffectInstance newEffect) {
@@ -257,7 +274,6 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
                     break;
                 }
             }
-
             if (!found) {
                 existingEffects.add(newEffect);
             }

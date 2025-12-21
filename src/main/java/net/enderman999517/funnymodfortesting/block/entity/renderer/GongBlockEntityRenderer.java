@@ -1,6 +1,5 @@
 package net.enderman999517.funnymodfortesting.block.entity.renderer;
 
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.custom.GongBlock;
 import net.enderman999517.funnymodfortesting.block.entity.GongBlockEntity;
 import net.enderman999517.funnymodfortesting.entity.client.GongModel;
@@ -42,9 +41,6 @@ public class GongBlockEntityRenderer  implements BlockEntityRenderer<GongBlockEn
 
         if (entity.swinging) {
             float angle = MathHelper.sin(ticks / MathHelper.PI) / (4.0F + ticks / 3.0F);
-            //FunnyModForTesting.LOGGER.error("angle: {}", angle);
-            //FunnyModForTesting.LOGGER.error("tickDelta: {}", tickDelta);
-            //FunnyModForTesting.LOGGER.error("tick: {}", entity.swingTicks);
             if (dir == Direction.NORTH) {
                 pitch = angle;
             } else if (dir == Direction.SOUTH) {

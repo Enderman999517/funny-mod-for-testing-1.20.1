@@ -17,7 +17,7 @@ import java.util.*;
 
 public class ModSync {
 
-    public static void syncHiddenFlag(Entity entity, boolean hidden) {
+    public static void syncHiddenFlag(Entity entity) {
         if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
 
         PacketByteBuf bufH = PacketByteBufs.create();
@@ -134,6 +134,15 @@ public class ModSync {
                     entry.setValue(ticks + 1);
                 }
             }
+
+            server.getPlayerManager().getPlayerList().forEach(player -> {
+                List<Entity> entities = player.getServerWorld().getOtherEntities(player, player.getBoundingBox().expand(50,50,50));
+                entities.forEach(entity -> {
+                    ModEntityData modEntityData = ((ModEntityData) entity);
+                    syncHiddenFlag(entity);
+                    syncRenderingOverlayFlag(entity, modEntityData.isHidden());
+                });
+            });
         });
 
 

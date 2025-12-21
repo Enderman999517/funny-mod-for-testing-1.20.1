@@ -47,7 +47,7 @@ public abstract class EntityNbtMixin implements ModEntityData {
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
         if (!entity.getWorld().isClient) {
-            ModSync.syncHiddenFlag(entity, hidden);
+            ModSync.syncHiddenFlag(entity);
         }
     }
 

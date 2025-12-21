@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -49,7 +50,6 @@ public class OverpoweredItem extends Item {
                 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
         );
 
-
         if (!world.isClient) {
             ExplosiveProjectileEntity explosiveProjectileEntity = new ExplosiveProjectileEntity(user, world);
             explosiveProjectileEntity.setItem(itemStack);
@@ -58,18 +58,14 @@ public class OverpoweredItem extends Item {
             explosiveProjectileEntity.setGlowing(true);
             world.spawnEntity(explosiveProjectileEntity);
         }
-
-        //user.incrementStat(Stats.USED.getOrCreateStat(this));
-        //if (!user.getAbilities().creativeMode) {
-        //    itemStack.decrement(1);
-        //}
-
+        user.incrementStat(Stats.USED.getOrCreateStat(this));
         return TypedActionResult.success(itemStack, world.isClient);
     }
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         entity.discard();
+        user.incrementStat(Stats.USED.getOrCreateStat(this));
         return ActionResult.SUCCESS;
     }
 

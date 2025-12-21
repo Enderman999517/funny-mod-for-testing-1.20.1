@@ -13,13 +13,6 @@ import net.minecraft.util.Identifier;
 public class ModEntities {
     public static void registerModEntities() {
         FunnyModForTesting.LOGGER.info("Registering Entities for " + FunnyModForTesting.MOD_ID);
-        //ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-        //    if (entity instanceof HiddenEntity) {
-        //        if (entity instanceof ModEntityData modEntityData) {
-        //            modEntityData.setHidden(modEntityData.isHidden());
-        //        }
-        //    }
-        //});
     }
 
     public static final EntityType<ExplosiveProjectileEntity> EXPLOSIVE_PROJECTILE = Registry.register(Registries.ENTITY_TYPE,
@@ -36,7 +29,6 @@ public class ModEntities {
             new Identifier(FunnyModForTesting.MOD_ID, "status_effect_projectile"),
             FabricEntityTypeBuilder.<StatusEffectProjectileEntity>create(SpawnGroup.MISC, StatusEffectProjectileEntity::new)
                     .dimensions(EntityDimensions.fixed(0.4f, 0.4f)).build());
-
 
     public static final EntityType<AmoghEntity> AMOGH = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(FunnyModForTesting.MOD_ID, "amogh"),

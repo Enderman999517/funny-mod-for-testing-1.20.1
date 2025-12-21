@@ -44,7 +44,6 @@ public class AmoghItem extends Item {
         if (!user.getAbilities().creativeMode) {
             itemStack.decrement(1);
         }
-
         return TypedActionResult.success(itemStack, world.isClient);
     }
 }

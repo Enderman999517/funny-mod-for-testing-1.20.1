@@ -1,7 +1,6 @@
 package net.enderman999517.funnymodfortesting.entity.custom;
 
 import net.enderman999517.funnymodfortesting.ModEntityData;
-import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -36,8 +35,6 @@ public class HiddenEntity extends HostileEntity {
                     modEntityData.setHidden(true);
                     modEntityData.setRenderingOverlay(true);
                 }
-                ModSync.syncHiddenFlag(this, modEntityData.isHidden());
-                ModSync.syncRenderingOverlayFlag(this, modEntityData.isHidden());
             }
         }
         super.tick();

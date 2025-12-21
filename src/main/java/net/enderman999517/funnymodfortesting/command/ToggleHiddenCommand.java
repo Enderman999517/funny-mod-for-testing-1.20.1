@@ -3,7 +3,6 @@ package net.enderman999517.funnymodfortesting.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import net.enderman999517.funnymodfortesting.ModEntityData;
-import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -12,7 +11,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import java.util.Collection;
-import java.util.Objects;
 
 public class ToggleHiddenCommand {
 
@@ -43,8 +41,6 @@ public class ToggleHiddenCommand {
             if (entity instanceof ModEntityData modEntityData) {
                 modEntityData.setHidden(hidden);
                 modEntityData.setRenderingOverlay(hidden);
-                //ModSync.syncHiddenFlag(entity, hidden);
-                //ModSync.syncRenderingOverlayFlag(entity, hidden);
                 validTargets++;
             }
         }
