@@ -130,11 +130,9 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
                         clearEffectsFromNbt(stack);
                     }
                 } else returnValue = false;
-            } else {
-                if (!user.getStatusEffects().isEmpty()) {
-                    useItem(world, user);
-                } else returnValue = false;
-            }
+            } else if (!user.getStatusEffects().isEmpty() && useOnSelf) {
+                useItem(world, user);
+            } else returnValue = false;
         }
         if (returnValue) {
             if (!world.isClient) {
@@ -156,19 +154,22 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
         return super.postHit(stack, target, attacker);
     }
 
-    @Override
-    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if (useOnOthers) {
-            Collection<StatusEffectInstance> effectInstances = entity.getStatusEffects();
-            if (!user.getWorld().isClient && entity != user) {
-                writeEffectsToNbt(stack, effectInstances);
-                //FunnyModForTesting.LOGGER.error("effects: {}", effectInstances);
-                FunnyModForTesting.LOGGER.error("nbt: {}", stack.getNbt().getList("Effects", 10));
-                entity.clearStatusEffects();
-            }
-            return ActionResult.SUCCESS;
-        } else return ActionResult.FAIL;
-    }
+    //boolean needsUpdate = false;
+    //Collection<StatusEffectInstance> effectInstances;
+    //@Override
+    //public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+    //    if (useOnOthers) {
+    //        effectInstances = entity.getStatusEffects();
+    //        if (!user.getWorld().isClient && entity != user) {
+    //            writeEffectsToNbt(stack, effectInstances);
+    //            //FunnyModForTesting.LOGGER.error("effects: {}", effectInstances);
+    //            FunnyModForTesting.LOGGER.error("nbt: {}", stack.getNbt().getList("Effects", 10));
+    //            entity.clearStatusEffects();
+    //            needsUpdate = true;
+    //        }
+    //        return ActionResult.SUCCESS;
+    //    } else return ActionResult.FAIL;
+    //}
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
@@ -179,8 +180,12 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
 
     //@Override
     //public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-    //    writeEffectsToNbt(stack, prevEffects);
-//
+    //    if (!world.isClient) {
+    //        if (needsUpdate) {
+    //            writeEffectsToNbt(stack, effectInstances);
+    //            needsUpdate = false;
+    //        }
+    //    }
     //    super.inventoryTick(stack, world, entity, slot, selected);
     //}
 
