@@ -29,7 +29,6 @@ public class ModModelProvider extends FabricModelProvider {
         //block entities
         blockStateModelGenerator.registerSimpleState(ModBlocks.BRAINROTIFIER);
         blockStateModelGenerator.registerSimpleState(ModBlocks.COMPACTOR);
-        //blockStateModelGenerator.registerSimpleState(ModBlocks.GONG);
     }
 
     @Override
@@ -41,6 +40,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.AMOGH, Models.GENERATED);
         itemModelGenerator.register(ModItems.FLASHBANG, Models.GENERATED);
         itemModelGenerator.register(ModItems.STIM, Models.GENERATED);
+        itemModelGenerator.register(ModItems.SYRINGE, Models.GENERATED);
         itemModelGenerator.register(ModItems.RING, Models.GENERATED);
         itemModelGenerator.register(ModItems.SPEAR, Models.GENERATED);
 

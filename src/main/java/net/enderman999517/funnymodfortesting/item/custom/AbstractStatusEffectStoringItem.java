@@ -2,18 +2,18 @@ package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.enchantment.ModEnchantments;
-import net.enderman999517.funnymodfortesting.item.ModToolMaterial;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolMaterial;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -35,16 +35,17 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class AbstractStatusEffectStoringItem extends SwordItem {
-    public AbstractStatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean useOnOthers, int effectSwapping, boolean stacksAmp, int attackDamage, float attackSpeed) {
-        super(ModToolMaterial.SCYTHE, attackDamage, attackSpeed, settings);
+    public AbstractStatusEffectStoringItem(Settings settings, boolean damagesUser, RegistryKey<DamageType> damageTypeRegistryKey, float damageAmount, boolean clearable, boolean useOnSelf, boolean hitOnOthers, int effectSwapping, boolean stacksAmp, boolean useOnOthers, int attackDamage, float attackSpeed, ToolMaterial toolMaterial) {
+        super(toolMaterial, attackDamage, attackSpeed, settings);
         this.damagesUser = damagesUser;
         this.damageTypeRegistryKey = damageTypeRegistryKey;
         this.damageAmount = damageAmount;
         this.clearable = clearable;
         this.useOnSelf = useOnSelf;
-        this.useOnOthers = useOnOthers;
+        this.hitOnOthers = hitOnOthers;
         this.effectSwapping = effectSwapping;
         this.stacksAmp = stacksAmp;
+        this.useOnOthers = useOnOthers;
         this.attackDamage = attackDamage;
         this.attackSpeed = attackSpeed;
     }
@@ -54,9 +55,10 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
     private final float damageAmount;
     private final boolean clearable;
     private final boolean useOnSelf;
-    private final boolean useOnOthers;
+    private final boolean hitOnOthers;
     private final int effectSwapping;
     private boolean stacksAmp;
+    private final boolean useOnOthers;
     private final int attackDamage;
     private final float attackSpeed;
 
@@ -144,7 +146,7 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (useOnOthers) {
+        if (hitOnOthers) {
             for (StatusEffectInstance effect : readEffectsFromNbt(stack)) {
                 target.addStatusEffect(new StatusEffectInstance(effect));
             }
@@ -155,11 +157,32 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
     }
 
     @Override
+    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+        if (useOnOthers) {
+            Collection<StatusEffectInstance> effectInstances = entity.getStatusEffects();
+            if (!user.getWorld().isClient && entity != user) {
+                writeEffectsToNbt(stack, effectInstances);
+                //FunnyModForTesting.LOGGER.error("effects: {}", effectInstances);
+                FunnyModForTesting.LOGGER.error("nbt: {}", stack.getNbt().getList("Effects", 10));
+                entity.clearStatusEffects();
+            }
+            return ActionResult.SUCCESS;
+        } else return ActionResult.FAIL;
+    }
+
+    @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         List<StatusEffectInstance> effects = readEffectsFromNbt(stack);
         PotionUtil.buildTooltip(effects, tooltip, 1f);
         super.appendTooltip(stack, world, tooltip, context);
     }
+
+    //@Override
+    //public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+    //    writeEffectsToNbt(stack, prevEffects);
+//
+    //    super.inventoryTick(stack, world, entity, slot, selected);
+    //}
 
     private void useItem(World world, PlayerEntity user) {
         ItemStack stack = user.getMainHandStack();
@@ -265,13 +288,10 @@ public abstract class AbstractStatusEffectStoringItem extends SwordItem {
             if (stacks) {
                 found = addingAmp(existingEffects, effects, false, newEffect, stack);
             } else  {
-                if (effectSwapping == 0) {
-                    found = noSwapping(existingEffects, effects, found, newEffect);
-                } else if (effectSwapping == 1) {
-                    found = swapping(existingEffects, effects, found, newEffect);
-                } else {
-                    FunnyModForTesting.LOGGER.error("Invalid effect swapping state");
-                    break;
+                switch (effectSwapping) {
+                    case 0 -> found = noSwapping(existingEffects, effects, found, newEffect);
+                    case 1 -> found = swapping(existingEffects, effects, found, newEffect);
+                    default -> FunnyModForTesting.LOGGER.error("Invalid effect swapping state");
                 }
             }
             if (!found) {
