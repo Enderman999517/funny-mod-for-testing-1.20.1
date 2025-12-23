@@ -113,7 +113,6 @@ public class HiddenEntity extends HostileEntity {
     public void onStoppedTrackingBy(ServerPlayerEntity player) {
         super.onStoppedTrackingBy(player);
         this.bossBar.removePlayer(player);
-        FunnyModForTesting.LOGGER.error("lsdjkgfosdugf");
         tracking = false;
     }
 }

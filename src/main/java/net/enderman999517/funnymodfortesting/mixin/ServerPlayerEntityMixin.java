@@ -33,15 +33,15 @@ public abstract class ServerPlayerEntityMixin {
             }
 
             Box checkBox = new Box(
-                    serverPlayerEntity.getX() - 50, serverPlayerEntity.getY() - 50, serverPlayerEntity.getZ() - 50,
-                    serverPlayerEntity.getX() + 50, serverPlayerEntity.getY() + 50, serverPlayerEntity.getZ() + 50);
+                    serverPlayerEntity.getX() - 100, serverPlayerEntity.getY() - 100, serverPlayerEntity.getZ() - 100,
+                    serverPlayerEntity.getX() + 100, serverPlayerEntity.getY() + 100, serverPlayerEntity.getZ() + 100);
 
             List<Entity> entities = serverPlayerEntity.getServerWorld().getOtherEntities(serverPlayerEntity, checkBox);
             entities.forEach(entity -> {
                 if (entity instanceof HiddenEntity hiddenEntity) {
                     if (modEntityData.isHidden() && hiddenEntity.getTracking()) {
                         hiddenEntity.getBossBar().addPlayer(serverPlayerEntity);
-                    } else if (/*hiddenEntity.getBossBar().getPlayers().contains(serverPlayerEntity) && */!modEntityData.hasRingInOffhand() || !hiddenEntity.getTracking()) {
+                    } else if (hiddenEntity.getBossBar().getPlayers().contains(serverPlayerEntity) && !modEntityData.hasRingInOffhand() || !hiddenEntity.getTracking()) {
                         hiddenEntity.getBossBar().removePlayer(serverPlayerEntity);
                     }
                 }
