@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Box;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -14,7 +15,9 @@ import java.util.List;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
+    @Unique
     ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)(Object)this;
+    @Unique
     boolean wasInOffhandPrevTick = false;
 
     @Inject(method = "playerTick", at = @At("HEAD"))

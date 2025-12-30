@@ -105,7 +105,6 @@ public class HiddenEntity extends HostileEntity {
                 EntityType<?> entityType = silverfishEntity.getType();
                 SpawnRestriction.Location location = SpawnRestriction.getLocation(entityType);
                 if (SpawnHelper.canSpawn(location, this.getWorld(), blockPos, entityType)) {
-                //        && SpawnRestriction.canSpawn(entityType, serverWorld, SpawnReason.TRIGGERED, blockPos, this.getWorld().random)) {
                     silverfishEntity.setPosition(x1, y1, z1);
 
                     if (!this.getWorld().isPlayerInRange(x1, y1, z1, 4.0)
@@ -115,11 +114,6 @@ public class HiddenEntity extends HostileEntity {
                         silverfishEntity.setTarget(livingEntity);
                         silverfishEntity.initialize(serverWorld, this.getWorld().getLocalDifficulty(silverfishEntity.getBlockPos()), SpawnReason.TRIGGERED, null, null);
                         serverWorld.spawnEntityAndPassengers(silverfishEntity);
-
-                        //this.getAttributeInstance(EntityAttributes.ZOMBIE_SPAWN_REINFORCEMENTS)
-                        //        .addPersistentModifier(new EntityAttributeModifier("Zombie reinforcement caller charge", -0.05F, EntityAttributeModifier.Operation.ADDITION));
-                        //silverfishEntity.getAttributeInstance(EntityAttributes.ZOMBIE_SPAWN_REINFORCEMENTS)
-                        //        .addPersistentModifier(new EntityAttributeModifier("Zombie reinforcement callee charge", -0.05F, EntityAttributeModifier.Operation.ADDITION));
                         break;
                     }
                 }
