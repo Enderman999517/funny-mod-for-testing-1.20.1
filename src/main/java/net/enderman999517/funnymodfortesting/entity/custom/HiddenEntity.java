@@ -2,10 +2,12 @@ package net.enderman999517.funnymodfortesting.entity.custom;
 
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.entity.ai.HiddenAttackGoal;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
@@ -15,15 +17,13 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.entity.mob.SilverfishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.World;
 
@@ -64,6 +64,12 @@ public class HiddenEntity extends HostileEntity {
                 if (this.getHealth() <= this.getMaxHealth()/2) {
                     triggerEvent();
                 }
+
+                if (this.getHealth() <= this.getMaxHealth()/4) {
+                    if (this.getTarget() != null) {
+                        this.goalSelector.add(0, new FleeEntityGoal<>(this, this.getTarget().getClass(), 10, 1, 1.5));
+                    }
+                }
             }
         }
         super.tick();
@@ -74,19 +80,21 @@ public class HiddenEntity extends HostileEntity {
             this.goalSelector.disableControl(Goal.Control.JUMP);
             this.goalSelector.disableControl(Goal.Control.MOVE);
             this.ticksRemaining--;
+            this.setInvulnerable(true);
         } else {
             this.goalSelector.enableControl(Goal.Control.JUMP);
             this.goalSelector.enableControl(Goal.Control.MOVE);
+            this.setInvulnerable(false);
         }
 
         LivingEntity livingEntity = this.getTarget();
         ServerWorld serverWorld = (ServerWorld)this.getWorld();
 
-        if (livingEntity != null) {
+        if (livingEntity != null && this.ticksRemaining % 3 == 1) {
             int x = MathHelper.floor(this.getX());
             int y = MathHelper.floor(this.getY());
             int z = MathHelper.floor(this.getZ());
-            ZombieEntity zombieEntity = new ZombieEntity(this.getWorld());
+            SilverfishEntity silverfishEntity = new SilverfishEntity(EntityType.SILVERFISH, this.getWorld());
 
             for (int i = 0; i < 50; i++) {
                 int x1 = x + MathHelper.nextInt(this.random, 1, 4) * MathHelper.nextInt(this.random, -1, 1);
@@ -94,23 +102,23 @@ public class HiddenEntity extends HostileEntity {
                 int z1 = z + MathHelper.nextInt(this.random, 1, 4) * MathHelper.nextInt(this.random, -1, 1);
                 BlockPos blockPos = new BlockPos(x1, y1, z1);
 
-                EntityType<?> entityType = zombieEntity.getType();
+                EntityType<?> entityType = silverfishEntity.getType();
                 SpawnRestriction.Location location = SpawnRestriction.getLocation(entityType);
-                if (SpawnHelper.canSpawn(location, this.getWorld(), blockPos, entityType)
-                        && SpawnRestriction.canSpawn(entityType, serverWorld, SpawnReason.TRIGGERED, blockPos, this.getWorld().random)) {
-                    zombieEntity.setPosition(x1, y1, z1);
+                if (SpawnHelper.canSpawn(location, this.getWorld(), blockPos, entityType)) {
+                //        && SpawnRestriction.canSpawn(entityType, serverWorld, SpawnReason.TRIGGERED, blockPos, this.getWorld().random)) {
+                    silverfishEntity.setPosition(x1, y1, z1);
 
                     if (!this.getWorld().isPlayerInRange(x1, y1, z1, 4.0)
-                            && this.getWorld().doesNotIntersectEntities(zombieEntity)
-                            && this.getWorld().isSpaceEmpty(zombieEntity)
-                            && !this.getWorld().containsFluid(zombieEntity.getBoundingBox())) {
-                        zombieEntity.setTarget(livingEntity);
-                        zombieEntity.initialize(serverWorld, this.getWorld().getLocalDifficulty(zombieEntity.getBlockPos()), SpawnReason.TRIGGERED, null, null);
-                        serverWorld.spawnEntityAndPassengers(zombieEntity);
+                            && this.getWorld().doesNotIntersectEntities(silverfishEntity)
+                            && this.getWorld().isSpaceEmpty(silverfishEntity)
+                            && !this.getWorld().containsFluid(silverfishEntity.getBoundingBox())) {
+                        silverfishEntity.setTarget(livingEntity);
+                        silverfishEntity.initialize(serverWorld, this.getWorld().getLocalDifficulty(silverfishEntity.getBlockPos()), SpawnReason.TRIGGERED, null, null);
+                        serverWorld.spawnEntityAndPassengers(silverfishEntity);
 
                         //this.getAttributeInstance(EntityAttributes.ZOMBIE_SPAWN_REINFORCEMENTS)
                         //        .addPersistentModifier(new EntityAttributeModifier("Zombie reinforcement caller charge", -0.05F, EntityAttributeModifier.Operation.ADDITION));
-                        //zombieEntity.getAttributeInstance(EntityAttributes.ZOMBIE_SPAWN_REINFORCEMENTS)
+                        //silverfishEntity.getAttributeInstance(EntityAttributes.ZOMBIE_SPAWN_REINFORCEMENTS)
                         //        .addPersistentModifier(new EntityAttributeModifier("Zombie reinforcement callee charge", -0.05F, EntityAttributeModifier.Operation.ADDITION));
                         break;
                     }
@@ -167,13 +175,13 @@ public class HiddenEntity extends HostileEntity {
         if (player instanceof ModEntityData modEntityData && modEntityData.isHidden()) {
             this.bossBar.addPlayer((ServerPlayerEntity) modEntityData);
         }
-        tracking = true;
+        this.tracking = true;
     }
 
     @Override
     public void onStoppedTrackingBy(ServerPlayerEntity player) {
         super.onStoppedTrackingBy(player);
         this.bossBar.removePlayer(player);
-        tracking = false;
+        this.tracking = false;
     }
 }
