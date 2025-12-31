@@ -1,15 +1,16 @@
-// 1.20.1	2025-12-21T23:44:01.5654776	Funny Mod For Testing/Model Definitions
+// 1.20.1	2025-12-30T17:59:53.839104	Funny Mod For Testing/Model Definitions
 0449566660d83c9ae4fc2bb4edd48c3975504977 assets\funnymodfortesting\blockstates\showcase_block_w.json
 0fef1fc6eaa82df73ad096f75fd67f958d7013d0 assets\funnymodfortesting\models\item\overpowered.json
 322c26622c74bf626645b7fd9978b96d08602dfc assets\funnymodfortesting\models\item\ring.json
 fce6dda5fab708964b5b22a6e3078b9bc712afba assets\funnymodfortesting\models\item\ltf_block.json
 a14ab8bce7a869731fe0b6bb467793e8cbb1d4ac assets\funnymodfortesting\blockstates\ltf_block.json
-52f6251ab871e279122e40fe7ac3792505bdb6a5 assets\funnymodfortesting\models\item\brainrotifier.json
 9a987fb28c8d936a5ad3c5af965efa2368d8d716 assets\funnymodfortesting\models\block\showcase_block_w.json
 3d34f1e68b8e3782c2f5958c39395e5d278b18bc assets\funnymodfortesting\models\item\syringe.json
+52f6251ab871e279122e40fe7ac3792505bdb6a5 assets\funnymodfortesting\models\item\brainrotifier.json
 ae217626eb5be0d9fa032becc72e85ed0534e7c7 assets\funnymodfortesting\models\item\amogh_essence.json
 8a2108ceeca5265f93950d898b2bcf1b80fcdd01 assets\funnymodfortesting\models\item\showcase_block_w.json
 abb3b3a8d32ae2bafe90ddb077588db0d9b7a740 assets\funnymodfortesting\blockstates\brainrotifier.json
+773496b17455a55589827d5a447342d7efb2602d assets\funnymodfortesting\models\item\impersonate_sword.json
 f22c7aa9da68a684a2f91f3eff611a5bf01e26be assets\funnymodfortesting\models\item\torch_gun.json
 756b9d4d3e7a10814259752da9ed87d0bee1b089 assets\funnymodfortesting\models\item\compactor.json
 3f998b0fc0763cf4f13da7c15e02606c6432df0b assets\funnymodfortesting\models\item\stim.json

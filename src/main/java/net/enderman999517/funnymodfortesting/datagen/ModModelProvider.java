@@ -43,6 +43,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.SYRINGE, Models.GENERATED);
         itemModelGenerator.register(ModItems.RING, Models.GENERATED);
         itemModelGenerator.register(ModItems.SPEAR, Models.GENERATED);
+        itemModelGenerator.register(ModItems.IMPERSONATE_SWORD, Models.GENERATED);
 
         //items
         itemModelGenerator.register(ModItems.AMOGH_ESSENCE, Models.GENERATED);

@@ -44,6 +44,8 @@ public class ModItems {
                     false, false, false, 1, false, true, -5, 2 -4, ModToolMaterial.SCYTHE));
     public static final Item SPEAR = registerItem("spear",
             new SpearItem(ToolMaterials.IRON, 2, 0.8f, new FabricItemSettings(), 23, 100, 50, 0.5, 200));
+    public static final Item IMPERSONATE_SWORD = registerItem("impersonate_sword",
+            new ImpersonateSwordItem(ToolMaterials.IRON, 10, 0.8f, new FabricItemSettings()));
 
     //items
     public static final Item AMOGH_ESSENCE = registerItem("amogh_essence",
