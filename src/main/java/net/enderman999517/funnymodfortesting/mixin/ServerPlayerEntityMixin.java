@@ -65,16 +65,18 @@ public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
     public void handleDeathWithImpersonate(DamageSource damageSource, CallbackInfo ci) {
+        // attacker is not me
+        // serverPlayerEntity is me so i die
         Entity attacker = damageSource.getAttacker();
         if(attacker != serverPlayerEntity && attacker instanceof ServerPlayerEntity serverAttacker) {
-            //gets both inventories and adds to the tracker
-             PlayerInventory targetInv = serverPlayerEntity.getInventory();
-             PlayerInventory attackerInv = serverAttacker.getInventory();
-             EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
-             EntityInventoryTracker.putInvToList(attacker.getUuid(), attackerInv);
+            //gets attacker inventory and adds to the tracker //works
+            PlayerInventory targetInv = serverPlayerEntity.getInventory();
+            PlayerInventory attackerInv = serverAttacker.getInventory();
+            EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
+            EntityInventoryTracker.putInvToList(attacker.getUuid(), attackerInv);
 
 
-             //for each slot, set the attacker's slot the same as the target's slot
+            //for each slot, set the attacker's slot the same as the target's slot //works
             for (int i = 0; i < serverAttacker.getInventory().size(); i++) {
                 StackReference attackerStackReference = serverAttacker.getStackReference(i);
                 StackReference targetStackReference = serverPlayerEntity.getStackReference(i);
@@ -89,14 +91,14 @@ public abstract class ServerPlayerEntityMixin {
                 }
             }
 
-            //stop death message and other stuff from broadcasting if the player is killed with the sword
+            //stop death message and other stuff from broadcasting if the player is killed with the sword //works except for item scatterer
             attacker.getHandItems().forEach(stack -> {
                 if(stack.isOf(ModItems.IMPERSONATE_SWORD)) {
                     ci.cancel();
                 }
             });
 
-            //make attacker impersonate the killed player
+            //make attacker impersonate the killed player //works
             //if(attacker instanceof ServerPlayerEntity) {
                 Impersonator.get((PlayerEntity) attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
             //} else Impersonator.get((PlayerEntity) attacker).stopImpersonation(FunnyModForTesting.IMPERSONATION_KEY);
@@ -107,10 +109,34 @@ public abstract class ServerPlayerEntityMixin {
             */
         }
 
-        //stop impersonation if the impersonator dies
+        //we dont care about attacker
+        //serverPlayerEntity is me so i die
+
+        //if the impersonator dies:
         if(Impersonator.get(serverPlayerEntity).isImpersonating()) {
+            //stop impersonation //works
             Impersonator.get(serverPlayerEntity).stopImpersonation(FunnyModForTesting.IMPERSONATION_KEY);
 
+
+            //reset my (attacker inventory from last step) inventory to before any impersonation and clear both lists
+            PlayerInventory originalInv =  EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid()).get(1);
+            if (originalInv != null) {
+                FunnyModForTesting.LOGGER.error("skjdgfa");
+                for (int i = 0; i < EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid()).size(); i++) {
+                    ItemStack originalInvStack = originalInv.getStack(i);
+                    StackReference targetStackReference = serverPlayerEntity.getStackReference(i);
+
+                    targetStackReference.set(targetStackReference.get());
+
+                    if (originalInvStack.getItem().isNetworkSynced()) {
+                        Packet<?> packet = ((NetworkSyncedItem)originalInvStack.getItem()).createSyncPacket(originalInvStack, serverPlayerEntity.getWorld(), serverPlayerEntity);
+                        if (packet != null) {
+                            serverPlayerEntity.networkHandler.sendPacket(packet);
+                        }
+                    }
+                }
+                EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid()).clear();
+            }
         }
     }
 
