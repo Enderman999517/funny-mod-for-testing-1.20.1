@@ -65,14 +65,14 @@ public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
     public void handleDeathWithImpersonate(DamageSource damageSource, CallbackInfo ci) {
+        PlayerInventory targetInv = serverPlayerEntity.getInventory();
+        EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
         // attacker is not me
         // serverPlayerEntity is me so i die
         Entity attacker = damageSource.getAttacker();
         if(attacker != serverPlayerEntity && attacker instanceof ServerPlayerEntity serverAttacker) {
             //gets attacker inventory and adds to the tracker //works
-            PlayerInventory targetInv = serverPlayerEntity.getInventory();
             PlayerInventory attackerInv = serverAttacker.getInventory();
-            EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
             EntityInventoryTracker.putInvToList(attacker.getUuid(), attackerInv);
 
 
@@ -119,14 +119,15 @@ public abstract class ServerPlayerEntityMixin {
 
 
             //reset my (attacker inventory from last step) inventory to before any impersonation and clear both lists
-            PlayerInventory originalInv =  EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid()).get(1);
+            PlayerInventory originalInv =  EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid()).get(0);
             if (originalInv != null) {
-                FunnyModForTesting.LOGGER.error("skjdgfa");
-                for (int i = 0; i < EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid()).size(); i++) {
+                for (int i = 0; i < originalInv.size(); i++) {
                     ItemStack originalInvStack = originalInv.getStack(i);
                     StackReference targetStackReference = serverPlayerEntity.getStackReference(i);
+                    FunnyModForTesting.LOGGER.error("tsr.g: {}", targetStackReference.get());
+                    FunnyModForTesting.LOGGER.error("ois: {}", originalInvStack);
 
-                    targetStackReference.set(targetStackReference.get());
+                    targetStackReference.set(originalInvStack);
 
                     if (originalInvStack.getItem().isNetworkSynced()) {
                         Packet<?> packet = ((NetworkSyncedItem)originalInvStack.getItem()).createSyncPacket(originalInvStack, serverPlayerEntity.getWorld(), serverPlayerEntity);
