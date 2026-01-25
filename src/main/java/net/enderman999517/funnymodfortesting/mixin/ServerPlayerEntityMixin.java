@@ -1,19 +1,10 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
-import io.github.ladysnake.impersonate.Impersonator;
-import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
 import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
-import net.enderman999517.funnymodfortesting.item.ModItems;
-import net.enderman999517.funnymodfortesting.networking.EntityInventoryTracker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.StackReference;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.NetworkSyncedItem;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Box;
 import org.spongepowered.asm.mixin.Mixin;
@@ -66,21 +57,28 @@ public abstract class ServerPlayerEntityMixin {
     @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
     public void handleDeathWithImpersonate(DamageSource damageSource, CallbackInfo ci) {
 
-        PlayerInventory targetInv = serverPlayerEntity.getInventory();
-        EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
-
-
-
-
         //PlayerInventory targetInv = serverPlayerEntity.getInventory();
         //EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
-        //// attacker is not me
-        //// serverPlayerEntity is me so i die
+
+        //for if killed with sword
+        if(damageSource.isOf(ModDamageSources.IMPERSONATE_DAMAGE)) {
+
+        }
+
+
+
+
+
+        // attacker is not me
+        // serverPlayerEntity is me so i die
         //Entity attacker = damageSource.getAttacker();
         //if(attacker != serverPlayerEntity && attacker instanceof ServerPlayerEntity serverAttacker) {
+//
+        //    PlayerInventory targetInv = serverPlayerEntity.getInventory();
+        //    EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
         //    //gets attacker inventory and adds to the tracker //works
         //    PlayerInventory attackerInv = serverAttacker.getInventory();
-        //    EntityInventoryTracker.putInvToList(attacker.getUuid(), attackerInv);
+        //    EntityInventoryTracker.putInvToList(attacker.getUuid(), attackerInv );
 //
 //
         //    //for each slot, set the attacker's slot the same as the target's slot //works
@@ -102,7 +100,7 @@ public abstract class ServerPlayerEntityMixin {
         //    attacker.getHandItems().forEach(stack -> {
         //        if(stack.isOf(ModItems.IMPERSONATE_SWORD)) {
         //            ci.cancel();
-        //        }
+        //         }
         //    });
 //
         //    //make attacker impersonate the killed player //works
@@ -134,7 +132,7 @@ public abstract class ServerPlayerEntityMixin {
         //            FunnyModForTesting.LOGGER.error("tsr.g: {}", targetStackReference.get());
         //            FunnyModForTesting.LOGGER.error("ois: {}", originalInvStack);
 //
-        //            targetStackReference.set(originalInvStack);
+         //            targetStackReference.set(originalInvStack);
 //
         //            if (originalInvStack.getItem().isNetworkSynced()) {
         //                Packet<?> packet = ((NetworkSyncedItem)originalInvStack.getItem()).createSyncPacket(originalInvStack, serverPlayerEntity.getWorld(), serverPlayerEntity);

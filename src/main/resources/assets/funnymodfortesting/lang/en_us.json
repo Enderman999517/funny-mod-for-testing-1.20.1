@@ -37,7 +37,8 @@
   "commands.hidden.success.multiple": "Set hidden to %s for %s targets",
 
   "death.attack.scythe": "%1$s drained too much of their blood",
-  "death.attack.stim": "%1$s got too stimulated"
+  "death.attack.stim": "%1$s got too stimulated",
+  "death.attack.impersonate": "%1$s"
 
 
 }
