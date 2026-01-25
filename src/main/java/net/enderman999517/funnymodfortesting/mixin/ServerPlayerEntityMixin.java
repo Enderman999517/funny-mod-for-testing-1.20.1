@@ -1,17 +1,25 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
-import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
+import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
+import net.enderman999517.funnymodfortesting.networking.EntityInventoryTracker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.StackReference;
+import net.minecraft.item.NetworkSyncedItem;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Box;
+import net.minecraft.world.GameMode;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
@@ -54,16 +62,81 @@ public abstract class ServerPlayerEntityMixin {
         }
     }
 
-    @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
-    public void handleDeathWithImpersonate(DamageSource damageSource, CallbackInfo ci) {
+    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+    private void handleDamageWithImpersonate(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (source.isOf(ModDamageTypes.IMPERSONATE_DAMAGE)) {
+            FunnyModForTesting.LOGGER.error("source=imp");
+            if (amount >= serverPlayerEntity.getHealth()) {
+                FunnyModForTesting.LOGGER.error("damage>health");
+                cir.setReturnValue(false);
 
-        //PlayerInventory targetInv = serverPlayerEntity.getInventory();
-        //EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
+                FunnyModForTesting.LOGGER.error("att: {}", serverPlayerEntity.getAttacker());
+                FunnyModForTesting.LOGGER.error("!isalive: {}", !serverPlayerEntity.isAlive());
+                FunnyModForTesting.LOGGER.error("a-glat: {}", serverPlayerEntity.age - serverPlayerEntity.getLastAttackedTime());
+                if (serverPlayerEntity.getAttacker() instanceof ServerPlayerEntity attacker) {
+                    //serverPlayerEntity.setInvisible(true);
+                    //serverPlayerEntity.setInvulnerable(true);
+                    //serverPlayerEntity.setPos(attacker.getPos().x, attacker.getPos().y, attacker.getPos().z);
+                    //serverPlayerEntity.setHealth(attacker.getHealth());
+                    //serverPlayerEntity.getHungerManager().setFoodLevel(attacker.getHungerManager().getFoodLevel());
+                    //serverPlayerEntity.getHungerManager().setSaturationLevel(attacker.getHungerManager().getSaturationLevel());
+                    //serverPlayerEntity.getHungerManager().setExhaustion(attacker.getHungerManager().getExhaustion());
 
-        //for if killed with sword
-        if(damageSource.isOf(ModDamageSources.IMPERSONATE_DAMAGE)) {
+                    serverPlayerEntity.changeGameMode(GameMode.SPECTATOR);
+                    serverPlayerEntity.setCameraEntity(attacker);
 
+                    //saves my (killed w/ sword) inv to tracker so can be put onto attacker's inv
+                    PlayerInventory targetInv = serverPlayerEntity.getInventory();
+                    EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
+
+                    //saves attacker inv to tracker so can be recalled when attacker dies
+                    PlayerInventory attackerInv = attacker.getInventory();
+                    EntityInventoryTracker.putInvToList(attacker.getUuid(), attackerInv);
+
+                    FunnyModForTesting.LOGGER.error("at io spe");
+
+
+                    //sets attacker's inv the same as target's inv
+                    for (int i = 0; i < attacker.getInventory().size(); i++) {
+                        StackReference attackerStackReference = attacker.getStackReference(i);
+                        StackReference targetStackReference = serverPlayerEntity.getStackReference(i);
+
+                        attackerStackReference.set(targetStackReference.get());
+
+                        if (attackerStackReference.get().getItem().isNetworkSynced()) {
+                            Packet<?> packet = ((NetworkSyncedItem)attackerStackReference.get().getItem()).createSyncPacket(attackerStackReference.get(), attacker.getWorld(), attacker);
+                            if (packet != null) {
+                                attacker.networkHandler.sendPacket(packet);
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    //@Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
+    //public void handleDeathWithImpersonate(DamageSource damageSource, CallbackInfo ci) {
+    //    //World world = damageSource.getSource().getWorld();
+    //    //PlayerInventory targetInv = serverPlayerEntity.getInventory();
+    //    //EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
+//
+    //    //if killed with sword
+    //    if(damageSource.isOf(ModDamageTypes.IMPERSONATE_DAMAGE)) {
+    //        if (serverPlayerEntity.getAttacker() instanceof ServerPlayerEntity attacker) {
+    //            //saves my (killed w/ sword) inv to tracker so can be put onto attacker's inv
+    //            PlayerInventory targetInv = serverPlayerEntity.getInventory();
+    //            EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
+    //
+    //            //saves attacker inv to tracker so can be recalled when attacker dies
+    //            PlayerInventory attackerInv = attacker.getInventory();
+    //            EntityInventoryTracker.putInvToList(attacker.getUuid(), attackerInv);
+//
+    //            FunnyModForTesting.LOGGER.error("killed w/ sword");
+    //            //stops death message + stats + item drops from occurring
+    //            ci.cancel();
+    //        }
+    //    }
 
 
 
@@ -144,6 +217,6 @@ public abstract class ServerPlayerEntityMixin {
         //        EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid()).clear();
         //    }
         //}
-    }
+    //}
 
 }

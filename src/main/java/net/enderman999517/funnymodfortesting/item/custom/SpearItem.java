@@ -1,6 +1,7 @@
 package net.enderman999517.funnymodfortesting.item.custom;
 
 import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
+import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.networking.EntityMovementTracker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -48,8 +49,8 @@ public class SpearItem extends SwordItem {
                     DamageSource source = new DamageSource(
                             attacker.getWorld().getRegistryManager()
                                     .get(RegistryKeys.DAMAGE_TYPE)
-                                    .entryOf(ModDamageSources.SCYTHE_DAMAGE));
-                    target.damage(source, extra);
+                                    .entryOf(ModDamageTypes.SCYTHE_DAMAGE));
+                    target.damage(ModDamageSources.of(attacker.getWorld(), ModDamageTypes.SCYTHE_DAMAGE, attacker), extra);
                 }
             }
         }

@@ -23,6 +23,7 @@ public class ModItemGroups {
                         entries.add(ModItems.NVG_GOGGLES);
                         entries.add(ModItems.SCYTHE);
                         entries.add(ModItems.STIM);
+                        entries.add(ModItems.IMPERSONATE_SWORD);
 
                         //items
                         entries.add(ModItems.AMOGH_ESSENCE);

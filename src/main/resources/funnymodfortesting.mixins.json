@@ -3,7 +3,6 @@
   "package": "net.enderman999517.funnymodfortesting.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ClientPlayerEntityMixin",
     "EnchantmentTargetWeaponMixin",
     "EntityNbtMixin",
     "LivingEntityMixin",
@@ -11,6 +10,7 @@
     "ServerPlayerEntityMixin"
   ],
   "client": [
+    "ClientPlayerEntityMixin",
     "EntityRenderDispatcherMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",

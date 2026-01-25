@@ -2,7 +2,7 @@ package net.enderman999517.funnymodfortesting.item;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.block.ModBlocks;
-import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
+import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.custom.*;
@@ -34,13 +34,13 @@ public class ModItems {
     public static final Item TORCH_GUN = registerItem("torch_gun",
             new TorchGunItem(new FabricItemSettings()));
     public static final Item SCYTHE = registerItem("scythe",
-            new ScytheItem(new FabricItemSettings().maxCount(1).maxDamage(128), true, ModDamageSources.SCYTHE_DAMAGE,4,
+            new ScytheItem(new FabricItemSettings().maxCount(1).maxDamage(128), true, ModDamageTypes.SCYTHE_DAMAGE,4,
                     true, false, true, 1, false, false, -5, 1 -4, ModToolMaterial.SCYTHE));
     public static final Item STIM = registerItem("stim",
-            new StimItem(new FabricItemSettings().maxCount(1).maxDamage(64), true, ModDamageSources.STIM_DAMAGE,1,
+            new StimItem(new FabricItemSettings().maxCount(1).maxDamage(64), true, ModDamageTypes.STIM_DAMAGE,1,
                     false, true, true, 1, false, false, -5, 2 -4, ModToolMaterial.SCYTHE));
     public static final Item SYRINGE = registerItem("syringe",
-            new SyringeItem(new FabricItemSettings().maxCount(1).maxDamage(8), false, ModDamageSources.STIM_DAMAGE,1,
+            new SyringeItem(new FabricItemSettings().maxCount(1).maxDamage(8), false, ModDamageTypes.STIM_DAMAGE,1,
                     false, false, false, 1, false, true, -5, 2 -4, ModToolMaterial.SCYTHE));
     public static final Item SPEAR = registerItem("spear",
             new SpearItem(ToolMaterials.IRON, 2, 0.8f, new FabricItemSettings(), 23, 100, 50, 0.5, 200));

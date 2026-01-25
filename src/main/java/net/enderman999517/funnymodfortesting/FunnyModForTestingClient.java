@@ -95,6 +95,14 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             }
         });
 
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player != null && client.player.isSpectator()) {
+                if (client.options.sneakKey.wasPressed()) {
+
+                }
+            }
+        });
+
 
         ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
             if (renderingBlit) {

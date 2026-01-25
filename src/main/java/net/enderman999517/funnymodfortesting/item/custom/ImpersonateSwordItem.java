@@ -1,12 +1,7 @@
 package net.enderman999517.funnymodfortesting.item.custom;
 
-import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
-import net.minecraft.registry.RegistryKeys;
 
 public class ImpersonateSwordItem extends SwordItem {
 
@@ -14,18 +9,16 @@ public class ImpersonateSwordItem extends SwordItem {
         super(toolMaterial, attackDamage, attackSpeed, settings);
     }
 
-    @Override
-    public boolean damage(DamageSource source) {
-        DamageSource damageSource = new DamageSource(
-                source.getAttacker().getWorld().getRegistryManager()
-                        .get(RegistryKeys.DAMAGE_TYPE)
-                        .entryOf(ModDamageSources.IMPERSONATE_DAMAGE));
+    //@Override
+    //public boolean damage(DamageSource source) {
+    //    Entity attacker = source.getAttacker();
+    //    if (attacker != null) {
+    //        return super.damage(ModDamageSources.of(attacker.getWorld(), ModDamageTypes.IMPERSONATE_DAMAGE, attacker));
+    //    } else return false;
+    //}
 
-        return super.damage(damageSource);
-    }
-
-    @Override
-    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        return super.postHit(stack, target, attacker);
-    }
+    //@Override
+    //public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    //    return super.postHit(stack, target, attacker);
+    //}
 }

@@ -69,4 +69,11 @@ public abstract class ClientPlayerEntityMixin {
                     && !entity.isFallFlying());
         }
     }
+
+    @Inject(method = "hasMovementInput", at = @At("HEAD"))
+    private void slkdfj(CallbackInfoReturnable<Boolean> cir) {
+        if (entity.isSpectator()) {
+            cir.setReturnValue(false);
+        }
+    }
 }
