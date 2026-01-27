@@ -50,13 +50,13 @@ public abstract class ClientPlayerEntityMixin {
     }
 
     @Shadow
-    public abstract boolean isWalking();
+    protected abstract boolean isWalking();
 
     @Shadow
-    public abstract boolean canSprint();
+    protected abstract boolean canSprint();
 
     @Shadow
-    public abstract boolean canVehicleSprint(Entity vehicle);
+    protected abstract boolean canVehicleSprint(Entity vehicle);
 
     @Inject(method = "canStartSprinting", at = @At("RETURN"), cancellable = true)
     private void canSprintIfUsingSpear(CallbackInfoReturnable<Boolean> cir) {
@@ -67,13 +67,6 @@ public abstract class ClientPlayerEntityMixin {
                     && !entity.hasStatusEffect(StatusEffects.BLINDNESS)
                     && (!entity.hasVehicle() || this.canVehicleSprint(entity.getVehicle()))
                     && !entity.isFallFlying());
-        }
-    }
-
-    @Inject(method = "hasMovementInput", at = @At("HEAD"))
-    private void slkdfj(CallbackInfoReturnable<Boolean> cir) {
-        if (entity.isSpectator()) {
-            cir.setReturnValue(false);
         }
     }
 }

@@ -10,9 +10,12 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
+    PlayerEntity player1 = (PlayerEntity)(Object)this;
 
     @WrapOperation(
             method = "attack",
@@ -24,5 +27,12 @@ public class PlayerEntityMixin {
                 return instance.damage(ModDamageSources.of(instance.getWorld(), ModDamageTypes.IMPERSONATE_DAMAGE, source.getAttacker()), amount);
             } else return original.call(instance, source, amount);
         } else return original.call(instance, source, amount);
+    }
+
+    @Inject(method = "shouldDismount", at = @At("HEAD"), cancellable = true)
+    private void stopDismountingIfPlayerBeingImpersonated(CallbackInfoReturnable<Boolean> cir) {
+        if (player1.isSpectator()) {
+            cir.setReturnValue(false);
+        }
     }
 }
