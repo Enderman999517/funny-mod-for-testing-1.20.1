@@ -23,11 +23,14 @@ public abstract class EntityNbtMixin implements ModEntityData {
     private boolean hidden = false;
     @Unique
     private boolean renderingOverlay = false;
+    @Unique
+    private boolean beingImpersonated = false;
 
     @Inject(method = "writeNbt(Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/nbt/NbtCompound;", at = @At("RETURN"))
     private void writeModData(NbtCompound nbt, CallbackInfoReturnable<CallbackInfo> cir) {
         nbt.putBoolean("hidden", hidden);
         nbt.putBoolean("renderingOverlay", renderingOverlay);
+        nbt.putBoolean("beingImpersonated", beingImpersonated);
     }
 
     @Inject(method = "readNbt(Lnet/minecraft/nbt/NbtCompound;)V", at = @At("RETURN"))
@@ -37,6 +40,9 @@ public abstract class EntityNbtMixin implements ModEntityData {
         }
         if (nbt.contains("renderingOverlay")) {
             renderingOverlay = nbt.getBoolean("renderingOverlay");
+        }
+        if (nbt.contains("beingImpersonated")) {
+            beingImpersonated = nbt.getBoolean("beingImpersonated");
         }
     }
 
@@ -71,5 +77,17 @@ public abstract class EntityNbtMixin implements ModEntityData {
         if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
             return serverPlayerEntity.getStackInHand(Hand.OFF_HAND).isOf(ModItems.RING);
         } else return false;
+    }
+
+    @Override
+    public boolean isBeingImpersonated() {
+        return beingImpersonated;
+    }
+
+    public void setBeingImpersonated(boolean beingImpersonated) {
+        this.beingImpersonated = beingImpersonated;
+        if (!entity.getWorld().isClient) {
+            ModSync.syncBeingImpersonatedFlag(entity, beingImpersonated);
+        }
     }
 }

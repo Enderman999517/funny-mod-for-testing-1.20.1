@@ -14,14 +14,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ModNetworking {
     public static final Identifier ENTITY_HIDDEN_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "entity_hidden_sync");
     public static final Identifier DISPLAY_OVERLAY_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "display_overlay_sync");
+    public static final Identifier BEING_IMPERSONATED_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "being_impersonated_sync");
 
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(ENTITY_HIDDEN_SYNC, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            int entityId = packetByteBuf.readVarInt();
-            boolean isHidden = packetByteBuf.readBoolean();
+        ClientPlayNetworking.registerGlobalReceiver(ENTITY_HIDDEN_SYNC, (client, handler, buf, responseSender) -> {
+            int entityId = buf.readVarInt();
+            boolean isHidden = buf.readBoolean();
 
-            minecraftClient.execute(() -> {
-                Entity entity = minecraftClient.world.getEntityById(entityId);
+            client.execute(() -> {
+                Entity entity = client.world.getEntityById(entityId);
                 if (entity == null) {
                     return;
                 }
@@ -31,12 +32,12 @@ public class ModNetworking {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(DISPLAY_OVERLAY_SYNC, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            int entityId = packetByteBuf.readVarInt();
-            boolean shouldRenderOverlay = packetByteBuf.readBoolean();
+        ClientPlayNetworking.registerGlobalReceiver(DISPLAY_OVERLAY_SYNC, (client, handler, buf, responseSender) -> {
+            int entityId = buf.readVarInt();
+            boolean shouldRenderOverlay = buf.readBoolean();
 
-            minecraftClient.execute(() -> {
-               Entity entity = minecraftClient.world.getEntityById(entityId);
+            client.execute(() -> {
+               Entity entity = client.world.getEntityById(entityId);
                if (entity == null) {
                    return;
                }
@@ -46,9 +47,24 @@ public class ModNetworking {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(BEING_IMPERSONATED_SYNC, (client, handler, buf, responseSender) ->  {
+            int entityId = buf.readVarInt();
+            boolean beingImpersonated = buf.readBoolean();
+
+            client.execute(() -> {
+                Entity entity = client.world.getEntityById(entityId);
+                if (entity == null) {
+                    return;
+                }
+                if (entity instanceof ModEntityData modEntityData) {
+                    modEntityData.setBeingImpersonated(beingImpersonated);
+                }
+            });
+        });
+
+
         AtomicInteger tickCounter = new AtomicInteger();
         AtomicBoolean awaitingResync = new AtomicBoolean(false);
-
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender,client) -> {
             tickCounter.set(0);
@@ -66,6 +82,7 @@ public class ModNetworking {
                         if (entity instanceof ModEntityData data) {
                             data.setHidden(data.isHidden());
                             data.setRenderingOverlay(data.isRenderingOverlay());
+                            data.setBeingImpersonated(data.isBeingImpersonated());
                         }
                     }
                 }

@@ -1,14 +1,17 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
+import io.github.ladysnake.impersonate.Impersonator;
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
 import net.enderman999517.funnymodfortesting.networking.EntityInventoryTracker;
+import net.enderman999517.funnymodfortesting.networking.EntityPosTracker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.StackReference;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.NetworkSyncedItem;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -64,15 +67,17 @@ public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     private void handleDamageWithImpersonate(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+
+        //if damaged player should be impersonated
         if (source.isOf(ModDamageTypes.IMPERSONATE_DAMAGE)) {
-            FunnyModForTesting.LOGGER.error("source=imp");
+            //FunnyModForTesting.LOGGER.error("source=imp");
             if (amount >= serverPlayerEntity.getHealth()) {
-                FunnyModForTesting.LOGGER.error("damage>health");
+                //FunnyModForTesting.LOGGER.error("damage>health");
                 cir.setReturnValue(false);
 
-                FunnyModForTesting.LOGGER.error("att: {}", serverPlayerEntity.getAttacker());
-                FunnyModForTesting.LOGGER.error("!isalive: {}", !serverPlayerEntity.isAlive());
-                FunnyModForTesting.LOGGER.error("a-glat: {}", serverPlayerEntity.age - serverPlayerEntity.getLastAttackedTime());
+                //FunnyModForTesting.LOGGER.error("att: {}", serverPlayerEntity.getAttacker());
+                //FunnyModForTesting.LOGGER.error("!isalive: {}", !serverPlayerEntity.isAlive());
+                //FunnyModForTesting.LOGGER.error("a-glat: {}", serverPlayerEntity.age - serverPlayerEntity.getLastAttackedTime());
                 if (serverPlayerEntity.getAttacker() instanceof ServerPlayerEntity attacker) {
                     //serverPlayerEntity.setInvisible(true);
                     //serverPlayerEntity.setInvulnerable(true);
@@ -82,18 +87,25 @@ public abstract class ServerPlayerEntityMixin {
                     //serverPlayerEntity.getHungerManager().setSaturationLevel(attacker.getHungerManager().getSaturationLevel());
                     //serverPlayerEntity.getHungerManager().setExhaustion(attacker.getHungerManager().getExhaustion());
 
+                    //save attacker inv + pos
+                    EntityInventoryTracker.putInvToList(attacker.getUuid(), attacker.getInventory());
+                    EntityPosTracker.putPosToList(attacker.getUuid(), attacker.getPos());
+
+                    //impersonate
                     serverPlayerEntity.changeGameMode(GameMode.SPECTATOR);
+                    if (serverPlayerEntity instanceof ModEntityData modEntityData) {
+                        modEntityData.setBeingImpersonated(true);
+                    }
+                    Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
                     serverPlayerEntity.setCameraEntity(attacker);
+
 
                     //saves my (killed w/ sword) inv to tracker so can be put onto attacker's inv
                     PlayerInventory targetInv = serverPlayerEntity.getInventory();
                     EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
 
-                    //saves attacker inv to tracker so can be recalled when attacker dies
-                    PlayerInventory attackerInv = attacker.getInventory();
-                    EntityInventoryTracker.putInvToList(attacker.getUuid(), attackerInv);
 
-                    FunnyModForTesting.LOGGER.error("at io spe");
+                    //FunnyModForTesting.LOGGER.error("at io spe");
 
 
                     //sets attacker's inv the same as target's inv
@@ -112,6 +124,39 @@ public abstract class ServerPlayerEntityMixin {
                     }
                 }
             }
+        }
+
+        //if damaged player is impersonating
+        if (amount >= serverPlayerEntity.getHealth() && Impersonator.get(serverPlayerEntity).isImpersonating()) {
+            cir.setReturnValue(false);
+            List<PlayerInventory> invList = EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid());
+            PlayerInventory originalInv = invList.get(invList.size() - 1);
+
+
+            //sets inv back to before
+            for (int i = 0; i < serverPlayerEntity.getInventory().size(); i++) {
+                ItemStack attackerStack = serverPlayerEntity.getInventory().getStack(i);
+                ItemStack targetStack = originalInv.getStack(i);
+
+                serverPlayerEntity.getInventory().setStack(i, targetStack);
+
+                if (attackerStack.getItem().isNetworkSynced()) {
+                    Packet<?> packet = ((NetworkSyncedItem)attackerStack.getItem()).createSyncPacket(attackerStack, serverPlayerEntity.getWorld(), serverPlayerEntity);
+                    if (packet != null) {
+                        serverPlayerEntity.networkHandler.sendPacket(packet);
+                    }
+                }
+            }
+            //clears list
+            EntityInventoryTracker.clear(serverPlayerEntity.getUuid());
+        }
+    }
+
+
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    public void handleDeathWithImpersonate(DamageSource damageSource, CallbackInfo ci) {
+        if (serverPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
+            modEntityData.setBeingImpersonated(false);
         }
     }
 

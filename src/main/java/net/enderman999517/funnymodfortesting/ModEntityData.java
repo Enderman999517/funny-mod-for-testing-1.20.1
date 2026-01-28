@@ -6,4 +6,6 @@ public interface ModEntityData {
     boolean isRenderingOverlay();
     void setRenderingOverlay(boolean renderingOverlay);
     boolean hasRingInOffhand();
+    boolean isBeingImpersonated();
+    void setBeingImpersonated(boolean beingImpersonated);
 }

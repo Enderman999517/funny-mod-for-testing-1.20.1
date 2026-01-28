@@ -2,6 +2,7 @@ package net.enderman999517.funnymodfortesting.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.damage.ModDamageSources;
 import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.item.ModItems;
@@ -31,7 +32,7 @@ public class PlayerEntityMixin {
 
     @Inject(method = "shouldDismount", at = @At("HEAD"), cancellable = true)
     private void stopDismountingIfPlayerBeingImpersonated(CallbackInfoReturnable<Boolean> cir) {
-        if (player1.isSpectator()) {
+        if (player1 instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
             cir.setReturnValue(false);
         }
     }

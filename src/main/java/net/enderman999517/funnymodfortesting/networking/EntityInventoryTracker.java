@@ -19,4 +19,7 @@ public class EntityInventoryTracker {
             inventories.get(uuid).add(playerInventory);
         } else inventories.get(uuid).add(playerInventory);
     }
+    public static void clear(UUID uuid) {
+        inventories.get(uuid).clear();
+    }
 }
