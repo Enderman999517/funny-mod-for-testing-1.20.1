@@ -20,6 +20,7 @@ public class ModSync {
 
     public static void init() {
         final Map<UUID, Integer> resyncPlayerInvisWaitTicks = new HashMap<>();
+
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
 
@@ -33,7 +34,6 @@ public class ModSync {
             ServerPlayerEntity player = handler.getPlayer();
             resyncPlayerInvisWaitTicks.put(player.getUuid(), 0);
         });
-
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             Iterator<Map.Entry<UUID, Integer>> iterator = resyncPlayerInvisWaitTicks.entrySet().iterator();

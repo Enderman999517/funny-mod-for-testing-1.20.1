@@ -7,6 +7,7 @@ import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
 import net.enderman999517.funnymodfortesting.networking.EntityInventoryTracker;
 import net.enderman999517.funnymodfortesting.networking.EntityPosTracker;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerInventory;
@@ -92,12 +93,18 @@ public abstract class ServerPlayerEntityMixin {
                     EntityPosTracker.putPosToList(attacker.getUuid(), attacker.getPos());
 
                     //impersonate
-                    serverPlayerEntity.changeGameMode(GameMode.SPECTATOR);
+                    //serverPlayerEntity.changeGameMode(GameMode.SPECTATOR);
+                    ServerPlayerEntity attacer = serverPlayerEntity.getServer().getPlayerManager().getPlayer(Impersonator.get(attacker).getActualProfile().getId());
+                    //serverPlayerEntity.setCameraEntity(attacer);
+                    ServerTickEvents.END_SERVER_TICK.register(server -> {
+                        if (serverPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
+                            serverPlayerEntity.teleport(attacker.getPos().x, attacker.getPos().y, attacker.getPos().z);
+                        }
+                    });
+
                     if (serverPlayerEntity instanceof ModEntityData modEntityData) {
                         modEntityData.setBeingImpersonated(true);
                     }
-                    Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
-                    serverPlayerEntity.setCameraEntity(attacker);
 
 
                     //saves my (killed w/ sword) inv to tracker so can be put onto attacker's inv
@@ -122,6 +129,8 @@ public abstract class ServerPlayerEntityMixin {
                             }
                         }
                     }
+                    Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
+
                 }
             }
         }
@@ -130,7 +139,10 @@ public abstract class ServerPlayerEntityMixin {
         if (amount >= serverPlayerEntity.getHealth() && Impersonator.get(serverPlayerEntity).isImpersonating()) {
             cir.setReturnValue(false);
             List<PlayerInventory> invList = EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid());
-            PlayerInventory originalInv = invList.get(invList.size() - 1);
+            PlayerInventory originalInv;
+            if (!invList.isEmpty()) {
+                originalInv = invList.get(invList.size() - 1);
+            } else originalInv = invList.get(1);
 
 
             //sets inv back to before
