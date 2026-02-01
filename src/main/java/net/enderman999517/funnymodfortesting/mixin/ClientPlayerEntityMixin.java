@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
+import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -67,6 +68,13 @@ public abstract class ClientPlayerEntityMixin {
                     && !entity.hasStatusEffect(StatusEffects.BLINDNESS)
                     && (!entity.hasVehicle() || this.canVehicleSprint(entity.getVehicle()))
                     && !entity.isFallFlying());
+        }
+    }
+
+    @Inject(method = "tickMovement", at = @At("HEAD"), cancellable = true)
+    private void cancelMovementIfBeingImpersonated(CallbackInfo ci) {
+        if (entity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
+            ci.cancel();
         }
     }
 }

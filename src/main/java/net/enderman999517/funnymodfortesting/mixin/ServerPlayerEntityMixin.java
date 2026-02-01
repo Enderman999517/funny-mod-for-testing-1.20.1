@@ -15,10 +15,14 @@ import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.NetworkSyncedItem;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.SetCameraEntityS2CPacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.GameMode;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,6 +33,7 @@ import java.util.List;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
+    @Shadow @Final public MinecraftServer server;
     @Unique
     ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)(Object)this;
     @Unique
@@ -71,97 +76,87 @@ public abstract class ServerPlayerEntityMixin {
 
         //if damaged player should be impersonated
         if (source.isOf(ModDamageTypes.IMPERSONATE_DAMAGE)) {
-            //FunnyModForTesting.LOGGER.error("source=imp");
             if (amount >= serverPlayerEntity.getHealth()) {
-                //FunnyModForTesting.LOGGER.error("damage>health");
                 cir.setReturnValue(false);
 
-                //FunnyModForTesting.LOGGER.error("att: {}", serverPlayerEntity.getAttacker());
-                //FunnyModForTesting.LOGGER.error("!isalive: {}", !serverPlayerEntity.isAlive());
-                //FunnyModForTesting.LOGGER.error("a-glat: {}", serverPlayerEntity.age - serverPlayerEntity.getLastAttackedTime());
                 if (serverPlayerEntity.getAttacker() instanceof ServerPlayerEntity attacker) {
-                    //serverPlayerEntity.setInvisible(true);
-                    //serverPlayerEntity.setInvulnerable(true);
-                    //serverPlayerEntity.setPos(attacker.getPos().x, attacker.getPos().y, attacker.getPos().z);
-                    //serverPlayerEntity.setHealth(attacker.getHealth());
-                    //serverPlayerEntity.getHungerManager().setFoodLevel(attacker.getHungerManager().getFoodLevel());
-                    //serverPlayerEntity.getHungerManager().setSaturationLevel(attacker.getHungerManager().getSaturationLevel());
-                    //serverPlayerEntity.getHungerManager().setExhaustion(attacker.getHungerManager().getExhaustion());
 
                     //save attacker inv + pos
-                    EntityInventoryTracker.putInvToList(attacker.getUuid(), attacker.getInventory());
-                    EntityPosTracker.putPosToList(attacker.getUuid(), attacker.getPos());
+                    //EntityInventoryTracker.putInvToList(attacker.getUuid(), attacker.getInventory());
+                    //EntityPosTracker.putPosToList(attacker.getUuid(), attacker.getPos());
+
+
 
                     //impersonate
-                    //serverPlayerEntity.changeGameMode(GameMode.SPECTATOR);
-                    ServerPlayerEntity attacer = serverPlayerEntity.getServer().getPlayerManager().getPlayer(Impersonator.get(attacker).getActualProfile().getId());
-                    //serverPlayerEntity.setCameraEntity(attacer);
-                    ServerTickEvents.END_SERVER_TICK.register(server -> {
-                        if (serverPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
-                            serverPlayerEntity.teleport(attacker.getPos().x, attacker.getPos().y, attacker.getPos().z);
-                        }
-                    });
 
-                    if (serverPlayerEntity instanceof ModEntityData modEntityData) {
+                    if (serverPlayerEntity instanceof ModEntityData modEntityData && !modEntityData.isBeingImpersonated()) {
                         modEntityData.setBeingImpersonated(true);
                     }
+                    serverPlayerEntity.changeGameMode(GameMode.SPECTATOR);
+                    //serverPlayerEntity.setCameraEntity(attacker);
 
 
-                    //saves my (killed w/ sword) inv to tracker so can be put onto attacker's inv
-                    PlayerInventory targetInv = serverPlayerEntity.getInventory();
-                    EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
+                    ////saves my (killed w/ sword) inv to tracker so can be put onto attacker's inv
+                    //PlayerInventory targetInv = serverPlayerEntity.getInventory();
+                    //EntityInventoryTracker.putInvToList(serverPlayerEntity.getUuid(), targetInv);
+//
+//
+                    ////sets attacker's inv the same as target's inv
+                    //for (int i = 0; i < attacker.getInventory().size(); i++) {
+                    //    StackReference attackerStackReference = attacker.getStackReference(i);
+                    //    StackReference targetStackReference = serverPlayerEntity.getStackReference(i);
+//
+                    //    attackerStackReference.set(targetStackReference.get());
+//
+                    //    if (attackerStackReference.get().getItem().isNetworkSynced()) {
+                    //        Packet<?> packet = ((NetworkSyncedItem)attackerStackReference.get().getItem()).createSyncPacket(attackerStackReference.get(), attacker.getWorld(), attacker);
+                    //        if (packet != null) {
+                    //            attacker.networkHandler.sendPacket(packet);
+                    //        }
+                    //    }
+                    //}
+                    //Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
 
+                    serverPlayerEntity.getServer().execute(() -> {
+                        serverPlayerEntity.setCameraEntity(attacker);
 
-                    //FunnyModForTesting.LOGGER.error("at io spe");
-
-
-                    //sets attacker's inv the same as target's inv
-                    for (int i = 0; i < attacker.getInventory().size(); i++) {
-                        StackReference attackerStackReference = attacker.getStackReference(i);
-                        StackReference targetStackReference = serverPlayerEntity.getStackReference(i);
-
-                        attackerStackReference.set(targetStackReference.get());
-
-                        if (attackerStackReference.get().getItem().isNetworkSynced()) {
-                            Packet<?> packet = ((NetworkSyncedItem)attackerStackReference.get().getItem()).createSyncPacket(attackerStackReference.get(), attacker.getWorld(), attacker);
-                            if (packet != null) {
-                                attacker.networkHandler.sendPacket(packet);
-                            }
-                        }
-                    }
-                    Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
-
+                        Impersonator.get(attacker)
+                                .impersonate(
+                                        FunnyModForTesting.IMPERSONATION_KEY,
+                                        serverPlayerEntity.getGameProfile()
+                                );
+                    });
                 }
             }
         }
 
-        //if damaged player is impersonating
-        if (amount >= serverPlayerEntity.getHealth() && Impersonator.get(serverPlayerEntity).isImpersonating()) {
-            cir.setReturnValue(false);
-            List<PlayerInventory> invList = EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid());
-            PlayerInventory originalInv;
-            if (!invList.isEmpty()) {
-                originalInv = invList.get(invList.size() - 1);
-            } else originalInv = invList.get(1);
-
-
-            //sets inv back to before
-            for (int i = 0; i < serverPlayerEntity.getInventory().size(); i++) {
-                ItemStack attackerStack = serverPlayerEntity.getInventory().getStack(i);
-                ItemStack targetStack = originalInv.getStack(i);
-
-                serverPlayerEntity.getInventory().setStack(i, targetStack);
-
-                if (attackerStack.getItem().isNetworkSynced()) {
-                    Packet<?> packet = ((NetworkSyncedItem)attackerStack.getItem()).createSyncPacket(attackerStack, serverPlayerEntity.getWorld(), serverPlayerEntity);
-                    if (packet != null) {
-                        serverPlayerEntity.networkHandler.sendPacket(packet);
-                    }
-                }
-            }
-            //clears list
-            EntityInventoryTracker.clear(serverPlayerEntity.getUuid());
-        }
+        ////if damaged player is impersonating
+        //if (amount >= serverPlayerEntity.getHealth() && Impersonator.get(serverPlayerEntity).isImpersonating()) {
+        //    cir.setReturnValue(false);
+        //    List<PlayerInventory> invList = EntityInventoryTracker.getInvList(serverPlayerEntity.getUuid());
+        //    PlayerInventory originalInv;
+        //    if (!invList.isEmpty()) {
+        //        originalInv = invList.get(invList.size() - 1);
+        //    } else originalInv = invList.get(1);
+//
+//
+        //    //sets inv back to before
+        //    for (int i = 0; i < serverPlayerEntity.getInventory().size(); i++) {
+        //        ItemStack attackerStack = serverPlayerEntity.getInventory().getStack(i);
+        //        ItemStack targetStack = originalInv.getStack(i);
+//
+        //        serverPlayerEntity.getInventory().setStack(i, targetStack);
+//
+        //        if (attackerStack.getItem().isNetworkSynced()) {
+        //            Packet<?> packet = ((NetworkSyncedItem)attackerStack.getItem()).createSyncPacket(attackerStack, serverPlayerEntity.getWorld(), serverPlayerEntity);
+        //            if (packet != null) {
+        //                serverPlayerEntity.networkHandler.sendPacket(packet);
+        //            }
+        //        }
+        //    }
+        //    //clears list
+        //    EntityInventoryTracker.clear(serverPlayerEntity.getUuid());
+        //}
     }
 
 
