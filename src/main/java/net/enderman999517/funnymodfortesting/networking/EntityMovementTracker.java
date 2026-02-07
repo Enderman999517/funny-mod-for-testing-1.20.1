@@ -34,6 +34,9 @@ public class EntityMovementTracker {
     public static double getHSpeed(UUID id) {
         return lastCalculatedSpeed.getOrDefault(id, 0.0);
     }
+    public static Vec3d getLastTickPos(UUID id) {
+        return lastTickPos.getOrDefault(id, new Vec3d(0,0,0));
+    }
     public static double getDx(UUID id) {
         return lastCalculatedDx.getOrDefault(id, 0.0);
     }

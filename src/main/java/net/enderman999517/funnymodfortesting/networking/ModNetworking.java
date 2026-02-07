@@ -5,8 +5,13 @@ import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -87,6 +92,20 @@ public class ModNetworking {
                     }
                 }
             }
+        });
+    }
+
+    public static void lerpTp(ServerPlayerEntity target) {
+        WorldRenderEvents.END.register(context -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.player == null) return;
+            float tickDelta = context.tickDelta();
+
+            Vec3d lastTickPos = EntityMovementTracker.getLastTickPos(target.getUuid());
+            client.player.setPos(
+                    MathHelper.lerp(tickDelta, lastTickPos.getX(), target.getX()),
+                    MathHelper.lerp(tickDelta, lastTickPos.getY(), target.getY()),
+                    MathHelper.lerp(tickDelta, lastTickPos.getZ(), target.getZ()));
         });
     }
 }
