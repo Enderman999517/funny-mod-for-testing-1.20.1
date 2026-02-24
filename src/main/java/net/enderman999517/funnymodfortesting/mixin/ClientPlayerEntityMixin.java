@@ -2,9 +2,7 @@ package net.enderman999517.funnymodfortesting.mixin;
 
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.item.ModItems;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.BuiltChunkStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffects;
 import org.objectweb.asm.Opcodes;

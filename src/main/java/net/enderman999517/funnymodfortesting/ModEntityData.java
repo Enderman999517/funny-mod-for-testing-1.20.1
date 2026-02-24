@@ -8,4 +8,6 @@ public interface ModEntityData {
     boolean hasRingInOffhand();
     boolean isBeingImpersonated();
     void setBeingImpersonated(boolean beingImpersonated);
+    boolean isImpersonating();
+    void setImpersonating(boolean impersonating);
 }

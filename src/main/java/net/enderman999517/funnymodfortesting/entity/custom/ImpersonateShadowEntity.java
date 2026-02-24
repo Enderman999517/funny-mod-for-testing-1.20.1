@@ -1,7 +1,6 @@
 package net.enderman999517.funnymodfortesting.entity.custom;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
-import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -12,6 +11,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,22 +25,24 @@ public class ImpersonateShadowEntity extends Entity implements Ownable {
     private UUID ownerUuid;
 
     public ImpersonateShadowEntity(EntityType<? extends ImpersonateShadowEntity> entityType, World world) {
+        //disabled rendering in renderDispatcherMixin
         super(entityType, world);
+        this.noClip = true;
+        this.setInvulnerable(true);
+        this.setNoGravity(true);
+        if (ownerUuid != null) {
+            this.setCustomName(Text.literal(ownerUuid.toString()));
+        }
     }
-
-    public ImpersonateShadowEntity(LivingEntity owner, World world) {
-        super(ModEntities.IMPERSONATE_SHADOW, owner, world);
-    }
-
 
     @Override
     public void tick() {
         super.tick();
 
         if (this.owner == null) {
-            FunnyModForTesting.LOGGER.info("Discarded shadow entity with id {} and position {}", this.getId(), this.getPos());
+            FunnyModForTesting.LOGGER.info("Discarded shadow entity with uuid {} and position {}", this.getUuid(), this.getPos());
             this.discard();
-        } else this.teleport(owner.getServer().getWorld(owner.getWorld().getRegistryKey()), owner.getX(), owner.getY(), owner.getZ(), Set.of(), 0f, 0f);
+        } else this.teleport(owner.getServer().getWorld(owner.getWorld().getRegistryKey()), owner.getX(), owner.getY(), owner.getZ(), Set.of(), owner.getYaw(), owner.getPitch());
 
         //sets owner null if owner dc
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -79,5 +81,16 @@ public class ImpersonateShadowEntity extends Entity implements Ownable {
             }
         }
         return this.owner;
+    }
+
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        FunnyModForTesting.LOGGER.error("shadow spawn");
+        super.onSpawnPacket(packet);
+    }
+
+    @Override
+    public Packet<ClientPlayPacketListener> createSpawnPacket() {
+        return new EntitySpawnS2CPacket(this);
     }
 }

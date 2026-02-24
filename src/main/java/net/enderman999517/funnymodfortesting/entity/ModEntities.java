@@ -42,7 +42,7 @@ public class ModEntities {
 
     public static final EntityType<ImpersonateShadowEntity> IMPERSONATE_SHADOW = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(FunnyModForTesting.MOD_ID, "impersonate_shadow"),
-            FabricEntityTypeBuilder.<ImpersonateShadowEntity>create(SpawnGroup.MISC, ImpersonateShadowEntity::new)
-                    .dimensions(EntityDimensions.fixed(1f, 1f)).build());
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, ImpersonateShadowEntity::new)
+                    .dimensions(EntityDimensions.fixed(0f, 0f)).build());
 
 }

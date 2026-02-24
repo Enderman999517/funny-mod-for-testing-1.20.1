@@ -96,6 +96,10 @@ public abstract class ServerPlayerEntityMixin {
                         modEntityData.setBeingImpersonated(true);
                     }
 
+                    if (actualAttacker instanceof ModEntityData modEntityData && !modEntityData.isImpersonating()) {
+                        modEntityData.setImpersonating(true);
+                    }
+
                     Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
 
                     UUID id = MathHelper.randomUuid();
@@ -197,6 +201,11 @@ public abstract class ServerPlayerEntityMixin {
         if (serverPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
             modEntityData.setBeingImpersonated(false);
         }
+
+        if (serverPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isImpersonating()) {
+            modEntityData.setImpersonating(false);
+        }
+
         Impersonator.get(serverPlayerEntity).stopImpersonation(FunnyModForTesting.IMPERSONATION_KEY);
     }
 
