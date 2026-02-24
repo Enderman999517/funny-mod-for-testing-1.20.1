@@ -1,32 +1,20 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
+import com.mojang.authlib.GameProfile;
 import io.github.ladysnake.impersonate.Impersonator;
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
-import net.enderman999517.funnymodfortesting.networking.EntityInventoryTracker;
-import net.enderman999517.funnymodfortesting.networking.EntityMovementTracker;
-import net.enderman999517.funnymodfortesting.networking.EntityPosTracker;
-import net.enderman999517.funnymodfortesting.networking.ModNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.StackReference;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.NetworkSyncedItem;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.SetCameraEntityS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,10 +25,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
     @Shadow @Final public MinecraftServer server;
+
+    @Shadow public abstract ServerWorld getServerWorld();
+
     @Unique
     ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)(Object)this;
     @Unique
@@ -87,6 +79,10 @@ public abstract class ServerPlayerEntityMixin {
                 cir.setReturnValue(false);
 
                 if (serverPlayerEntity.getAttacker() instanceof ServerPlayerEntity attacker) {
+                    PlayerEntity actualPlayerEntity = serverPlayerEntity.getServerWorld().getPlayerByUuid(Impersonator.get(serverPlayerEntity).getActualProfile().getId());
+                    ServerPlayerEntity actualServerPlayerEntity = ((ServerPlayerEntity) actualPlayerEntity);
+                    PlayerEntity actualAttacker = serverPlayerEntity.getServerWorld().getPlayerByUuid(Impersonator.get(attacker).getActualProfile().getId());
+                    ServerPlayerEntity actualServerAttacker = ((ServerPlayerEntity) actualAttacker);
 
                     //save attacker inv + pos
                     //EntityInventoryTracker.putInvToList(attacker.getUuid(), attacker.getInventory());
@@ -100,8 +96,26 @@ public abstract class ServerPlayerEntityMixin {
                         modEntityData.setBeingImpersonated(true);
                     }
 
-                    PlayerEntity actualPlayerEntity = serverPlayerEntity.getServerWorld().getPlayerByUuid(Impersonator.get(serverPlayerEntity).getActualProfile().getId());
-                    PlayerEntity actualAttacker = serverPlayerEntity.getServerWorld().getPlayerByUuid(Impersonator.get(attacker).getEditedProfile().getId());
+                    Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
+
+                    UUID id = MathHelper.randomUuid();
+
+                    Impersonator.get(serverPlayerEntity).impersonate(FunnyModForTesting.IMPERSONATION_KEY,
+                            new GameProfile(id, id.toString().substring(0,15)));
+
+
+
+                    actualServerPlayerEntity.setCameraEntity(attacker);
+
+                    //ServerTickEvents.END_SERVER_TICK.register(server -> {
+                    //    if (actualServerPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
+                    //        server.getPlayerManager().getPlayer(serverPlayerEntity.getUuid()).setCameraEntity(server.getPlayerManager().getPlayer(actualAttacker.getUuid()));
+                    //        server.getPlayerManager().getPlayer(serverPlayerEntity.getUuid()).teleport(actualServerAttacker.getX(), actualServerAttacker.getY(), actualServerAttacker.getZ());
+                    //    }
+                    //});
+
+
+
 
                     //serverPlayerEntity.changeGameMode(GameMode.SPECTATOR);
 
@@ -128,21 +142,22 @@ public abstract class ServerPlayerEntityMixin {
                     //Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
 
 
-                    ServerTickEvents.END_SERVER_TICK.register(server1 -> {
-                        if (serverPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
-                            serverPlayerEntity.teleport(attacker.getX(), attacker.getY(), attacker.getZ());
-                        }
-                    });
-
-                    ModNetworking.lerpTp(serverPlayerEntity);
-
-                    serverPlayerEntity.getServer().execute(() -> {
-                        Impersonator.get(attacker)
-                                .impersonate(
-                                        FunnyModForTesting.IMPERSONATION_KEY,
-                                        serverPlayerEntity.getGameProfile()
-                                );
-                    });
+                    //ServerTickEvents.END_SERVER_TICK.register(server1 -> {
+                    //    if (serverPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
+                    //        serverPlayerEntity.teleport(attacker.getX(), attacker.getY(), attacker.getZ());
+                    //    }
+                    //});
+//
+                    //
+                    ////ModNetworking.lerpTp(serverPlayerEntity);
+//
+                    //serverPlayerEntity.getServer().execute(() -> {
+                    //    Impersonator.get(attacker)
+                    //            .impersonate(
+                    //                    FunnyModForTesting.IMPERSONATION_KEY,
+                    //                    serverPlayerEntity.getGameProfile()
+                    //            );
+                    //});
                 }
             }
         }
@@ -182,6 +197,7 @@ public abstract class ServerPlayerEntityMixin {
         if (serverPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
             modEntityData.setBeingImpersonated(false);
         }
+        Impersonator.get(serverPlayerEntity).stopImpersonation(FunnyModForTesting.IMPERSONATION_KEY);
     }
 
     //@Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)

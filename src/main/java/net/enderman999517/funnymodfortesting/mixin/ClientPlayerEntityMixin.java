@@ -2,7 +2,9 @@ package net.enderman999517.funnymodfortesting.mixin;
 
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.BuiltChunkStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffects;
 import org.objectweb.asm.Opcodes;
@@ -59,6 +61,8 @@ public abstract class ClientPlayerEntityMixin {
     @Shadow
     protected abstract boolean canVehicleSprint(Entity vehicle);
 
+    @Shadow protected abstract void sendMovementPackets();
+
     @Inject(method = "canStartSprinting", at = @At("RETURN"), cancellable = true)
     private void canSprintIfUsingSpear(CallbackInfoReturnable<Boolean> cir) {
         if (entity.getStackInHand(entity.getActiveHand()).isOf(ModItems.SPEAR)) {
@@ -77,4 +81,16 @@ public abstract class ClientPlayerEntityMixin {
             ci.cancel();
         }
     }
+
+    //@Inject(method = "init", at = @At("HEAD"))
+    //private void resyncCameraMovementIfBeingImpersonated(CallbackInfo ci) {
+    //    if (entity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
+    //        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+    //            //System.out.println("ASDFKLH");
+    //            //this.sendMovementPackets();
+    //            client.worldRenderer.
+    //        });
+    //    }
+    //}
+
 }

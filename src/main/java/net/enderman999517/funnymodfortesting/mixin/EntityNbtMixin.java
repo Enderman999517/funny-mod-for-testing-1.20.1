@@ -1,9 +1,11 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
 import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.enderman999517.funnymodfortesting.entity.custom.ImpersonateShadowEntity;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
@@ -88,6 +90,8 @@ public abstract class EntityNbtMixin implements ModEntityData {
         this.beingImpersonated = beingImpersonated;
         if (!entity.getWorld().isClient) {
             ModSync.syncBeingImpersonatedFlag(entity, beingImpersonated);
+
+            ImpersonateShadowEntity impersonateShadowEntity = new ImpersonateShadowEntity((LivingEntity) entity, entity.getWorld());
         }
     }
 }
