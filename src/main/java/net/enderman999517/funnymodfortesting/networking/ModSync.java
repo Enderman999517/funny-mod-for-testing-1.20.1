@@ -50,9 +50,11 @@ public class ModSync {
                         syncHiddenFlag(joiningPlayer, entityData.isHidden(), joiningPlayer);
                         syncOverlayFlag(joiningPlayer, entityData.isRenderingOverlay(), joiningPlayer);
                         syncBeingImpersonatedFlag(joiningPlayer, entityData.isBeingImpersonated(), joiningPlayer);
+                        syncImpersonatingFlag(joiningPlayer, entityData.isImpersonating(), joiningPlayer);
 
                         reSyncAllVisibilityFor(joiningPlayer);
                         reSyncAllOverlayFor(joiningPlayer);
+                        reSyncAllBeingImpersonatedFor(joiningPlayer);
                         reSyncAllImpersonatingFor(joiningPlayer);
                     }
                     iterator.remove();
@@ -69,6 +71,7 @@ public class ModSync {
                     syncHiddenFlag(entity);
                     syncRenderingOverlayFlag(entity, modEntityData.isHidden());
                     syncBeingImpersonatedFlag(entity, modEntityData.isBeingImpersonated());
+                    syncImpersonatingFlag(entity, modEntityData.isImpersonating());
                 });
             });
         });
@@ -80,6 +83,7 @@ public class ModSync {
                 syncHiddenFlag(player, entityData.isHidden(), player);
                 syncOverlayFlag(player, entityData.isRenderingOverlay(), player);
                 syncBeingImpersonatedFlag(player, entityData.isBeingImpersonated(), player);
+                syncImpersonatingFlag(player, entityData.isImpersonating(), player);
             }
         });
 
@@ -91,10 +95,12 @@ public class ModSync {
                 newData.setHidden(oldData.isHidden());
                 newData.setRenderingOverlay(oldData.isRenderingOverlay());
                 newData.setBeingImpersonated(oldData.isBeingImpersonated());
+                newData.setImpersonating(oldData.isImpersonating());
 
                 syncHiddenFlag(newPlayer, oldData.isHidden(), newPlayer);
                 syncOverlayFlag(newPlayer, oldData.isRenderingOverlay(), newPlayer);
                 syncBeingImpersonatedFlag(newPlayer, oldData.isBeingImpersonated(), newPlayer);
+                syncImpersonatingFlag(newPlayer, oldData.isImpersonating(), newPlayer);
             }
         });
     }
@@ -130,7 +136,7 @@ public class ModSync {
         }
     }
 
-    private static void reSyncAllImpersonatingFor(ServerPlayerEntity joiningPlayer) {
+    private static void reSyncAllBeingImpersonatedFor(ServerPlayerEntity joiningPlayer) {
         ServerWorld serverWorld = joiningPlayer.getServerWorld();
         List<ServerPlayerEntity> players = serverWorld.getPlayers();
 
@@ -142,6 +148,21 @@ public class ModSync {
 
             syncBeingImpersonatedFlag(other, otherData.isBeingImpersonated(), joiningPlayer);
             syncBeingImpersonatedFlag(joiningPlayer, joiningData.isBeingImpersonated(), other);
+        }
+    }
+
+    private static void reSyncAllImpersonatingFor(ServerPlayerEntity joiningPlayer) {
+        ServerWorld serverWorld = joiningPlayer.getServerWorld();
+        List<ServerPlayerEntity> players = serverWorld.getPlayers();
+
+        for (ServerPlayerEntity other : players) {
+            if (other == joiningPlayer) continue;
+
+            ModEntityData otherData = (ModEntityData) other;
+            ModEntityData joiningData = (ModEntityData) joiningPlayer;
+
+            syncImpersonatingFlag(other, otherData.isImpersonating(), joiningPlayer);
+            syncImpersonatingFlag(joiningPlayer, joiningData.isImpersonating(), other);
         }
     }
 
@@ -216,6 +237,10 @@ public class ModSync {
         handleSimpleBoolean(entity, beingImpersonated, ModNetworking.BEING_IMPERSONATED_SYNC);
     }
 
+    public static void syncImpersonatingFlag(Entity entity, boolean impersonating) {
+        handleSimpleBoolean(entity, impersonating, ModNetworking.IMPERSONATING_SYNC);
+    }
+
 
     public static void syncHiddenFlag(Entity entity, boolean hidden, ServerPlayerEntity target) {
         syncSimpleBoolean(entity, target, hidden, ModNetworking.ENTITY_HIDDEN_SYNC);
@@ -227,6 +252,10 @@ public class ModSync {
 
     public static void syncBeingImpersonatedFlag(Entity entity, boolean beingImpersonated, ServerPlayerEntity target) {
         syncSimpleBoolean(entity, target, beingImpersonated, ModNetworking.BEING_IMPERSONATED_SYNC);
+    }
+
+    public static void syncImpersonatingFlag(Entity entity, boolean impersonating, ServerPlayerEntity target) {
+        syncSimpleBoolean(entity, target, impersonating, ModNetworking.IMPERSONATING_SYNC);
     }
 
 

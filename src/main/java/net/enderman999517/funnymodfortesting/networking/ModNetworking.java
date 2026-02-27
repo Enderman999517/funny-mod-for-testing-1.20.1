@@ -20,6 +20,7 @@ public class ModNetworking {
     public static final Identifier ENTITY_HIDDEN_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "entity_hidden_sync");
     public static final Identifier DISPLAY_OVERLAY_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "display_overlay_sync");
     public static final Identifier BEING_IMPERSONATED_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "being_impersonated_sync");
+    public static final Identifier IMPERSONATING_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "impersonating_sync");
 
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(ENTITY_HIDDEN_SYNC, (client, handler, buf, responseSender) -> {
@@ -67,6 +68,21 @@ public class ModNetworking {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(IMPERSONATING_SYNC, (client, handler, buf, responseSender) ->  {
+            int entityId = buf.readVarInt();
+            boolean isImpersonating = buf.readBoolean();
+
+            client.execute(() -> {
+                Entity entity = client.world.getEntityById(entityId);
+                if (entity == null) {
+                    return;
+                }
+                if (entity instanceof ModEntityData modEntityData) {
+                    modEntityData.setImpersonating(isImpersonating);
+                }
+            });
+        });
+
 
         AtomicInteger tickCounter = new AtomicInteger();
         AtomicBoolean awaitingResync = new AtomicBoolean(false);
@@ -88,6 +104,7 @@ public class ModNetworking {
                             data.setHidden(data.isHidden());
                             data.setRenderingOverlay(data.isRenderingOverlay());
                             data.setBeingImpersonated(data.isBeingImpersonated());
+                            data.setImpersonating(data.isImpersonating());
                         }
                     }
                 }
