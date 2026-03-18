@@ -6,7 +6,8 @@ import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.enderman999517.funnymodfortesting.entity.custom.ImpersonateShadowEntity;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,8 +25,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
@@ -100,16 +103,33 @@ public abstract class ServerPlayerEntityMixin {
                         modEntityData.setImpersonating(true);
                     }
 
+
+
                     Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
 
                     UUID id = MathHelper.randomUuid();
 
-                    Impersonator.get(serverPlayerEntity).impersonate(FunnyModForTesting.IMPERSONATION_KEY,
-                            new GameProfile(id, id.toString().substring(0,15)));
+                    //Impersonator.get(serverPlayerEntity).impersonate(FunnyModForTesting.IMPERSONATION_KEY,
+                    //        new GameProfile(id, id.toString().substring(0,15)));
 
 
 
-                    actualServerPlayerEntity.setCameraEntity(attacker);
+                    Box box = new Box(serverPlayerEntity.getX() - 50, serverPlayerEntity.getY() - 50, serverPlayerEntity.getZ() - 50,
+                            serverPlayerEntity.getX() + 50, serverPlayerEntity.getY() + 50, serverPlayerEntity.getZ() + 50);
+
+                    List<Entity> targetForCameraList = new ArrayList<>();
+                    this.getServerWorld().getOtherEntities(serverPlayerEntity, box).forEach(entity1 -> {
+                        if (entity1 instanceof ImpersonateShadowEntity impersonateShadowEntity) {
+                            FunnyModForTesting.LOGGER.error("owner: " + impersonateShadowEntity.getOwner() + ", serverPlayerEntity: " + serverPlayerEntity + ", id: " + impersonateShadowEntity.getId());
+                            if (impersonateShadowEntity.getOwner() == serverPlayerEntity) {
+                                targetForCameraList.add(entity1);
+                            }
+                        }
+                    });
+
+                    if (!targetForCameraList.isEmpty()) {
+                        actualServerPlayerEntity.setCameraEntity(targetForCameraList.get(targetForCameraList.size() - 1));
+                    } //else FunnyModForTesting.LOGGER.error("No target for camera");
 
                     //ServerTickEvents.END_SERVER_TICK.register(server -> {
                     //    if (actualServerPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {

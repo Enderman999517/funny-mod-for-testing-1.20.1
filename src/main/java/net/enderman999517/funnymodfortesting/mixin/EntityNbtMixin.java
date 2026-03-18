@@ -1,13 +1,13 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.custom.ImpersonateShadowEntity;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -123,37 +123,49 @@ public abstract class EntityNbtMixin implements ModEntityData {
 
     @Override
     public void setImpersonating(boolean impersonating) {
-        this.impersonating = impersonating;
-        if (!entity.getWorld().isClient) {
-            ModSync.syncImpersonatingFlag(entity, impersonating);
-        }
 
         if (this.getWorld().getServer() != null) {
             ServerWorld serverWorld = this.getWorld().getServer().getWorld(this.getWorld().getRegistryKey());
 
-
-            if (!this.isImpersonating()) {
-                //ImpersonateShadowEntity impersonateShadowEntity = new ImpersonateShadowEntity(ModEntities.IMPERSONATE_SHADOW, getEntityWorld());
-                PigEntity impersonateShadowEntity = new PigEntity(EntityType.PIG, this.getWorld());
+            //if going from not impersonating to impersonating
+            if ((!this.isImpersonating() && impersonating)) {
+                ImpersonateShadowEntity impersonateShadowEntity = new ImpersonateShadowEntity(ModEntities.IMPERSONATE_SHADOW, this.getWorld());
                 if (entity instanceof LivingEntity le && !entity.getWorld().isClient) {
-                    //impersonateShadowEntity.setOwner(le);
+                    impersonateShadowEntity.setTryDiscard(false);
+                    impersonateShadowEntity.setOwner(le);
                     impersonateShadowEntity.setPos(le.getX(), le.getY(), le.getZ());
                     serverWorld.spawnEntityAndPassengers(impersonateShadowEntity);
+                    impersonateShadowEntity.setOwner(le);
+                    impersonateShadowEntity.setTryDiscard(true);
+
+                    FunnyModForTesting.LOGGER.error("not impersonating to impersonating");
+                    FunnyModForTesting.LOGGER.error("owner: " + impersonateShadowEntity.getOwner() + ", id: " + impersonateShadowEntity.getId());
                 }
             } else {
+                //adds specific shadow to be removed
                 Box box = new Box(entity.getX() - 1, entity.getY() - 1, entity.getZ() - 1, entity.getX() + 1, entity.getY() + 1, entity.getZ() + 1);
-                List<ImpersonateShadowEntity> entityList = new ArrayList<>();
+                //List<ImpersonateShadowEntity> entityList = new ArrayList<>();
                 serverWorld.getOtherEntities(entity, box).forEach(entity1 -> {
-                    if ((entity1.getDisplayName().getString().equals(entity.getUuid().toString())) && entity1 instanceof ImpersonateShadowEntity) {
-                        entityList.add((ImpersonateShadowEntity) entity1);
+                    //if ((entity1.getDisplayName().getString().equals(entity.getUuid().toString())) && entity1 instanceof ImpersonateShadowEntity) {
+                    //    entityList.add((ImpersonateShadowEntity) entity1);
+                    //}
+
+                    FunnyModForTesting.LOGGER.error("set owner null in enbtmxn");
+                    if (entity1 instanceof ImpersonateShadowEntity impersonateShadowEntity && impersonateShadowEntity.getOwner() == entity) {
+                        impersonateShadowEntity.setOwner(null);
                     }
                 });
-                if (!entityList.isEmpty()) {
-                    ImpersonateShadowEntity impersonateShadowEntity = entityList.get(entityList.size() - 1);
-                    impersonateShadowEntity.setOwner(null);
-                }
-                //ImpersonateShadowEntity impersonateShadowEntity = entity.getServer().getWorld(entity.getWorld().getRegistryKey()).getOtherEntities(entity, box).;
+
+                //if (!entityList.isEmpty()) {
+                //    ImpersonateShadowEntity impersonateShadowEntity = entityList.get(entityList.size() - 1);
+                //    impersonateShadowEntity.setOwner(null);
+                //}
             }
+        }
+
+        this.impersonating = impersonating;
+        if (!entity.getWorld().isClient) {
+            ModSync.syncImpersonatingFlag(entity, impersonating);
         }
     }
 }
