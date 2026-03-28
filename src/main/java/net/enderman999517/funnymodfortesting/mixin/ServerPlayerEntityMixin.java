@@ -1,13 +1,11 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
-import com.mojang.authlib.GameProfile;
 import io.github.ladysnake.impersonate.Impersonator;
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.damage.ModDamageTypes;
 import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
 import net.enderman999517.funnymodfortesting.entity.custom.ImpersonateShadowEntity;
-import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
@@ -36,6 +34,7 @@ public abstract class ServerPlayerEntityMixin {
 
     @Shadow public abstract ServerWorld getServerWorld();
 
+    @Shadow private @Nullable Entity cameraEntity;
     @Unique
     ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)(Object)this;
     @Unique
@@ -82,6 +81,8 @@ public abstract class ServerPlayerEntityMixin {
                 cir.setReturnValue(false);
 
                 if (serverPlayerEntity.getAttacker() instanceof ServerPlayerEntity attacker) {
+                    FunnyModForTesting.LOGGER.error("asuiodfg");
+
                     PlayerEntity actualPlayerEntity = serverPlayerEntity.getServerWorld().getPlayerByUuid(Impersonator.get(serverPlayerEntity).getActualProfile().getId());
                     ServerPlayerEntity actualServerPlayerEntity = ((ServerPlayerEntity) actualPlayerEntity);
                     PlayerEntity actualAttacker = serverPlayerEntity.getServerWorld().getPlayerByUuid(Impersonator.get(attacker).getActualProfile().getId());
@@ -105,7 +106,6 @@ public abstract class ServerPlayerEntityMixin {
 
 
 
-                    Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
 
                     UUID id = MathHelper.randomUuid();
 
@@ -120,16 +120,26 @@ public abstract class ServerPlayerEntityMixin {
                     List<Entity> targetForCameraList = new ArrayList<>();
                     this.getServerWorld().getOtherEntities(serverPlayerEntity, box).forEach(entity1 -> {
                         if (entity1 instanceof ImpersonateShadowEntity impersonateShadowEntity) {
-                            FunnyModForTesting.LOGGER.error("owner: " + impersonateShadowEntity.getOwner() + ", serverPlayerEntity: " + serverPlayerEntity + ", id: " + impersonateShadowEntity.getId());
+                            //FunnyModForTesting.LOGGER.error("owner: " + impersonateShadowEntity.getOwner() + ", serverPlayerEntity: " + serverPlayerEntity + ", id: " + impersonateShadowEntity.getId());
                             if (impersonateShadowEntity.getOwner() == serverPlayerEntity) {
                                 targetForCameraList.add(entity1);
+                                FunnyModForTesting.LOGGER.error("asl;dfjk");
                             }
                         }
                     });
 
                     if (!targetForCameraList.isEmpty()) {
-                        actualServerPlayerEntity.setCameraEntity(targetForCameraList.get(targetForCameraList.size() - 1));
+                        Entity cameraTargetEntity = targetForCameraList.get(targetForCameraList.size() - 1);
+
+                        if (serverPlayerEntity instanceof ModEntityData modEntityData) {
+                            //FunnyModForTesting.LOGGER.error("cameraTargetEntity: " + cameraTargetEntity);
+                            modEntityData.setCameraTargetEntityUuid(cameraTargetEntity.getUuid().toString());
+                        }
+                        //actualServerPlayerEntity.setCameraEntity(cameraTargetEntity);
                     } //else FunnyModForTesting.LOGGER.error("No target for camera");
+
+                    Impersonator.get(attacker).impersonate(FunnyModForTesting.IMPERSONATION_KEY, serverPlayerEntity.getGameProfile());
+
 
                     //ServerTickEvents.END_SERVER_TICK.register(server -> {
                     //    if (actualServerPlayerEntity instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {

@@ -21,6 +21,7 @@ public class ModNetworking {
     public static final Identifier DISPLAY_OVERLAY_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "display_overlay_sync");
     public static final Identifier BEING_IMPERSONATED_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "being_impersonated_sync");
     public static final Identifier IMPERSONATING_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "impersonating_sync");
+    public static final Identifier CAMERA_TARGET_ENTITY_UUID_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "camera_target_entity_uuid_sync");
 
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(ENTITY_HIDDEN_SYNC, (client, handler, buf, responseSender) -> {
@@ -83,6 +84,21 @@ public class ModNetworking {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(CAMERA_TARGET_ENTITY_UUID_SYNC, (client, handler, buf, responseSender) ->  {
+            int entityId = buf.readVarInt();
+            String cameraTargetEntityUuid = buf.readString();
+
+            client.execute(() -> {
+                Entity entity = client.world.getEntityById(entityId);
+                if (entity == null) {
+                    return;
+                }
+                if (entity instanceof ModEntityData modEntityData) {
+                    modEntityData.setCameraTargetEntityUuid(cameraTargetEntityUuid);
+                }
+            });
+        });
+
 
         AtomicInteger tickCounter = new AtomicInteger();
         AtomicBoolean awaitingResync = new AtomicBoolean(false);
@@ -105,6 +121,7 @@ public class ModNetworking {
                             data.setRenderingOverlay(data.isRenderingOverlay());
                             data.setBeingImpersonated(data.isBeingImpersonated());
                             data.setImpersonating(data.isImpersonating());
+                            data.setCameraTargetEntityUuid(data.getCameraTargetEntityUuid());
                         }
                     }
                 }

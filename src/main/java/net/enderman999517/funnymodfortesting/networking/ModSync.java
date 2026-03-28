@@ -51,11 +51,13 @@ public class ModSync {
                         syncOverlayFlag(joiningPlayer, entityData.isRenderingOverlay(), joiningPlayer);
                         syncBeingImpersonatedFlag(joiningPlayer, entityData.isBeingImpersonated(), joiningPlayer);
                         syncImpersonatingFlag(joiningPlayer, entityData.isImpersonating(), joiningPlayer);
+                        syncCameraTargetEntityUuidFlag(joiningPlayer, entityData.getCameraTargetEntityUuid(), joiningPlayer);
 
                         reSyncAllVisibilityFor(joiningPlayer);
                         reSyncAllOverlayFor(joiningPlayer);
                         reSyncAllBeingImpersonatedFor(joiningPlayer);
                         reSyncAllImpersonatingFor(joiningPlayer);
+                        reSyncAllCameraTargetEntityUuidFor(joiningPlayer);
                     }
                     iterator.remove();
                 } else {
@@ -72,6 +74,7 @@ public class ModSync {
                     syncRenderingOverlayFlag(entity, modEntityData.isHidden());
                     syncBeingImpersonatedFlag(entity, modEntityData.isBeingImpersonated());
                     syncImpersonatingFlag(entity, modEntityData.isImpersonating());
+                    syncCameraTargetEntityUuidFlag(entity, modEntityData.getCameraTargetEntityUuid());
                 });
             });
         });
@@ -84,6 +87,7 @@ public class ModSync {
                 syncOverlayFlag(player, entityData.isRenderingOverlay(), player);
                 syncBeingImpersonatedFlag(player, entityData.isBeingImpersonated(), player);
                 syncImpersonatingFlag(player, entityData.isImpersonating(), player);
+                syncCameraTargetEntityUuidFlag(player, entityData.getCameraTargetEntityUuid(), player);
             }
         });
 
@@ -96,11 +100,13 @@ public class ModSync {
                 newData.setRenderingOverlay(oldData.isRenderingOverlay());
                 newData.setBeingImpersonated(oldData.isBeingImpersonated());
                 newData.setImpersonating(oldData.isImpersonating());
+                newData.setCameraTargetEntityUuid(null);
 
                 syncHiddenFlag(newPlayer, oldData.isHidden(), newPlayer);
                 syncOverlayFlag(newPlayer, oldData.isRenderingOverlay(), newPlayer);
                 syncBeingImpersonatedFlag(newPlayer, oldData.isBeingImpersonated(), newPlayer);
                 syncImpersonatingFlag(newPlayer, oldData.isImpersonating(), newPlayer);
+                syncCameraTargetEntityUuidFlag(newPlayer, oldData.getCameraTargetEntityUuid(), newPlayer);
             }
         });
     }
@@ -163,6 +169,21 @@ public class ModSync {
 
             syncImpersonatingFlag(other, otherData.isImpersonating(), joiningPlayer);
             syncImpersonatingFlag(joiningPlayer, joiningData.isImpersonating(), other);
+        }
+    }
+
+    private static void reSyncAllCameraTargetEntityUuidFor(ServerPlayerEntity joiningPlayer) {
+        ServerWorld serverWorld = joiningPlayer.getServerWorld();
+        List<ServerPlayerEntity> players = serverWorld.getPlayers();
+
+        for (ServerPlayerEntity other : players) {
+            if (other == joiningPlayer) continue;
+
+            ModEntityData otherData = (ModEntityData) other;
+            ModEntityData joiningData = (ModEntityData) joiningPlayer;
+
+            syncCameraTargetEntityUuidFlag(other, otherData.getCameraTargetEntityUuid(), joiningPlayer);
+            syncCameraTargetEntityUuidFlag(joiningPlayer, joiningData.getCameraTargetEntityUuid(), other);
         }
     }
 
@@ -241,6 +262,10 @@ public class ModSync {
         handleSimpleBoolean(entity, impersonating, ModNetworking.IMPERSONATING_SYNC);
     }
 
+    public static void syncCameraTargetEntityUuidFlag(Entity entity, String cameraTargetEntityUuid) {
+        handleSimpleString(entity, cameraTargetEntityUuid, ModNetworking.CAMERA_TARGET_ENTITY_UUID_SYNC);
+    }
+
 
     public static void syncHiddenFlag(Entity entity, boolean hidden, ServerPlayerEntity target) {
         syncSimpleBoolean(entity, target, hidden, ModNetworking.ENTITY_HIDDEN_SYNC);
@@ -258,6 +283,10 @@ public class ModSync {
         syncSimpleBoolean(entity, target, impersonating, ModNetworking.IMPERSONATING_SYNC);
     }
 
+    public static void syncCameraTargetEntityUuidFlag(Entity entity, String cameraTargetEntityUuid, ServerPlayerEntity target) {
+        syncSimpleString(entity, target, cameraTargetEntityUuid, ModNetworking.CAMERA_TARGET_ENTITY_UUID_SYNC);
+    }
+
 
     private static void handleSimpleBoolean(Entity entity, boolean data, Identifier key) {
         if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
@@ -270,6 +299,20 @@ public class ModSync {
         playerEntities.forEach(player -> player.networkHandler.sendPacket(packet));
     }
 
+    private static void handleSimpleString(Entity entity, String data, Identifier key) {
+        if (data != null) {
+            if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeVarInt(entity.getId());
+            buf.writeString(data);
+            CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(key, buf);
+
+            List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
+            playerEntities.forEach(player -> player.networkHandler.sendPacket(packet));
+        }
+    }
+
+
     private static void syncSimpleBoolean(Entity entity, ServerPlayerEntity target, boolean data, Identifier key) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(entity.getId());
@@ -277,5 +320,15 @@ public class ModSync {
 
         CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(key, buf);
         target.networkHandler.sendPacket(packet);
+    }
+
+    private static void syncSimpleString(Entity entity, ServerPlayerEntity target, String data, Identifier key) {
+        if (data != null) {
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeVarInt(entity.getId());
+            buf.writeString(data);
+            CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(key, buf);
+            target.networkHandler.sendPacket(packet);
+        }
     }
 }

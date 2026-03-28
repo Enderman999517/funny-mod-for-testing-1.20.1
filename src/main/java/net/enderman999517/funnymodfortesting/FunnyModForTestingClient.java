@@ -34,6 +34,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.UUID;
+
 public class FunnyModForTestingClient implements ClientModInitializer {
 
     public static final KeyBinding NVG_TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -96,9 +98,9 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.player != null && client.player.isSpectator()) {
-                if (client.options.sneakKey.wasPressed()) {
-
+            if (client.player instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
+                if (modEntityData.getCameraTargetEntityUuid() != null) {
+                    client.setCameraEntity(client.getServer().getWorld(client.world.getRegistryKey()).getEntity(UUID.fromString(modEntityData.getCameraTargetEntityUuid())));
                 }
             }
         });

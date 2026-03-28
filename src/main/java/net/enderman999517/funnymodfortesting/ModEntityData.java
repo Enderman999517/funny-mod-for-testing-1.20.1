@@ -10,4 +10,6 @@ public interface ModEntityData {
     void setBeingImpersonated(boolean beingImpersonated);
     boolean isImpersonating();
     void setImpersonating(boolean impersonating);
+    String getCameraTargetEntityUuid();
+    void setCameraTargetEntityUuid(String cameraTargetEntityUuid);
 }
