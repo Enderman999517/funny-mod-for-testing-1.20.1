@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left_open",
+  "textures": {
+    "bottom": "funnymodfortesting:block/magenta_wool_door_bottom",
+    "top": "funnymodfortesting:block/magenta_wool_door_top"
+  }
+}

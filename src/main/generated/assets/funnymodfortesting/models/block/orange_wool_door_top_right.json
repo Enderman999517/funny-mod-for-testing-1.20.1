@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_right",
+  "textures": {
+    "bottom": "funnymodfortesting:block/orange_wool_door_bottom",
+    "top": "funnymodfortesting:block/orange_wool_door_top"
+  }
+}

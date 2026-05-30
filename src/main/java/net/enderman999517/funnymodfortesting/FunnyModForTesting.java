@@ -18,7 +18,10 @@ import net.enderman999517.funnymodfortesting.recipe.ModRecipes;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.enderman999517.funnymodfortesting.sound.ModSounds;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +51,147 @@ public class FunnyModForTesting implements ModInitializer {
 		ModEnchantments.registerModEnchantments();
 		ModSync.init();
 		EntityMovementTracker.register();
+
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COLORED_BLOCKS).register(fabricItemGroupEntries -> {
+
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PINK_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.MAGENTA_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PURPLE_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLUE_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_BLUE_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.CYAN_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GREEN_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIME_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.YELLOW_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.ORANGE_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.RED_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BROWN_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLACK_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GRAY_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_GRAY_WOOL_PRESSURE_PLATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.WHITE_WOOL_PRESSURE_PLATE);
+
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PINK_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.MAGENTA_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PURPLE_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLUE_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_BLUE_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.CYAN_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GREEN_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIME_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.YELLOW_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.ORANGE_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.RED_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BROWN_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLACK_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GRAY_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_GRAY_WOOL_BUTTON);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.WHITE_WOOL_BUTTON);
+
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PINK_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.MAGENTA_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PURPLE_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLUE_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_BLUE_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.CYAN_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GREEN_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIME_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.YELLOW_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.ORANGE_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.RED_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BROWN_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLACK_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GRAY_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_GRAY_WOOL_TRAPDOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.WHITE_WOOL_TRAPDOOR);
+
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PINK_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.MAGENTA_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PURPLE_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLUE_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_BLUE_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.CYAN_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GREEN_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIME_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.YELLOW_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.ORANGE_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.RED_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BROWN_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLACK_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GRAY_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_GRAY_WOOL_DOOR);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.WHITE_WOOL_DOOR);
+
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PINK_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.MAGENTA_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PURPLE_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLUE_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_BLUE_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.CYAN_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GREEN_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIME_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.YELLOW_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.ORANGE_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.RED_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BROWN_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLACK_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GRAY_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_GRAY_WOOL_FENCE_GATE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.WHITE_WOOL_FENCE_GATE);
+
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PINK_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.MAGENTA_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PURPLE_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLUE_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_BLUE_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.CYAN_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GREEN_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIME_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.YELLOW_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.ORANGE_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.RED_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BROWN_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLACK_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GRAY_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_GRAY_WOOL_FENCE);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.WHITE_WOOL_FENCE);
+
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PINK_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.MAGENTA_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PURPLE_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLUE_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_BLUE_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.CYAN_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GREEN_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIME_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.YELLOW_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.ORANGE_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.RED_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BROWN_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLACK_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GRAY_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_GRAY_WOOL_SLAB);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.WHITE_WOOL_SLAB);
+
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PINK_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.MAGENTA_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.PURPLE_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLUE_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_BLUE_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.CYAN_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GREEN_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIME_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.YELLOW_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.ORANGE_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.RED_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BROWN_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.BLACK_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.GRAY_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.LIGHT_GRAY_WOOL_STAIRS);
+			fabricItemGroupEntries.addAfter(Items.PINK_CARPET, ModBlocks.WHITE_WOOL_STAIRS);
+		});
+
+
 
 	}
 }
