@@ -2,12 +2,12 @@
   "type": "funnymodfortesting:oceandim_type",
   "generator": {
     "type": "minecraft:noise",
-    "settings": "minecraft:overworld",
+    "settings": "funnymodfortesting:oceandim_noise_settings",
     "biome_source": {
       "type": "minecraft:multi_noise",
       "biomes": [
         {
-          "biome": "minecraft:deep_cold_ocean",
+          "biome": "funnymodfortesting:ocean_dim_biome",
           "parameters": {
             "temperature": 0,
             "humidity": 0,

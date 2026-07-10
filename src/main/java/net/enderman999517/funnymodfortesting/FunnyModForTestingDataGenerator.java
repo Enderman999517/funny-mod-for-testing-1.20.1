@@ -1,6 +1,7 @@
 package net.enderman999517.funnymodfortesting;
 
 import net.enderman999517.funnymodfortesting.datagen.*;
+import net.enderman999517.funnymodfortesting.world.biome.ModBiomes;
 import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -23,5 +24,6 @@ public class FunnyModForTestingDataGenerator implements DataGeneratorEntrypoint 
 	@Override
 	public void buildRegistry(RegistryBuilder registryBuilder) {
 		registryBuilder.addRegistry(RegistryKeys.DIMENSION_TYPE, ModDimensions::bootstrapType);
+		registryBuilder.addRegistry(RegistryKeys.BIOME, ModBiomes::bootstrap);
 	}
 }

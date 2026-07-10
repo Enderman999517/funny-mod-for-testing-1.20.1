@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.DimensionTypes;
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
+import net.minecraft.world.gen.densityfunction.DensityFunction;
 
 import java.util.OptionalLong;
 
@@ -22,12 +24,16 @@ public class ModDimensions {
             Identifier.of(FunnyModForTesting.MOD_ID, "oceandim"));
     public static final RegistryKey<DimensionType> OCEANDIM_TYPE = RegistryKey.of(RegistryKeys.DIMENSION_TYPE,
             Identifier.of(FunnyModForTesting.MOD_ID, "oceandim_type"));
+    public static final RegistryKey<DensityFunction> OCEANDIM_DENSITY_FUNCTION = RegistryKey.of(RegistryKeys.DENSITY_FUNCTION,
+            Identifier.of(FunnyModForTesting.MOD_ID, "oceandim_density_function"));
+    public static final RegistryKey<ChunkGeneratorSettings> OCEANDIM_CHUNK_GENERATOR_SETTINGS = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS,
+            Identifier.of(FunnyModForTesting.MOD_ID, "oceandim_chunk_generator_settings"));
 
 
     public static void bootstrapType(Registerable<DimensionType> context) {
         context.register(ModDimensions.OCEANDIM_TYPE,
                 new DimensionType(
-                        OptionalLong.empty(),
+                        OptionalLong.of(18000),
                         true,
                         false,
                         false,
@@ -45,4 +51,17 @@ public class ModDimensions {
                 )
         );
     }
+
+
+    //public static void bootstrapChunkGeneratorSettings(Registerable<ChunkGeneratorSettings> context) {
+    //    GenerationShapeConfig generationShapeConfig = GenerationShapeConfig.create(0, 320, 1, 1);
+    //    NoiseRouter noiseRouter = ModNoiseRouters.testNoiseRouter();
+//
+    //    context.register(ModDimensions.OCEANDIM_CHUNK_GENERATOR_SETTINGS,
+    //            new ChunkGeneratorSettings(
+    //                    generationShapeConfig, Blocks.DIAMOND_BLOCK.getDefaultState(),Blocks.WATER.getDefaultState(), noiseRouter,
+    //                    ModMaterialRules.makeRules(), new ArrayList<>(),128,true,false,false,false
+    //            )
+    //    );
+    //}
 }
