@@ -51,17 +51,4 @@ public class ModDimensions {
                 )
         );
     }
-
-
-    //public static void bootstrapChunkGeneratorSettings(Registerable<ChunkGeneratorSettings> context) {
-    //    GenerationShapeConfig generationShapeConfig = GenerationShapeConfig.create(0, 320, 1, 1);
-    //    NoiseRouter noiseRouter = ModNoiseRouters.testNoiseRouter();
-//
-    //    context.register(ModDimensions.OCEANDIM_CHUNK_GENERATOR_SETTINGS,
-    //            new ChunkGeneratorSettings(
-    //                    generationShapeConfig, Blocks.DIAMOND_BLOCK.getDefaultState(),Blocks.WATER.getDefaultState(), noiseRouter,
-    //                    ModMaterialRules.makeRules(), new ArrayList<>(),128,true,false,false,false
-    //            )
-    //    );
-    //}
 }

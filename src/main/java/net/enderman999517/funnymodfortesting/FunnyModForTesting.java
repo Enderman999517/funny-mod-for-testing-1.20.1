@@ -8,7 +8,6 @@ import net.enderman999517.funnymodfortesting.enchantment.ModEnchantments;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.custom.AmoghEntity;
 import net.enderman999517.funnymodfortesting.entity.custom.HiddenEntity;
-import net.enderman999517.funnymodfortesting.entity.custom.ImpersonateShadowEntity;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItemGroups;
 import net.enderman999517.funnymodfortesting.item.ModItems;
@@ -17,9 +16,13 @@ import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.enderman999517.funnymodfortesting.recipe.ModRecipes;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.enderman999517.funnymodfortesting.sound.ModSounds;
+import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
+import net.kyrptonaught.customportalapi.util.SHOULDTP;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
@@ -192,6 +195,16 @@ public class FunnyModForTesting implements ModInitializer {
 		});
 
 
+		CustomPortalBuilder.beginPortal()
+				.frameBlock(Blocks.GOLD_BLOCK)
+				.lightWithWater()
+				.destDimID(new Identifier(FunnyModForTesting.MOD_ID, "oceandim"))
+				.flatPortal()
+				.tintColor(0xffffff)
+				.forcedSize(2,2)
+				.onlyLightInOverworld()
+				.registerPreIgniteEvent((player, world, portalPos, framePos, portalIgnitionSource) -> ! (world.getDimensionKey() == ModDimensions.OCEANDIM_TYPE))
+				.registerPortal();
 
 	}
 }
