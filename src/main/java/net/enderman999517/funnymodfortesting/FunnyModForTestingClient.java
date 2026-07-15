@@ -70,6 +70,9 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         });
     }
 
+    public static float waterStart = 0;
+    public static float waterEnd = 0;
+
     @Override
     public void onInitializeClient() {
 
@@ -124,7 +127,6 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.MAGENTA_WOOL_TRAPDOOR, RenderLayer.getCutout());
             BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PINK_WOOL_TRAPDOOR, RenderLayer.getCutout());
         }
-
 
 
         BlockEntityRendererFactories.register(ModBlockEntities.GONG_BLOCK_ENTITY, GongBlockEntityRenderer::new);
