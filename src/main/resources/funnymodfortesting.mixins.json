@@ -3,11 +3,13 @@
   "package": "net.enderman999517.funnymodfortesting.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "CustomTeleporterMixin",
     "EnchantmentTargetWeaponMixin",
     "EntityMixin",
     "EntityNbtMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
+    "PortalPlacerMixin",
     "ServerPlayerEntityMixin"
   ],
   "client": [
