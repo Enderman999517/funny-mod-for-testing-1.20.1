@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.mixin;
 
+import net.enderman999517.funnymodfortesting.render.sky.OceandimSkyRenderer;
 import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.WorldRenderer;
@@ -24,7 +25,7 @@ public abstract class WorldRendererMixin {
         assert world != null;
         if (world.getRegistryKey().equals(ModDimensions.OCEANDIM_LEVEL)) {
             ci.cancel();
-            //renderEndSky(matrices);
+            OceandimSkyRenderer.renderOceandimSky(matrices);
         }
     }
 
