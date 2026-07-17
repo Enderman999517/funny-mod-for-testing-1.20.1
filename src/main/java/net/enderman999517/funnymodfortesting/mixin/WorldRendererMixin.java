@@ -24,7 +24,7 @@ public abstract class WorldRendererMixin {
         assert world != null;
         if (world.getRegistryKey().equals(ModDimensions.OCEANDIM_LEVEL)) {
             ci.cancel();
-            renderEndSky(matrices);
+            //renderEndSky(matrices);
         }
     }
 

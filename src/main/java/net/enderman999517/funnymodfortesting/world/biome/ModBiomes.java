@@ -14,8 +14,8 @@ public class ModBiomes {
     public static final RegistryKey<Biome> OCEAN_DIM_BIOME = RegistryKey.of(RegistryKeys.BIOME,
             new Identifier(FunnyModForTesting.MOD_ID, "ocean_dim_biome"));
 
-    public static float waterStart = 20;
-    public static float waterEnd = 30;
+    public static float waterStart = 10;
+    public static float waterEnd = 20;
 
     public static void bootstrap(Registerable<Biome> context) {
         context.register(OCEAN_DIM_BIOME, oceanDimBiome(context));
