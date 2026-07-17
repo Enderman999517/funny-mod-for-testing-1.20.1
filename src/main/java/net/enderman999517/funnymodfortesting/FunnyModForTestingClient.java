@@ -18,6 +18,7 @@ import net.enderman999517.funnymodfortesting.render.ChargedPlayerRenderFeature;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
 import net.enderman999517.funnymodfortesting.screen.CompactingScreen;
 import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
+import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -29,6 +30,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRe
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
@@ -36,8 +38,6 @@ import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.UUID;
 
 public class FunnyModForTestingClient implements ClientModInitializer {
 
@@ -70,8 +70,6 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         });
     }
 
-    public static float waterStart = 0;
-    public static float waterEnd = 0;
 
     @Override
     public void onInitializeClient() {
@@ -91,6 +89,20 @@ public class FunnyModForTestingClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(DepthFx.INSTANCE);
         ShaderEffectRenderCallback.EVENT.register(DepthFx.INSTANCE);
         PostWorldRenderCallback.EVENT.register(DepthFx.INSTANCE);
+
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            SimpleOption<Double> gamma = client.options.getGamma();
+            double value = 0;
+            double originalValue;
+            if (!ModDimensions.isPlayerInOceandim(client.player)) {
+                originalValue = gamma.getValue();
+            }
+
+            if (gamma.getValue() != value && ModDimensions.isPlayerInOceandim(client.player)) {
+                gamma.setValue(value);
+            }
+        });
 
         {
             BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.WHITE_WOOL_DOOR, RenderLayer.getCutout());
@@ -140,13 +152,13 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             }
         });
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.player instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
-                if (modEntityData.getCameraTargetEntityUuid() != null) {
-                    client.setCameraEntity(client.getServer().getWorld(client.world.getRegistryKey()).getEntity(UUID.fromString(modEntityData.getCameraTargetEntityUuid())));
-                }
-            }
-        });
+        //ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        //    if (client.player instanceof ModEntityData modEntityData && modEntityData.isBeingImpersonated()) {
+        //        if (modEntityData.getCameraTargetEntityUuid() != null) {
+        //            client.setCameraEntity(client.getServer().getWorld(client.world.getRegistryKey()).getEntity(UUID.fromString(modEntityData.getCameraTargetEntityUuid())));
+        //        }
+        //    }
+        //});
 
 
         ShaderEffectRenderCallback.EVENT.register(tickDelta -> {

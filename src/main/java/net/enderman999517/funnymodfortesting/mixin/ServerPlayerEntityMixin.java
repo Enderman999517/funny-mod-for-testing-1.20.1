@@ -41,8 +41,9 @@ public abstract class ServerPlayerEntityMixin {
     boolean wasInOffhandPrevTick = false;
 
     @Inject(method = "playerTick", at = @At("HEAD"))
-    public void setHiddenForRing(CallbackInfo ci) {
+    public void handleCustomTickEvents(CallbackInfo ci) {
         if (serverPlayerEntity instanceof ModEntityData modEntityData) {
+            // handles setting hidden state by checking for the correct item being added or removed from the offhand (1t lag I think, but it's fine)
             if(wasInOffhandPrevTick) {
                 if(!modEntityData.hasRingInOffhand()) {
                     modEntityData.setHidden(false);
@@ -55,6 +56,7 @@ public abstract class ServerPlayerEntityMixin {
                 wasInOffhandPrevTick = true;
             }
 
+            // handles setting a bossbar for HiddenEntity only for hidden players
             Box checkBox = new Box(
                     serverPlayerEntity.getX() - 100, serverPlayerEntity.getY() - 100, serverPlayerEntity.getZ() - 100,
                     serverPlayerEntity.getX() + 100, serverPlayerEntity.getY() + 100, serverPlayerEntity.getZ() + 100);

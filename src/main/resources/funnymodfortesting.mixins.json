@@ -18,7 +18,8 @@
     "EntityRenderDispatcherMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
-    "ModelLoaderMixin"
+    "ModelLoaderMixin",
+    "WorldRendererMixin"
   ],
   "server": [],
   "injectors": {

@@ -1,10 +1,15 @@
 package net.enderman999517.funnymodfortesting.world.dimension;
 
 import net.enderman999517.funnymodfortesting.FunnyModForTesting;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
@@ -50,5 +55,9 @@ public class ModDimensions {
                         new DimensionType.MonsterSettings(false, false, UniformIntProvider.create(0, 0), 0)
                 )
         );
+    }
+
+    public static boolean isPlayerInOceandim(Entity player) {
+        return player instanceof PlayerEntity && player.getWorld().getRegistryKey().equals(ModDimensions.OCEANDIM_LEVEL);
     }
 }

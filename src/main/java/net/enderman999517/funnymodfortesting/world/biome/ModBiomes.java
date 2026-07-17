@@ -14,6 +14,9 @@ public class ModBiomes {
     public static final RegistryKey<Biome> OCEAN_DIM_BIOME = RegistryKey.of(RegistryKeys.BIOME,
             new Identifier(FunnyModForTesting.MOD_ID, "ocean_dim_biome"));
 
+    public static float waterStart = 20;
+    public static float waterEnd = 30;
+
     public static void bootstrap(Registerable<Biome> context) {
         context.register(OCEAN_DIM_BIOME, oceanDimBiome(context));
     }
@@ -32,12 +35,12 @@ public class ModBiomes {
                 .generationSettings(biomeBuilder.build())
                 .spawnSettings(spawnBuilder.build())
                 .effects((new BiomeEffects.Builder())
-                        .waterColor(0xffffff)
+                        .waterColor(0x000000)
                         .waterFogColor(0xffffff)
                         .skyColor(0x30c918)
                         .grassColor(0x7f03fc)
                         .foliageColor(0xd203fc)
-                        .fogColor(0xffffff)
+                        .fogColor(0x000000)
                         .build())
                 .build();
     }
