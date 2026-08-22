@@ -20,14 +20,14 @@ public abstract class WorldRendererMixin {
 
     @Shadow protected abstract void renderEndSky(MatrixStack matrices);
 
-    @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("HEAD"), cancellable = true)
-    private void dontRenderSkyInOceandim(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
-        assert world != null;
-        if (world.getRegistryKey().equals(ModDimensions.OCEANDIM_LEVEL)) {
-            ci.cancel();
-            OceandimSkyRenderer.renderOceandimSky(matrices);
-        }
-    }
+    //@Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("HEAD"), cancellable = true)
+    //private void renderCustomSkyInOceandim(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
+    //    assert world != null;
+    //    if (world.getRegistryKey().equals(ModDimensions.OCEANDIM_LEVEL)) {
+    //        ci.cancel();
+    //        OceandimSkyRenderer.renderOceandimSky(matrices);
+    //    }
+    //}
 
     @Inject(method = "renderClouds(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FDDD)V", at = @At("HEAD"), cancellable = true)
     private void dontRenderCloudsInOceandim(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {

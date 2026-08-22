@@ -46,6 +46,18 @@ repositories {
 	}
 
 	maven {url = "https://maven.kyrptonaught.dev"}
+
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 fabricApi {
@@ -79,6 +91,12 @@ dependencies {
 
 	modImplementation 'net.kyrptonaught:customportalapi:0.0.1-beta65-1.20'
 	include 'net.kyrptonaught:customportalapi:0.0.1-beta65-1.20'
+
+	//iris
+	modImplementation "maven.modrinth:YL57xq9U:s5eFLITc"
+
+	//sodium
+	modImplementation "maven.modrinth:AANobbMI:OihdIimA"
 }
 
 processResources {

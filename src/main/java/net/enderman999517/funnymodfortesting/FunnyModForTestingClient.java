@@ -92,6 +92,12 @@ public class FunnyModForTestingClient implements ClientModInitializer {
 
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (FISH.wasPressed()) {
+
+            }
+        });
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
             SimpleOption<Double> gamma = client.options.getGamma();
             double value = 0;
             double originalValue;

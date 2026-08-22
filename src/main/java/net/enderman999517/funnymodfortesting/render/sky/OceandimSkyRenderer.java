@@ -10,6 +10,7 @@ import org.joml.Matrix4f;
 
 public class OceandimSkyRenderer {
     private static final Identifier OCEANDIM_SKY = new Identifier(FunnyModForTesting.MOD_ID, "textures/environment/oceandim_sky.png");
+    private static final Identifier END_SKY = new Identifier("textures/environment/end_sky.png");
 
 
     public static void renderOceandimSky(MatrixStack matrices) {
@@ -46,7 +47,7 @@ public class OceandimSkyRenderer {
             bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
             bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, -100.0F).texture(0.0F, 0.0F).color(40, 40, 40, 255).next();
             bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, 100.0F).texture(0.0F, 16.0F).color(40, 40, 40, 255).next();
-            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, 100.0F).texture(16.0F, 16.0F).color(40, 40, 40, 255).next();
+            bufferBuilder.vertex(matrix4f, 100, -100.0F, 100.0F).texture(16.0F, 16.0F).color(40, 40, 40, 255).next();
             bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, -100.0F).texture(16.0F, 0.0F).color(40, 40, 40, 255).next();
             tessellator.draw();
             matrices.pop();
