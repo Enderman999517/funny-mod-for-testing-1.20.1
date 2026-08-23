@@ -58,6 +58,13 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
+
+	maven {
+		url = uri('https://jitpack.io')
+	}
+
+	maven { url = "https://maven.caffeinemc.net/releases" }
+	mavenCentral()
 }
 
 fabricApi {
@@ -92,11 +99,17 @@ dependencies {
 	modImplementation 'net.kyrptonaught:customportalapi:0.0.1-beta65-1.20'
 	include 'net.kyrptonaught:customportalapi:0.0.1-beta65-1.20'
 
-	//iris
-	modImplementation "maven.modrinth:YL57xq9U:s5eFLITc"
 
-	//sodium
-	modImplementation "maven.modrinth:AANobbMI:OihdIimA"
+	//modLocalRuntime files("run/mods/iris-1.7.6+mc1.20.1.jar")
+	modImplementation("maven.modrinth:iris:1.7.5+1.20.1")
+
+	modLocalRuntime files("run/mods/sodium-fabric-0.5.12-beta.2+mc1.20.1.jar")
+
+	////indium
+	//modLocalRuntime "maven.modrinth:Orvt0mRa:nQHYSjxO"
+
+
+
 }
 
 processResources {

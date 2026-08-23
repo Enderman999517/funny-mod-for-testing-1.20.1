@@ -13,6 +13,7 @@ import net.enderman999517.funnymodfortesting.entity.client.*;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
+import net.enderman999517.funnymodfortesting.mixin.ShaderPackSelectionListMixin;
 import net.enderman999517.funnymodfortesting.networking.ModNetworking;
 import net.enderman999517.funnymodfortesting.render.ChargedPlayerRenderFeature;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
@@ -21,12 +22,19 @@ import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
+import net.irisshaders.iris.Iris;
+import net.irisshaders.iris.api.v0.IrisApi;
+import net.irisshaders.iris.config.IrisConfig;
+import net.irisshaders.iris.gui.element.ShaderPackSelectionList;
+import net.irisshaders.iris.parsing.IrisFunctions;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
@@ -37,7 +45,11 @@ import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import org.apache.logging.log4j.core.config.properties.PropertiesConfiguration;
 import org.lwjgl.glfw.GLFW;
+
+import java.io.File;
+import java.nio.file.Path;
 
 public class FunnyModForTestingClient implements ClientModInitializer {
 
@@ -71,6 +83,10 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     }
 
 
+    //public static void setIrisShader(String shader) {
+    //    Path file = FabricLoader.getInstance().getGameDir().resolve("optionsshaders.txt")
+    //}
+
     @Override
     public void onInitializeClient() {
 
@@ -93,7 +109,7 @@ public class FunnyModForTestingClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (FISH.wasPressed()) {
-
+                ShaderPackSelectionList.setApplied();
             }
         });
 
