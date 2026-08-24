@@ -47,9 +47,9 @@ public class ToggleHiddenCommand {
 
         if (targets.size() == 1) {
             source.sendFeedback(
-                    () -> Text.translatable("commands.hidden.success.single", hidden, (targets.iterator().next()).getDisplayName()), true);
+                    () -> Text.translatable("commands.funnymodfortesting.hidden.success.single", hidden, (targets.iterator().next()).getDisplayName()), true);
         } else {
-            source.sendFeedback(() -> Text.translatable("commands.hidden.success.multiple", hidden, targets.size()), true);
+            source.sendFeedback(() -> Text.translatable("commands.funnymodfortesting.hidden.success.multiple", hidden, targets.size()), true);
         }
         return validTargets;
     }

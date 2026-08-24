@@ -13,7 +13,6 @@ import net.enderman999517.funnymodfortesting.entity.client.*;
 import net.enderman999517.funnymodfortesting.entity.effect.ModStatusEffects;
 import net.enderman999517.funnymodfortesting.item.ModItems;
 import net.enderman999517.funnymodfortesting.item.custom.ScytheItem;
-import net.enderman999517.funnymodfortesting.mixin.ShaderPackSelectionListMixin;
 import net.enderman999517.funnymodfortesting.networking.ModNetworking;
 import net.enderman999517.funnymodfortesting.render.ChargedPlayerRenderFeature;
 import net.enderman999517.funnymodfortesting.screen.BrainrottingScreen;
@@ -22,19 +21,23 @@ import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.irisshaders.iris.config.IrisConfig;
+import net.irisshaders.iris.gl.IrisRenderSystem;
+import net.irisshaders.iris.gui.element.IrisObjectSelectionList;
 import net.irisshaders.iris.gui.element.ShaderPackSelectionList;
 import net.irisshaders.iris.parsing.IrisFunctions;
+import net.irisshaders.iris.parsing.IrisOptions;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
@@ -44,12 +47,16 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.core.config.properties.PropertiesConfiguration;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
-import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FunnyModForTestingClient implements ClientModInitializer {
 
@@ -61,6 +68,16 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     public static final KeyBinding FISH = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.funnymodfortesting.fish",
             GLFW.GLFW_KEY_F,
+            "category.funnymodfortesting"
+    ));
+    public static final KeyBinding NEXT_SHADER = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.funnymodfortesting.next_shader",
+            GLFW.GLFW_KEY_DOWN,
+            "category.funnymodfortesting"
+    ));
+    public static final KeyBinding PREVIOUS_SHADER = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.funnymodfortesting.previous_shader",
+            GLFW.GLFW_KEY_UP,
             "category.funnymodfortesting"
     ));
 
@@ -83,9 +100,27 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     }
 
 
-    //public static void setIrisShader(String shader) {
-    //    Path file = FabricLoader.getInstance().getGameDir().resolve("optionsshaders.txt")
-    //}
+    private int currentShader = 0;
+    public void doShaderStuff(int currentShader, MinecraftClient client) {
+
+        File shaderpacksDir = new File(MinecraftClient.getInstance().runDirectory, "shaderpacks");
+        File[] packs = shaderpacksDir.listFiles(file ->
+                (file.isFile() && file.getName().endsWith(".zip")) || file.isDirectory());
+        List<String> shaderpacks = packs != null ? Arrays.stream(packs).map(File::getName).toList() : List.of();
+
+        int actualCurrentShader = Math.floorMod(currentShader + 1, shaderpacks.size());
+
+        String currentShaderEnabled = shaderpacks.get(actualCurrentShader);
+        Iris.getIrisConfig().setShaderPackName(shaderpacks.get(actualCurrentShader));
+        IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
+        client.player.sendMessage(Text.translatable("messages.funnymodfortesting.shader_change_1").formatted(Formatting.GOLD)
+                .append(Text.literal(currentShaderEnabled).formatted(Formatting.RED))
+                .append(Text.translatable("messages.funnymodfortesting.shader_change_2").formatted(Formatting.GOLD))
+                .append(Text.literal(String.valueOf((actualCurrentShader + 1))).formatted(Formatting.RED))
+                .append(Text.translatable("messages.funnymodfortesting.shader_change_3").formatted(Formatting.GOLD))
+                .append(Text.literal(String.valueOf(shaderpacks.size())).formatted(Formatting.RED))
+                .formatted(Formatting.BOLD));
+    }
 
     @Override
     public void onInitializeClient() {
@@ -108,8 +143,19 @@ public class FunnyModForTestingClient implements ClientModInitializer {
 
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (FISH.wasPressed()) {
-                ShaderPackSelectionList.setApplied();
+            if (NEXT_SHADER.wasPressed()) {
+                currentShader++;
+                doShaderStuff(currentShader, client);
+            }
+            if (PREVIOUS_SHADER.wasPressed()) {
+                currentShader--;
+                doShaderStuff(currentShader, client);
+            }
+        });
+
+        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+            if (Iris.getIrisConfig().areShadersEnabled()) {
+                IrisApi.getInstance().getConfig().setShadersEnabledAndApply(false);
             }
         });
 

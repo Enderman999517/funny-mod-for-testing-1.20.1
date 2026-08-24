@@ -164,6 +164,10 @@
   "subtitles.funnymodfortesting.nvg_turn_off": "NVG turns off",
   "subtitles.funnymodfortesting.nvg_turn_on": "NVG turns on",
 
+  "messages.funnymodfortesting.shader_change_1" : "Current shader: ",
+  "messages.funnymodfortesting.shader_change_2" : ", index ",
+  "messages.funnymodfortesting.shader_change_3" : " in list out of ",
+
   "effect.funnymodfortesting.exp": "Experience",
 
   "key.funnymodfortesting.nvg": "Toggle Night Vision",
@@ -171,8 +175,12 @@
 
   "commands.funnymodfortesting.kill.success.multiple": "Killed %s entities",
   "commands.funnymodfortesting.kill.success.single": "Killed %s",
-  "commands.hidden.success.single": "Set hidden to %s for %s",
-  "commands.hidden.success.multiple": "Set hidden to %s for %s targets",
+  "commands.funnymodfortesting.hidden.success.single": "Set hidden to %s for %s",
+  "commands.funnymodfortesting.hidden.success.multiple": "Set hidden to %s for %s targets",
+  "commands.funnymodfortesting.dlshader.error" : "There was an error accessing Modrinth's api or downloading the shader. Check your internet connection and try again later",
+  "commands.funnymodfortesting.dlshader.success" : "Shader downloaded successfully!",
+  "commands.funnymodfortesting.dlshader.not_uniqe" : "A shader with the name \"%s\" already exists, rename or delete the one in your shaderpacks folder",
+
 
   "death.attack.scythe": "%1$s drained too much of their blood",
   "death.attack.stim": "%1$s got too stimulated",

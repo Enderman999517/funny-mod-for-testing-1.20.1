@@ -19,7 +19,6 @@
     "ItemRendererAccessor",
     "ItemRendererMixin",
     "ModelLoaderMixin",
-    "ShaderPackSelectionListAccessor",
     "WorldRendererMixin"
   ],
   "server": [],
