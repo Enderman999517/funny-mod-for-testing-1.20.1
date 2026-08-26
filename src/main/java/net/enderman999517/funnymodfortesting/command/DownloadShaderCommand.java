@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.util.concurrent.TimeoutException;
 
 public class DownloadShaderCommand {
-    private static final int TIMEOUT = 10000; //timeout in millis
+    private static final int TIMEOUT = 1000000; //timeout in millis
     public static final RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(TIMEOUT).setConnectionRequestTimeout(TIMEOUT).setSocketTimeout(TIMEOUT).build();
     private static final CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 
