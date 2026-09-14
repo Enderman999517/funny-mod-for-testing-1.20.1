@@ -25,19 +25,13 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
-import net.irisshaders.iris.config.IrisConfig;
-import net.irisshaders.iris.gl.IrisRenderSystem;
-import net.irisshaders.iris.gui.element.IrisObjectSelectionList;
-import net.irisshaders.iris.gui.element.ShaderPackSelectionList;
-import net.irisshaders.iris.parsing.IrisFunctions;
-import net.irisshaders.iris.parsing.IrisOptions;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
@@ -50,13 +44,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class FunnyModForTestingClient implements ClientModInitializer {
 
@@ -80,6 +72,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             GLFW.GLFW_KEY_UP,
             "category.funnymodfortesting"
     ));
+
+    public static String oceandimShader = "EchoShift 1.0.0.zip";
 
     public boolean renderingBlit = false;
     private static final ManagedShaderEffect testShader = ShaderEffectManager.getInstance().manage(new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/blit.json"));
@@ -121,6 +115,11 @@ public class FunnyModForTestingClient implements ClientModInitializer {
                 .append(Text.literal(String.valueOf(shaderpacks.size())).formatted(Formatting.RED))
                 .formatted(Formatting.BOLD));
     }
+
+    //public static void renderOceandimShader() {
+    //    Iris.getIrisConfig().setShaderPackName(oceandimShader);
+    //    IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
+    //}
 
     @Override
     public void onInitializeClient() {

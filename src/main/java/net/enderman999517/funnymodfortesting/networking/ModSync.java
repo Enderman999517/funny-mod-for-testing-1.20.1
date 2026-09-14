@@ -1,6 +1,8 @@
 package net.enderman999517.funnymodfortesting.networking;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTestingClient;
 import net.enderman999517.funnymodfortesting.ModEntityData;
+import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -13,10 +15,13 @@ import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.dimension.DimensionTypes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class ModSync {
+    private static String userShader;
 
     public static void init() {
         final Map<UUID, Integer> resyncPlayerInvisWaitTicks = new HashMap<>();
@@ -88,6 +93,13 @@ public class ModSync {
                 syncBeingImpersonatedFlag(player, entityData.isBeingImpersonated(), player);
                 syncImpersonatingFlag(player, entityData.isImpersonating(), player);
                 syncCameraTargetEntityUuidFlag(player, entityData.getCameraTargetEntityUuid(), player);
+                if (ModDimensions.isPlayerInOceandim(player)) {
+                    userShader = entityData.getClientShader();
+                    syncRenderingShaderFlag(player, FunnyModForTestingClient.oceandimShader, player);
+                }
+                if (destination.getDimensionKey().equals(DimensionTypes.OVERWORLD) && origin.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+                    syncRenderingShaderFlag(player, userShader, player);
+                }
             }
         });
 
@@ -112,7 +124,7 @@ public class ModSync {
     }
 
 
-    private static void reSyncAllVisibilityFor(ServerPlayerEntity joiningPlayer) {
+    private static void reSyncAllVisibilityFor(@NotNull ServerPlayerEntity joiningPlayer) {
         ServerWorld serverWorld = joiningPlayer.getServerWorld();
         List<ServerPlayerEntity> players = serverWorld.getPlayers();
 
@@ -127,7 +139,7 @@ public class ModSync {
         }
     }
 
-    private static void reSyncAllOverlayFor(ServerPlayerEntity joiningPlayer) {
+    private static void reSyncAllOverlayFor(@NotNull ServerPlayerEntity joiningPlayer) {
         ServerWorld serverWorld = joiningPlayer.getServerWorld();
         List<ServerPlayerEntity> players = serverWorld.getPlayers();
 
@@ -142,7 +154,7 @@ public class ModSync {
         }
     }
 
-    private static void reSyncAllBeingImpersonatedFor(ServerPlayerEntity joiningPlayer) {
+    private static void reSyncAllBeingImpersonatedFor(@NotNull ServerPlayerEntity joiningPlayer) {
         ServerWorld serverWorld = joiningPlayer.getServerWorld();
         List<ServerPlayerEntity> players = serverWorld.getPlayers();
 
@@ -157,7 +169,7 @@ public class ModSync {
         }
     }
 
-    private static void reSyncAllImpersonatingFor(ServerPlayerEntity joiningPlayer) {
+    private static void reSyncAllImpersonatingFor(@NotNull ServerPlayerEntity joiningPlayer) {
         ServerWorld serverWorld = joiningPlayer.getServerWorld();
         List<ServerPlayerEntity> players = serverWorld.getPlayers();
 
@@ -172,7 +184,7 @@ public class ModSync {
         }
     }
 
-    private static void reSyncAllCameraTargetEntityUuidFor(ServerPlayerEntity joiningPlayer) {
+    private static void reSyncAllCameraTargetEntityUuidFor(@NotNull ServerPlayerEntity joiningPlayer) {
         ServerWorld serverWorld = joiningPlayer.getServerWorld();
         List<ServerPlayerEntity> players = serverWorld.getPlayers();
 
@@ -188,7 +200,7 @@ public class ModSync {
     }
 
 
-    public static void syncHiddenFlag(Entity entity) {
+    public static void syncHiddenFlag(@NotNull Entity entity) {
         if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
 
         PacketByteBuf bufH = PacketByteBufs.create();
@@ -267,6 +279,7 @@ public class ModSync {
     }
 
 
+
     public static void syncHiddenFlag(Entity entity, boolean hidden, ServerPlayerEntity target) {
         syncSimpleBoolean(entity, target, hidden, ModNetworking.ENTITY_HIDDEN_SYNC);
     }
@@ -287,8 +300,13 @@ public class ModSync {
         syncSimpleString(entity, target, cameraTargetEntityUuid, ModNetworking.CAMERA_TARGET_ENTITY_UUID_SYNC);
     }
 
+    public static void syncRenderingShaderFlag(Entity entity, String shaderName, ServerPlayerEntity target) {
+        syncSimpleString(entity, target, shaderName, ModNetworking.RENDERING_SHADER_SYNC);
+    }
 
-    private static void handleSimpleBoolean(Entity entity, boolean data, Identifier key) {
+
+    // handle methods send to all players
+    private static void handleSimpleBoolean(@NotNull Entity entity, boolean data, Identifier key) {
         if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(entity.getId());
@@ -313,7 +331,8 @@ public class ModSync {
     }
 
 
-    private static void syncSimpleBoolean(Entity entity, ServerPlayerEntity target, boolean data, Identifier key) {
+    // sync methods send to a specific target only
+    private static void syncSimpleBoolean(@NotNull Entity entity, @NotNull ServerPlayerEntity target, boolean data, Identifier key) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(entity.getId());
         buf.writeBoolean(data);

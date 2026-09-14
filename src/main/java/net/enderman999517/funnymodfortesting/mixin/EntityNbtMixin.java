@@ -29,11 +29,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityNbtMixin implements ModEntityData {
 
     @Shadow public abstract World getWorld();
-
     @Shadow public abstract @Nullable MinecraftServer getServer();
-
     @Unique
     Entity entity = (Entity)(Object)this;
+
+    /**
+     *Adding data:
+     * <li>See the comment in {@link net.enderman999517.funnymodfortesting.networking.ModNetworking} first</li>
+     * <li>Create the relevant field below</li>
+     * <li>Add the key in {@link EntityNbtMixin#writeModData} and {@link EntityNbtMixin#readModData}</li>
+     * <li>Add functionality to data getter and setters from {@link ModEntityData}</li>
+     */
 
     @Unique
     private boolean hidden = false;
@@ -45,6 +51,8 @@ public abstract class EntityNbtMixin implements ModEntityData {
     private boolean impersonating = false;
     @Unique
     private String cameraTargetEntityUuid = null;
+    @Unique
+    private String clientShader = null;
 
     @Inject(method = "writeNbt(Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/nbt/NbtCompound;", at = @At("RETURN"))
     private void writeModData(NbtCompound nbt, CallbackInfoReturnable<CallbackInfo> cir) {
@@ -54,6 +62,9 @@ public abstract class EntityNbtMixin implements ModEntityData {
         nbt.putBoolean("impersonating", impersonating);
         if (cameraTargetEntityUuid != null) {
             nbt.putString("cameraTargetEntityUuid", cameraTargetEntityUuid);
+        }
+        if (clientShader != null) {
+            nbt.putString("clientShader", clientShader);
         }
     }
 
@@ -73,6 +84,9 @@ public abstract class EntityNbtMixin implements ModEntityData {
         }
         if (nbt.contains("cameraTargetEntityUuid")) {
             cameraTargetEntityUuid = nbt.getString("cameraTargetEntityUuid");
+        }
+        if (nbt.contains("clientShader")) {
+            clientShader = nbt.getString("clientShader");
         }
     }
 
@@ -177,5 +191,15 @@ public abstract class EntityNbtMixin implements ModEntityData {
             FunnyModForTesting.LOGGER.error("cameraTargetEntityUUID: " + cameraTargetEntityUuid);
             ModSync.syncCameraTargetEntityUuidFlag(entity, cameraTargetEntityUuid);
         }
+    }
+
+    @Override
+    public String getClientShader() {
+        return clientShader;
+    }
+
+    @Override
+    public void setClientShader(String clientShader) {
+        this.clientShader = clientShader;
     }
 }

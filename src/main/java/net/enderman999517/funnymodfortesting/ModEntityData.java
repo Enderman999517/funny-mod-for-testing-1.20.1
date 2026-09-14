@@ -12,4 +12,6 @@ public interface ModEntityData {
     void setImpersonating(boolean impersonating);
     String getCameraTargetEntityUuid();
     void setCameraTargetEntityUuid(String cameraTargetEntityUuid);
+    String getClientShader();
+    void setClientShader(String clientShader);
 }
