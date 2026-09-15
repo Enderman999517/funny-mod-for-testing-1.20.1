@@ -195,11 +195,13 @@ public abstract class EntityNbtMixin implements ModEntityData {
 
     @Override
     public String getClientShader() {
+        FunnyModForTesting.LOGGER.error("gclisha: {}", clientShader);
         return clientShader;
     }
 
     @Override
     public void setClientShader(String clientShader) {
         this.clientShader = clientShader;
+        FunnyModForTesting.LOGGER.error("sclisha: {}", this.clientShader);
     }
 }

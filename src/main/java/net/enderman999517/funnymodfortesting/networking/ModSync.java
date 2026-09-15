@@ -1,5 +1,6 @@
 package net.enderman999517.funnymodfortesting.networking;
 
+import net.enderman999517.funnymodfortesting.FunnyModForTesting;
 import net.enderman999517.funnymodfortesting.FunnyModForTestingClient;
 import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
@@ -8,9 +9,11 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -94,7 +97,9 @@ public class ModSync {
                 syncImpersonatingFlag(player, entityData.isImpersonating(), player);
                 syncCameraTargetEntityUuidFlag(player, entityData.getCameraTargetEntityUuid(), player);
                 if (ModDimensions.isPlayerInOceandim(player)) {
+                    syncCurrentAppliedShaderFlag(player, player);
                     userShader = entityData.getClientShader();
+                    FunnyModForTesting.LOGGER.error("userShader: {}", userShader);
                     syncRenderingShaderFlag(player, FunnyModForTestingClient.oceandimShader, player);
                 }
                 if (destination.getDimensionKey().equals(DimensionTypes.OVERWORLD) && origin.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
@@ -302,6 +307,20 @@ public class ModSync {
 
     public static void syncRenderingShaderFlag(Entity entity, String shaderName, ServerPlayerEntity target) {
         syncSimpleString(entity, target, shaderName, ModNetworking.RENDERING_SHADER_SYNC);
+    }
+
+    public static void syncCurrentAppliedShaderFlag(Entity entity, ServerPlayerEntity target) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(entity.getId());
+        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.CURRENT_APPLIED_SHADER_SYNC, buf);
+        target.networkHandler.sendPacket(packet);
+    }
+
+    public static void syncRenderingShaderServerFlag(Entity entity, String shaderName, ClientPlayerEntity target) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeString(shaderName);
+        CustomPayloadC2SPacket packet = new CustomPayloadC2SPacket(ModNetworking.RENDERING_SHADER_SYNC_SERVER, buf);
+        target.networkHandler.sendPacket(packet);
     }
 
 

@@ -21,6 +21,7 @@ import net.enderman999517.funnymodfortesting.screen.ModScreenHandlers;
 import net.enderman999517.funnymodfortesting.world.dimension.ModDimensions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -31,6 +32,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
+import net.irisshaders.iris.parsing.IrisFunctions;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
@@ -73,7 +75,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             "category.funnymodfortesting"
     ));
 
-    public static String oceandimShader = "EchoShift 1.0.0.zip";
+    public static String oceandimShader = "test";
+    //public static String oceandimShader = "EchoShift 1.0.0.zip";
 
     public boolean renderingBlit = false;
     private static final ManagedShaderEffect testShader = ShaderEffectManager.getInstance().manage(new Identifier(FunnyModForTesting.MOD_ID, "shaders/post/blit.json"));
@@ -120,6 +123,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
     //    Iris.getIrisConfig().setShaderPackName(oceandimShader);
     //    IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
     //}
+
+    public String currentShaderApplied;
 
     @Override
     public void onInitializeClient() {

@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.MinecraftClient;
@@ -45,6 +46,8 @@ public class ModNetworking {
     public static final Identifier IMPERSONATING_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "impersonating_sync");
     public static final Identifier CAMERA_TARGET_ENTITY_UUID_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "camera_target_entity_uuid_sync");
     public static final Identifier RENDERING_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "rendering_shader_sync");
+    public static final Identifier RENDERING_SHADER_SYNC_SERVER = new Identifier(FunnyModForTesting.MOD_ID, "rendering_shader_sync_server");
+    public static final Identifier CURRENT_APPLIED_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "current_applied_shader_sync");
 
 
     public static void register() {
@@ -125,6 +128,36 @@ public class ModNetworking {
 
 
         ClientPlayNetworking.registerGlobalReceiver(RENDERING_SHADER_SYNC, (client, handler, buf, responseSender) ->  {
+            //int entityId = buf.readVarInt();
+
+            client.execute(() -> {
+                //Entity entity = client.world.getEntityById(entityId);
+                //if (entity == null) {
+                //    return;
+                //}
+//
+                //if (buf.readString() != null) {
+//
+                //}
+                FunnyModForTesting.LOGGER.error("buf.readString: {}", buf.readString());
+                Iris.getIrisConfig().setShaderPackName(buf.readString());
+                IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(RENDERING_SHADER_SYNC_SERVER, (server, player, handler, buf, responseSender) -> {
+            server.execute(() -> {
+                if (player == null) {
+                    return;
+                }
+
+                if (player instanceof ModEntityData modEntityData) {
+                    modEntityData.setClientShader(buf.readString());
+                }
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(CURRENT_APPLIED_SHADER_SYNC, (client, handler, buf, responseSender) -> {
             int entityId = buf.readVarInt();
 
             client.execute(() -> {
@@ -133,8 +166,9 @@ public class ModNetworking {
                     return;
                 }
 
-                Iris.getIrisConfig().setShaderPackName(FunnyModForTestingClient.oceandimShader);
-                IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
+                if (entity instanceof ModEntityData modEntityData) {
+                    modEntityData.setClientShader(Iris.getCurrentPackName());
+                }
             });
         });
 
