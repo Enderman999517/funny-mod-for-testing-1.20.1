@@ -14,4 +14,6 @@ public interface ModEntityData {
     void setCameraTargetEntityUuid(String cameraTargetEntityUuid);
     String getClientShader();
     void setClientShader(String clientShader);
+    String getPreviousShader();
+    void setPreviousShader(String clientShader);
 }

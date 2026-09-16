@@ -75,7 +75,8 @@ public class FunnyModForTestingClient implements ClientModInitializer {
             "category.funnymodfortesting"
     ));
 
-    public static String oceandimShader = "test";
+    public static String oceandimShader = "EchoShift 1.0.0.zip";
+    public static String fallbackShader = "fallback";
     //public static String oceandimShader = "EchoShift 1.0.0.zip";
 
     public boolean renderingBlit = false;

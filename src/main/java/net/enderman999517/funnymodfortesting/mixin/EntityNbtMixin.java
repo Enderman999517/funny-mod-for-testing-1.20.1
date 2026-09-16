@@ -53,6 +53,8 @@ public abstract class EntityNbtMixin implements ModEntityData {
     private String cameraTargetEntityUuid = null;
     @Unique
     private String clientShader = null;
+    @Unique
+    private String previousShader = null;
 
     @Inject(method = "writeNbt(Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/nbt/NbtCompound;", at = @At("RETURN"))
     private void writeModData(NbtCompound nbt, CallbackInfoReturnable<CallbackInfo> cir) {
@@ -65,6 +67,9 @@ public abstract class EntityNbtMixin implements ModEntityData {
         }
         if (clientShader != null) {
             nbt.putString("clientShader", clientShader);
+        }
+        if (previousShader != null) {
+            nbt.putString("previousShader", previousShader);
         }
     }
 
@@ -87,6 +92,9 @@ public abstract class EntityNbtMixin implements ModEntityData {
         }
         if (nbt.contains("clientShader")) {
             clientShader = nbt.getString("clientShader");
+        }
+        if (nbt.contains("previousShader")) {
+            previousShader = nbt.getString("previousShader");
         }
     }
 
@@ -203,5 +211,17 @@ public abstract class EntityNbtMixin implements ModEntityData {
     public void setClientShader(String clientShader) {
         this.clientShader = clientShader;
         FunnyModForTesting.LOGGER.error("sclisha: {}", this.clientShader);
+    }
+
+    @Override
+    public String getPreviousShader() {
+        FunnyModForTesting.LOGGER.error("gpreviousShader: {}", previousShader);
+        return previousShader;
+    }
+
+    @Override
+    public void setPreviousShader(String previousShader) {
+        this.previousShader = previousShader;
+        FunnyModForTesting.LOGGER.error("spreviousShader: {}", this.previousShader);
     }
 }
