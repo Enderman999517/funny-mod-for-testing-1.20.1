@@ -5,6 +5,7 @@ import net.enderman999517.funnymodfortesting.ModEntityData;
 import net.enderman999517.funnymodfortesting.entity.ModEntities;
 import net.enderman999517.funnymodfortesting.entity.custom.ImpersonateShadowEntity;
 import net.enderman999517.funnymodfortesting.item.ModItems;
+import net.enderman999517.funnymodfortesting.networking.ModNetworking;
 import net.enderman999517.funnymodfortesting.networking.ModSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -35,10 +36,27 @@ public abstract class EntityNbtMixin implements ModEntityData {
 
     /**
      *Adding data:
-     * <li>See the comment in {@link net.enderman999517.funnymodfortesting.networking.ModNetworking} first</li>
+     * <li>See the comment in {@link ModNetworking} first</li>
      * <li>Create the relevant field below</li>
      * <li>Add the key in {@link EntityNbtMixin#writeModData} and {@link EntityNbtMixin#readModData}</li>
-     * <li>Add functionality to data getter and setters from {@link ModEntityData}</li>
+     * <li>Add functionality to data getter and setters from {@link ModEntityData} in the format <pre>
+     *     {@code
+     *         @Override
+     *         public boolean get<Data>() {
+     *             return <data>;
+     *         }
+     *
+     *         @Override
+     *         public void set<Data>(<DATATYPE> <data>) {
+     *            this.<data> = <data>;
+     *            if (!entity.getWorld().isClient) {
+     *                ModSync.sync<Data>Flag(entity, <data>);
+     *            }
+     *         }
+     *
+     *     }
+     * </pre>
+     * </li>
      */
 
     @Unique
@@ -52,7 +70,7 @@ public abstract class EntityNbtMixin implements ModEntityData {
     @Unique
     private String cameraTargetEntityUuid = null;
     @Unique
-    private String clientShader = null;
+    private String currentAppliedShader = null;
     @Unique
     private String previousShader = null;
 
@@ -65,8 +83,8 @@ public abstract class EntityNbtMixin implements ModEntityData {
         if (cameraTargetEntityUuid != null) {
             nbt.putString("cameraTargetEntityUuid", cameraTargetEntityUuid);
         }
-        if (clientShader != null) {
-            nbt.putString("clientShader", clientShader);
+        if (currentAppliedShader != null) {
+            nbt.putString("currentAppliedShader", currentAppliedShader);
         }
         if (previousShader != null) {
             nbt.putString("previousShader", previousShader);
@@ -90,8 +108,8 @@ public abstract class EntityNbtMixin implements ModEntityData {
         if (nbt.contains("cameraTargetEntityUuid")) {
             cameraTargetEntityUuid = nbt.getString("cameraTargetEntityUuid");
         }
-        if (nbt.contains("clientShader")) {
-            clientShader = nbt.getString("clientShader");
+        if (nbt.contains("currentAppliedShader")) {
+            currentAppliedShader = nbt.getString("currentAppliedShader");
         }
         if (nbt.contains("previousShader")) {
             previousShader = nbt.getString("previousShader");
@@ -202,26 +220,27 @@ public abstract class EntityNbtMixin implements ModEntityData {
     }
 
     @Override
-    public String getClientShader() {
-        FunnyModForTesting.LOGGER.error("gclisha: {}", clientShader);
-        return clientShader;
+    public String getCurrentAppliedShader() {
+        return currentAppliedShader;
     }
 
     @Override
-    public void setClientShader(String clientShader) {
-        this.clientShader = clientShader;
-        FunnyModForTesting.LOGGER.error("sclisha: {}", this.clientShader);
+    public void setCurrentAppliedShader(String currentAppliedShader) {
+        this.currentAppliedShader = currentAppliedShader;
+        if (!entity.getWorld().isClient) {
+            ModSync.syncCurrentAppliedShaderFlag(entity, currentAppliedShader);
+        }
     }
 
     @Override
     public String getPreviousShader() {
-        FunnyModForTesting.LOGGER.error("gpreviousShader: {}", previousShader);
         return previousShader;
     }
 
     @Override
     public void setPreviousShader(String previousShader) {
-        this.previousShader = previousShader;
-        FunnyModForTesting.LOGGER.error("spreviousShader: {}", this.previousShader);
+        if (!entity.getWorld().isClient) {
+            ModSync.syncPreviousShaderFlag(entity, previousShader);
+        }
     }
 }

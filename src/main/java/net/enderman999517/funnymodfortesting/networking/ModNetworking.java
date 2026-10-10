@@ -40,17 +40,18 @@ public class ModNetworking {
      * Note: handle methods send to all players but sync methods send to a specific target only, so if global sync is not needed, don't add the handleSimpleDATATYPE method</li>
      * <li>For more complex interactions, don't use handleSimpleDATATYPE, use a custom method</li>
      * <li>If data storage is needed, add the relevant getters and setters in {@link ModEntityData} and see the comment in {@link net.enderman999517.funnymodfortesting.mixin.EntityNbtMixin}</li>
-     * <li>IMPOTRANT!!!!! DON'T READ FROM A DATATYPE MORE THAN THE NUMBER OF TIMES THAT DATATYPE HAS BEEN SAVED FROM A BUFFER</li>
+     * <li>IMPOTRANT!!!!! DON'T READ FROM A DATATYPE MORE THAN THE NUMBER OF TIMES THAT DATATYPE HAS BEEN SAVED FROM A BUFFER!!!! Extract it into a variable instead</li>
      */
     public static final Identifier ENTITY_HIDDEN_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "entity_hidden_sync");
     public static final Identifier DISPLAY_OVERLAY_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "display_overlay_sync");
     public static final Identifier BEING_IMPERSONATED_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "being_impersonated_sync");
     public static final Identifier IMPERSONATING_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "impersonating_sync");
     public static final Identifier CAMERA_TARGET_ENTITY_UUID_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "camera_target_entity_uuid_sync");
-    public static final Identifier RENDERING_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "rendering_shader_sync");
-    public static final Identifier RENDERING_SHADER_SYNC_SERVER = new Identifier(FunnyModForTesting.MOD_ID, "rendering_shader_sync_server");
     public static final Identifier CURRENT_APPLIED_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "current_applied_shader_sync");
     public static final Identifier PREVIOUS_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "previous_shader_sync");
+
+    //public static final Identifier RENDERING_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "rendering_shader_sync");
+    //public static final Identifier RENDERING_SHADER_SYNC_SERVER = new Identifier(FunnyModForTesting.MOD_ID, "rendering_shader_sync_server");
 
 
     public static void register() {
@@ -129,10 +130,9 @@ public class ModNetworking {
             });
         });
 
-
-        ClientPlayNetworking.registerGlobalReceiver(RENDERING_SHADER_SYNC, (client, handler, buf, responseSender) ->  {
+        ClientPlayNetworking.registerGlobalReceiver(CURRENT_APPLIED_SHADER_SYNC, (client, handler, buf, responseSender) ->  {
             int entityId = buf.readVarInt();
-            String shader = buf.readString();
+            String currentAppliedShader = buf.readString();
 
             client.execute(() -> {
                 Entity entity = client.world.getEntityById(entityId);
@@ -140,31 +140,21 @@ public class ModNetworking {
                     return;
                 }
 
-                //if (Objects.equals(shader, FunnyModForTestingClient.fallbackShader)) {
-                //    IrisApi.getInstance().getConfig().setShadersEnabledAndApply(false);
-                //    FunnyModForTesting.LOGGER.error("setting off");
-                //}
-                FunnyModForTesting.LOGGER.error("buf.readString: {}", shader);
-                Iris.getIrisConfig().setShaderPackName(shader);
-                IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
-            });
-        });
+                Iris.getIrisConfig().setShaderPackName(currentAppliedShader);
 
-        ServerPlayNetworking.registerGlobalReceiver(RENDERING_SHADER_SYNC_SERVER, (server, player, handler, buf, responseSender) -> {
-            server.execute(() -> {
-                if (player == null) {
-                    return;
+                if (currentAppliedShader != null) {
+                    IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
                 }
 
-                if (player instanceof ModEntityData modEntityData) {
-                    modEntityData.setClientShader(buf.readString());
+                if (entity instanceof ModEntityData modEntityData) {
+                    modEntityData.setCurrentAppliedShader(currentAppliedShader);
                 }
             });
         });
 
-        //saves current shader to player data
-        ClientPlayNetworking.registerGlobalReceiver(CURRENT_APPLIED_SHADER_SYNC, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(PREVIOUS_SHADER_SYNC, (client, handler, buf, responseSender) ->  {
             int entityId = buf.readVarInt();
+            //String previousShader = buf.readString();
 
             client.execute(() -> {
                 Entity entity = client.world.getEntityById(entityId);
@@ -173,28 +163,78 @@ public class ModNetworking {
                 }
 
                 if (entity instanceof ModEntityData modEntityData) {
-                    //IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
-                    FunnyModForTesting.LOGGER.error("curPaNa {}", Iris.getCurrentPackName());
-                    modEntityData.setClientShader(Iris.getCurrentPackName());
-                }
-            });
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(PREVIOUS_SHADER_SYNC, (client, handler, buf, responseSender) -> {
-            int entityId = buf.readVarInt();
-
-            client.execute(() -> {
-                Entity entity = client.world.getEntityById(entityId);
-                if (entity == null) {
-                    return;
-                }
-
-                if (entity instanceof ModEntityData modEntityData) {
-                    FunnyModForTesting.LOGGER.error("setting prev shad to: {}", Iris.getCurrentPackName());
                     modEntityData.setPreviousShader(Iris.getCurrentPackName());
                 }
             });
         });
+
+
+        //ClientPlayNetworking.registerGlobalReceiver(RENDERING_SHADER_SYNC, (client, handler, buf, responseSender) ->  {
+        //    int entityId = buf.readVarInt();
+        //    String shader = buf.readString();
+//
+        //    client.execute(() -> {
+        //        Entity entity = client.world.getEntityById(entityId);
+        //        if (entity == null) {
+        //            return;
+        //        }
+//
+        //        //if (Objects.equals(shader, FunnyModForTestingClient.fallbackShader)) {
+        //        //    IrisApi.getInstance().getConfig().setShadersEnabledAndApply(false);
+        //        //    FunnyModForTesting.LOGGER.error("setting off");
+        //        //}
+        //        FunnyModForTesting.LOGGER.error("buf.readString: {}", shader);
+        //        Iris.getIrisConfig().setShaderPackName(shader);
+        //        IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
+        //    });
+        //});
+//
+        //ServerPlayNetworking.registerGlobalReceiver(RENDERING_SHADER_SYNC_SERVER, (server, player, handler, buf, responseSender) -> {
+        //    server.execute(() -> {
+        //        if (player == null) {
+        //            return;
+        //        }
+//
+        //        if (player instanceof ModEntityData modEntityData) {
+        //            modEntityData.setClientShader(buf.readString());
+        //        }
+        //    });
+        //});
+//
+        ////saves current shader to player data
+        //ClientPlayNetworking.registerGlobalReceiver(CURRENT_APPLIED_SHADER_SYNC, (client, handler, buf, responseSender) -> {
+        //    int entityId = buf.readVarInt();
+//
+        //    client.execute(() -> {
+        //        Entity entity = client.world.getEntityById(entityId);
+        //        if (entity == null) {
+        //            return;
+        //        }
+//
+        //        if (entity instanceof ModEntityData modEntityData) {
+        //            //IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
+        //            FunnyModForTesting.LOGGER.error("curPaNa {}", Iris.getCurrentPackName());
+        //            modEntityData.setClientShader(Iris.getCurrentPackName());
+        //        }
+        //    });
+        //});
+//
+        //ClientPlayNetworking.registerGlobalReceiver(PREVIOUS_SHADER_SYNC, (client, handler, buf, responseSender) -> {
+        //    int entityId = buf.readVarInt();
+//
+        //    client.execute(() -> {
+        //        Entity entity = client.world.getEntityById(entityId);
+        //        if (entity == null) {
+        //            return;
+        //        }
+//
+        //        if (entity instanceof ModEntityData modEntityData) {
+        //            FunnyModForTesting.LOGGER.error("setting prev shad to: {}", Iris.getCurrentPackName());
+        //            modEntityData.setPreviousShader(Iris.getCurrentPackName());
+        //            FunnyModForTesting.LOGGER.error("after setting prev shad get prev shad = {}", modEntityData.getPreviousShader());
+        //        }
+        //    });
+        //});
 
 
         AtomicInteger tickCounter = new AtomicInteger();

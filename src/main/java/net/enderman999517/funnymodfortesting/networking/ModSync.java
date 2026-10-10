@@ -100,24 +100,45 @@ public class ModSync {
                     on other way, set shader to user shader
                     */
 
-
-                    syncCurrentAppliedShaderFlag(player, player);
-                    //userShader = entityData.getClientShader();
-                    //if (userShader != null) {
-                    String previousShader;
-
+                    // on to oceandim
                     if (destination.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+                        syncCurrentAppliedShaderFlag();
+                        FunnyModForTesting.LOGGER.error("before prev sync: {}", entityData.getPreviousShader());
+                        entityData.setPreviousShader(entityData.getCurrentAppliedShader());
                         syncPreviousShaderFlag(player, player);
-                        previousShader = entityData.getPreviousShader();
-                        FunnyModForTesting.LOGGER.error("previousShader: {}", previousShader);
-                        syncRenderingShaderFlag(player, FunnyModForTestingClient.oceandimShader, player);
+                        FunnyModForTesting.LOGGER.error("after prev sync: {}", entityData.getPreviousShader());
+
+                        FunnyModForTesting.LOGGER.error("before sync: {}", entityData.getCurrentAppliedShader());
+                        entityData.setCurrentAppliedShader(FunnyModForTestingClient.oceandimShader);
+                        syncCurrentAppliedShaderFlag(player, FunnyModForTestingClient.oceandimShader, player);
+                        FunnyModForTesting.LOGGER.error("after sync: {}", entityData.getCurrentAppliedShader());
                     }
-                    if (destination.getDimensionKey().equals(DimensionTypes.OVERWORLD) && origin.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
-                        previousShader = entityData.getPreviousShader();
-                        FunnyModForTesting.LOGGER.error("to ov prev sha: {}", previousShader);
-                        FunnyModForTesting.LOGGER.error("to ov ed.gps: {}", entityData.getPreviousShader());
-                        syncRenderingShaderFlag(player, previousShader, player);
+                    // on from oceandim
+                    if (origin.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+
                     }
+
+
+                    //syncCurrentAppliedShaderFlag(player, player);
+                    //FunnyModForTesting.LOGGER.error("syreshafla: {}", entityData.getClientShader());
+                    //syncRenderingShaderFlag(player, entityData.getClientShader(), player);
+                    ////userShader = entityData.getClientShader();
+                    ////if (userShader != null) {
+                    //String previousShader = entityData.getPreviousShader();
+//
+                    //if (destination.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+                    //    syncPreviousShaderFlag(player, previousShader, player);
+                    //    FunnyModForTesting.LOGGER.error("previousShader: {}", previousShader);
+                    //    syncRenderingShaderFlag(player, FunnyModForTestingClient.oceandimShader, player);
+                    //}
+                    //if (destination.getDimensionKey().equals(DimensionTypes.OVERWORLD) && origin.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+//
+                    //    //syncPreviousShaderFlag(player, previousShader, player);
+//
+                    //    FunnyModForTesting.LOGGER.error("to ov prev sha: {}", previousShader);
+                    //    FunnyModForTesting.LOGGER.error("to ov ed.gps: {}", entityData.getPreviousShader());
+                    //    syncRenderingShaderFlag(player, previousShader, player);
+                    //}
 
                     //} else {
                     //    FunnyModForTesting.LOGGER.error("Shader is null, falling back to fallback");
@@ -302,6 +323,14 @@ public class ModSync {
         handleSimpleString(entity, cameraTargetEntityUuid, ModNetworking.CAMERA_TARGET_ENTITY_UUID_SYNC);
     }
 
+    public static void syncCurrentAppliedShaderFlag(Entity entity, String currentAppliedShader) {
+        handleSimpleString(entity, currentAppliedShader, ModNetworking.CURRENT_APPLIED_SHADER_SYNC);
+    }
+
+    public static void syncPreviousShaderFlag(Entity entity, String previousShader) {
+        handleSimpleString(entity, previousShader, ModNetworking.PREVIOUS_SHADER_SYNC);
+    }
+
 
 
     public static void syncHiddenFlag(Entity entity, boolean hidden, ServerPlayerEntity target) {
@@ -324,25 +353,33 @@ public class ModSync {
         syncSimpleString(entity, target, cameraTargetEntityUuid, ModNetworking.CAMERA_TARGET_ENTITY_UUID_SYNC);
     }
 
-    public static void syncRenderingShaderFlag(Entity entity, String shaderName, ServerPlayerEntity target) {
-        syncSimpleString(entity, target, shaderName, ModNetworking.RENDERING_SHADER_SYNC);
-        FunnyModForTesting.LOGGER.error("shaderNameInModSync: {}", shaderName);
+    public static void syncCurrentAppliedShaderFlag(Entity entity, String currentAppliedShader, ServerPlayerEntity target) {
+        syncSimpleString(entity, target, currentAppliedShader, ModNetworking.CURRENT_APPLIED_SHADER_SYNC);
     }
-
-    public static void syncCurrentAppliedShaderFlag(Entity entity, ServerPlayerEntity target) {
-        syncSimpleString(entity, target, ModNetworking.CURRENT_APPLIED_SHADER_SYNC);
-    }
-
-    //public static void syncRenderingShaderServerFlag(Entity entity, String shaderName, ClientPlayerEntity target) {
-    //    PacketByteBuf buf = PacketByteBufs.create();
-    //    buf.writeString(shaderName);
-    //    CustomPayloadC2SPacket packet = new CustomPayloadC2SPacket(ModNetworking.RENDERING_SHADER_SYNC_SERVER, buf);
-    //    target.networkHandler.sendPacket(packet);
-    //}
 
     public static void syncPreviousShaderFlag(Entity entity, ServerPlayerEntity target) {
         syncSimpleString(entity, target, ModNetworking.PREVIOUS_SHADER_SYNC);
     }
+
+    //public static void syncRenderingShaderFlag(Entity entity, String shaderName, ServerPlayerEntity target) {
+    //    syncSimpleString(entity, target, shaderName, ModNetworking.RENDERING_SHADER_SYNC);
+    //    FunnyModForTesting.LOGGER.error("shaderNameInModSync: {}", shaderName);
+    //}
+//
+    //public static void syncCurrentAppliedShaderFlag(Entity entity, ServerPlayerEntity target) {
+    //    syncSimpleString(entity, target, ModNetworking.CURRENT_APPLIED_SHADER_SYNC);
+    //}
+//
+    ////public static void syncRenderingShaderServerFlag(Entity entity, String shaderName, ClientPlayerEntity target) {
+    ////    PacketByteBuf buf = PacketByteBufs.create();
+    ////    buf.writeString(shaderName);
+    ////    CustomPayloadC2SPacket packet = new CustomPayloadC2SPacket(ModNetworking.RENDERING_SHADER_SYNC_SERVER, buf);
+    ////    target.networkHandler.sendPacket(packet);
+    ////}
+//
+    //public static void syncPreviousShaderFlag(Entity entity, String shaderName, ServerPlayerEntity target) {
+    //    syncSimpleString(entity, target, shaderName, ModNetworking.PREVIOUS_SHADER_SYNC);
+    //}
 
 
     // handle methods send to all players
