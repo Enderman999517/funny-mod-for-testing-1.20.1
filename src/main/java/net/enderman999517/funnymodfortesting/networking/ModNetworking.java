@@ -49,6 +49,7 @@ public class ModNetworking {
     public static final Identifier CAMERA_TARGET_ENTITY_UUID_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "camera_target_entity_uuid_sync");
     public static final Identifier CURRENT_APPLIED_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "current_applied_shader_sync");
     public static final Identifier PREVIOUS_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "previous_shader_sync");
+    public static final Identifier SERVER_CURRENT_APPLIED_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "server_current_applied_shader_sync");
 
     //public static final Identifier RENDERING_SHADER_SYNC = new Identifier(FunnyModForTesting.MOD_ID, "rendering_shader_sync");
     //public static final Identifier RENDERING_SHADER_SYNC_SERVER = new Identifier(FunnyModForTesting.MOD_ID, "rendering_shader_sync_server");
@@ -133,6 +134,7 @@ public class ModNetworking {
         ClientPlayNetworking.registerGlobalReceiver(CURRENT_APPLIED_SHADER_SYNC, (client, handler, buf, responseSender) ->  {
             int entityId = buf.readVarInt();
             String currentAppliedShader = buf.readString();
+            boolean onlyUpdate = buf.readBoolean();
 
             client.execute(() -> {
                 Entity entity = client.world.getEntityById(entityId);
@@ -140,14 +142,23 @@ public class ModNetworking {
                     return;
                 }
 
-                Iris.getIrisConfig().setShaderPackName(currentAppliedShader);
+                if (onlyUpdate) {
+                    if (entity instanceof ModEntityData modEntityData) {
+                        FunnyModForTesting.LOGGER.error("ou curpana: {}", Iris.getCurrentPackName());
+                        modEntityData.setCurrentAppliedShader(Iris.getCurrentPackName());
+                    }
+                } else {
 
-                if (currentAppliedShader != null) {
-                    IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
-                }
+                    Iris.getIrisConfig().setShaderPackName(currentAppliedShader);
 
-                if (entity instanceof ModEntityData modEntityData) {
-                    modEntityData.setCurrentAppliedShader(currentAppliedShader);
+                    if (currentAppliedShader != null) {
+                        IrisApi.getInstance().getConfig().setShadersEnabledAndApply(true);
+                    }
+
+                    if (entity instanceof ModEntityData modEntityData) {
+                        modEntityData.setCurrentAppliedShader(currentAppliedShader);
+                    }
+
                 }
             });
         });
@@ -163,10 +174,25 @@ public class ModNetworking {
                 }
 
                 if (entity instanceof ModEntityData modEntityData) {
+                    FunnyModForTesting.LOGGER.error("setting previous shader to: {}", Iris.getCurrentPackName());
                     modEntityData.setPreviousShader(Iris.getCurrentPackName());
                 }
             });
         });
+
+        //ServerPlayNetworking.registerGlobalReceiver(SERVER_CURRENT_APPLIED_SHADER_SYNC, (server, player, handler, buf, responseSender) -> {
+        //    String shaderName = buf.readString();
+//
+        //    server.execute(() -> {
+        //        if (player == null) {
+        //            return;
+        //        }
+//
+        //        if (player instanceof ModEntityData modEntityData) {
+        //            modEntityData.setCurrentAppliedShader(shaderName);
+        //        }
+        //    });
+        //});
 
 
         //ClientPlayNetworking.registerGlobalReceiver(RENDERING_SHADER_SYNC, (client, handler, buf, responseSender) ->  {

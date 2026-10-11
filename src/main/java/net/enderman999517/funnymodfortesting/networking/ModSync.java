@@ -9,14 +9,16 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.irisshaders.iris.api.v0.IrisApi;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -102,15 +104,17 @@ public class ModSync {
 
                     // on to oceandim
                     if (destination.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
-                        syncCurrentAppliedShaderFlag();
                         FunnyModForTesting.LOGGER.error("before prev sync: {}", entityData.getPreviousShader());
+                        syncCurrentAppliedShaderFlag(player, null, true);
+                        entityData.setCurrentAppliedShader(entityData.getCurrentAppliedShader());
+                        FunnyModForTesting.LOGGER.error("current applied shader: {}", entityData.getCurrentAppliedShader());
                         entityData.setPreviousShader(entityData.getCurrentAppliedShader());
-                        syncPreviousShaderFlag(player, player);
+                        //syncPreviousShaderFlag(player, player);
                         FunnyModForTesting.LOGGER.error("after prev sync: {}", entityData.getPreviousShader());
 
                         FunnyModForTesting.LOGGER.error("before sync: {}", entityData.getCurrentAppliedShader());
-                        entityData.setCurrentAppliedShader(FunnyModForTestingClient.oceandimShader);
-                        syncCurrentAppliedShaderFlag(player, FunnyModForTestingClient.oceandimShader, player);
+                        //entityData.setCurrentAppliedShader(FunnyModForTestingClient.oceandimShader);
+                        //syncCurrentAppliedShaderFlag(player, FunnyModForTestingClient.oceandimShader, player);
                         FunnyModForTesting.LOGGER.error("after sync: {}", entityData.getCurrentAppliedShader());
                     }
                     // on from oceandim
@@ -323,8 +327,22 @@ public class ModSync {
         handleSimpleString(entity, cameraTargetEntityUuid, ModNetworking.CAMERA_TARGET_ENTITY_UUID_SYNC);
     }
 
-    public static void syncCurrentAppliedShaderFlag(Entity entity, String currentAppliedShader) {
-        handleSimpleString(entity, currentAppliedShader, ModNetworking.CURRENT_APPLIED_SHADER_SYNC);
+    public static void syncCurrentAppliedShaderFlag(Entity entity, String currentAppliedShader, boolean onlyUpdate) {
+
+        if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(entity.getId());
+        buf.writeBoolean(onlyUpdate);
+
+        if (currentAppliedShader != null) {
+            buf.writeString(currentAppliedShader);
+        } else {
+            buf.writeString(FunnyModForTestingClient.fallbackShader);
+        }
+
+        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.CURRENT_APPLIED_SHADER_SYNC, buf);
+        List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
+        playerEntities.forEach(player -> player.networkHandler.sendPacket(packet));
     }
 
     public static void syncPreviousShaderFlag(Entity entity, String previousShader) {
@@ -359,6 +377,14 @@ public class ModSync {
 
     public static void syncPreviousShaderFlag(Entity entity, ServerPlayerEntity target) {
         syncSimpleString(entity, target, ModNetworking.PREVIOUS_SHADER_SYNC);
+    }
+
+    public static void syncServerCurrentAppliedShaderFlag(Entity entity, String shaderName, ClientPlayerEntity target) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(entity.getId());
+        buf.writeString(shaderName);
+        CustomPayloadC2SPacket packet = new CustomPayloadC2SPacket(ModNetworking.SERVER_CURRENT_APPLIED_SHADER_SYNC, buf);
+        target.networkHandler.sendPacket(packet);
     }
 
     //public static void syncRenderingShaderFlag(Entity entity, String shaderName, ServerPlayerEntity target) {
