@@ -135,8 +135,10 @@ public class ModNetworking {
             int entityId = buf.readVarInt();
             String currentAppliedShader = buf.readString();
             boolean onlyUpdate = buf.readBoolean();
+            FunnyModForTesting.LOGGER.error("d");
 
             client.execute(() -> {
+                FunnyModForTesting.LOGGER.error("ou: {}", onlyUpdate);
                 Entity entity = client.world.getEntityById(entityId);
                 if (entity == null) {
                     return;

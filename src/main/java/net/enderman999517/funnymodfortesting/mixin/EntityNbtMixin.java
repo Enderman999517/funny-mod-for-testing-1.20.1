@@ -228,7 +228,7 @@ public abstract class EntityNbtMixin implements ModEntityData {
     public void setCurrentAppliedShader(String currentAppliedShader) {
         this.currentAppliedShader = currentAppliedShader;
         if (!entity.getWorld().isClient) {
-            ModSync.syncCurrentAppliedShaderFlag(entity, currentAppliedShader, false);
+            ModSync.syncCurrentAppliedShaderFlag(entity, currentAppliedShader);
         }
     }
 

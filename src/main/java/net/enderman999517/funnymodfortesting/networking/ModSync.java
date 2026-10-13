@@ -40,6 +40,10 @@ public class ModSync {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
             resyncPlayerInvisWaitTicks.put(player.getUuid(), 0);
+
+            FunnyModForTesting.LOGGER.error("a");
+            syncCurrentAppliedShaderFlag(player, null, true);
+            FunnyModForTesting.LOGGER.error("b");
         });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
@@ -95,6 +99,7 @@ public class ModSync {
                     syncBeingImpersonatedFlag(player, entityData.isBeingImpersonated(), player);
                     syncImpersonatingFlag(player, entityData.isImpersonating(), player);
                     syncCameraTargetEntityUuidFlag(player, entityData.getCameraTargetEntityUuid(), player);
+                    FunnyModForTesting.LOGGER.error("hey");
 
                     /*need to save user shader before entering oceandim
                     on dim change, if dest is oceandim, get user shader, save somewhere
@@ -102,24 +107,32 @@ public class ModSync {
                     on other way, set shader to user shader
                     */
 
+                    // get current shader
+                    syncCurrentAppliedShaderFlag(player, null, true);
+
                     // on to oceandim
                     if (destination.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
-                        FunnyModForTesting.LOGGER.error("before prev sync: {}", entityData.getPreviousShader());
-                        syncCurrentAppliedShaderFlag(player, null, true);
-                        entityData.setCurrentAppliedShader(entityData.getCurrentAppliedShader());
-                        FunnyModForTesting.LOGGER.error("current applied shader: {}", entityData.getCurrentAppliedShader());
-                        entityData.setPreviousShader(entityData.getCurrentAppliedShader());
-                        //syncPreviousShaderFlag(player, player);
-                        FunnyModForTesting.LOGGER.error("after prev sync: {}", entityData.getPreviousShader());
+                        // set prev to currentAppliedShader
+                        FunnyModForTesting.LOGGER.error("curr: {}", entityData.getCurrentAppliedShader());
 
-                        FunnyModForTesting.LOGGER.error("before sync: {}", entityData.getCurrentAppliedShader());
-                        //entityData.setCurrentAppliedShader(FunnyModForTestingClient.oceandimShader);
-                        //syncCurrentAppliedShaderFlag(player, FunnyModForTestingClient.oceandimShader, player);
-                        FunnyModForTesting.LOGGER.error("after sync: {}", entityData.getCurrentAppliedShader());
+                        FunnyModForTesting.LOGGER.error("before prev set: {}", entityData.getPreviousShader());
+                        entityData.setPreviousShader(entityData.getCurrentAppliedShader());
+                        FunnyModForTesting.LOGGER.error("after prev set: {}", entityData.getPreviousShader());
+
+                        //set currentAppliedShader to oceandim shader
+                        FunnyModForTesting.LOGGER.error("curr before set to oceandim: {}", entityData.getCurrentAppliedShader());
+                        entityData.setCurrentAppliedShader(FunnyModForTestingClient.oceandimShader);
+                        FunnyModForTesting.LOGGER.error("curr after set to oceandim: {}", entityData.getCurrentAppliedShader());
                     }
+
                     // on from oceandim
                     if (origin.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+                        //set currentAppliedShader to previous shader
+                        FunnyModForTesting.LOGGER.error("prev: {}", entityData.getPreviousShader());
 
+                        FunnyModForTesting.LOGGER.error("curr before set to prev: {}", entityData.getCurrentAppliedShader());
+                        entityData.setCurrentAppliedShader(entityData.getPreviousShader());
+                        FunnyModForTesting.LOGGER.error("curr after set to prev: {}", entityData.getCurrentAppliedShader());
                     }
 
 
@@ -333,6 +346,7 @@ public class ModSync {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(entity.getId());
         buf.writeBoolean(onlyUpdate);
+        FunnyModForTesting.LOGGER.error("ou in scasf: {}", onlyUpdate);
 
         if (currentAppliedShader != null) {
             buf.writeString(currentAppliedShader);
