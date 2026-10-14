@@ -180,6 +180,9 @@
   "commands.funnymodfortesting.dlshader.error" : "There was an error accessing Modrinth's api or downloading the shader. Check your internet connection and try again later",
   "commands.funnymodfortesting.dlshader.success" : "Shader downloaded successfully!",
   "commands.funnymodfortesting.dlshader.not_uniqe" : "A shader with the name \"%s\" already exists, rename or delete the one in your shaderpacks folder",
+  "commands.funnymodfortesting.setshader.success.single": "Set shader to \"%s\" for %s",
+  "commands.funnymodfortesting.setshader.success.multiple": "Set shader to %s for %s targets",
+
 
 
   "death.attack.scythe": "%1$s drained too much of their blood",

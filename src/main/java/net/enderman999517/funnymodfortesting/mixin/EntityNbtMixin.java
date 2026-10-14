@@ -84,9 +84,11 @@ public abstract class EntityNbtMixin implements ModEntityData {
             nbt.putString("cameraTargetEntityUuid", cameraTargetEntityUuid);
         }
         if (currentAppliedShader != null) {
+            FunnyModForTesting.LOGGER.error("curapsha: {}", currentAppliedShader);
             nbt.putString("currentAppliedShader", currentAppliedShader);
         }
         if (previousShader != null) {
+            FunnyModForTesting.LOGGER.error("prevsha nn");
             nbt.putString("previousShader", previousShader);
         }
     }
@@ -221,6 +223,7 @@ public abstract class EntityNbtMixin implements ModEntityData {
 
     @Override
     public String getCurrentAppliedShader() {
+        //ModSync.syncCurrentAppliedShaderFlag(entity, null, true);
         return currentAppliedShader;
     }
 
@@ -228,12 +231,14 @@ public abstract class EntityNbtMixin implements ModEntityData {
     public void setCurrentAppliedShader(String currentAppliedShader) {
         this.currentAppliedShader = currentAppliedShader;
         if (!entity.getWorld().isClient) {
-            ModSync.syncCurrentAppliedShaderFlag(entity, currentAppliedShader);
+            FunnyModForTesting.LOGGER.error("setting current to: {}", currentAppliedShader);
+            ModSync.syncCurrentAppliedShaderFlag(entity, currentAppliedShader,  false);
         }
     }
 
     @Override
     public String getPreviousShader() {
+        //ModSync.syncPreviousShaderFlag(entity, null, true);
         return previousShader;
     }
 
@@ -241,7 +246,8 @@ public abstract class EntityNbtMixin implements ModEntityData {
     public void setPreviousShader(String previousShader) {
         this.previousShader = previousShader;
         if (!entity.getWorld().isClient) {
-            ModSync.syncPreviousShaderFlag(entity, previousShader);
+            FunnyModForTesting.LOGGER.error("setting previous to: {}", previousShader);
+            ModSync.syncPreviousShaderFlag(entity, previousShader, false);
         }
     }
 }

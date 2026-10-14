@@ -13,6 +13,7 @@ public class ModCommands {
     public static void registerCommands() {
         CommandRegistrationCallback.EVENT.register(KItemsCommand::register);
         CommandRegistrationCallback.EVENT.register(ToggleHiddenCommand::register);
+        CommandRegistrationCallback.EVENT.register(SetShaderCommand::register);
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
                 dispatcher.register(ClientCommandManager.literal("dlshader")

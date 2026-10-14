@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,6 +26,8 @@ public class ModSync {
 
     public static void init() {
         final Map<UUID, Integer> resyncPlayerInvisWaitTicks = new HashMap<>();
+        final Map<UUID, Integer> syncShadersTicks = new HashMap<>();
+        final int SYNC_SHADERS_TICK_LIMIT = 5;
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
@@ -40,16 +41,12 @@ public class ModSync {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
             resyncPlayerInvisWaitTicks.put(player.getUuid(), 0);
-
-            FunnyModForTesting.LOGGER.error("a");
-            syncCurrentAppliedShaderFlag(player, null, true);
-            FunnyModForTesting.LOGGER.error("b");
         });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
-            Iterator<Map.Entry<UUID, Integer>> iterator = resyncPlayerInvisWaitTicks.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<UUID, Integer> entry = iterator.next();
+            Iterator<Map.Entry<UUID, Integer>> resyncPlayerInvisWaitTicksIterator = resyncPlayerInvisWaitTicks.entrySet().iterator();
+            while (resyncPlayerInvisWaitTicksIterator.hasNext()) {
+                Map.Entry<UUID, Integer> entry = resyncPlayerInvisWaitTicksIterator.next();
                 UUID uuid = entry.getKey();
                 int ticks = entry.getValue();
 
@@ -70,7 +67,7 @@ public class ModSync {
                         reSyncAllImpersonatingFor(joiningPlayer);
                         reSyncAllCameraTargetEntityUuidFor(joiningPlayer);
                     }
-                    iterator.remove();
+                    resyncPlayerInvisWaitTicksIterator.remove();
                 } else {
                     entry.setValue(ticks + 1);
                 }
@@ -88,6 +85,31 @@ public class ModSync {
                     syncCameraTargetEntityUuidFlag(entity, modEntityData.getCameraTargetEntityUuid());
                 });
             });
+
+            Iterator<Map.Entry<UUID, Integer>> syncShaderStuffTicksIterator = syncShadersTicks.entrySet().iterator();
+            while (syncShaderStuffTicksIterator.hasNext()) {
+                Map.Entry<UUID, Integer> entry = syncShaderStuffTicksIterator.next();
+                UUID uuid = entry.getKey();
+                int ticks = entry.getValue();
+
+                if (ticks > SYNC_SHADERS_TICK_LIMIT) {
+                    break;
+                } else if (ticks == SYNC_SHADERS_TICK_LIMIT) {
+                    ServerPlayerEntity player = server.getPlayerManager().getPlayer(uuid);
+                    if (player instanceof ModEntityData modEntityData) {
+
+                        FunnyModForTesting.LOGGER.error("modEntityData.getCurrentAppliedShader(): {}", modEntityData.getCurrentAppliedShader());
+                        modEntityData.setPreviousShader(modEntityData.getCurrentAppliedShader());
+
+                        //set currentAppliedShader to oceandim shader
+                        syncCurrentAppliedShaderFlag(player, FunnyModForTestingClient.oceandimShader, false);
+                    }
+                    syncShaderStuffTicksIterator.remove();
+                } else {
+                    entry.setValue(ticks + 1);
+                }
+            }
+
         });
 
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
@@ -99,7 +121,6 @@ public class ModSync {
                     syncBeingImpersonatedFlag(player, entityData.isBeingImpersonated(), player);
                     syncImpersonatingFlag(player, entityData.isImpersonating(), player);
                     syncCameraTargetEntityUuidFlag(player, entityData.getCameraTargetEntityUuid(), player);
-                    FunnyModForTesting.LOGGER.error("hey");
 
                     /*need to save user shader before entering oceandim
                     on dim change, if dest is oceandim, get user shader, save somewhere
@@ -107,32 +128,20 @@ public class ModSync {
                     on other way, set shader to user shader
                     */
 
-                    // get current shader
-                    syncCurrentAppliedShaderFlag(player, null, true);
 
                     // on to oceandim
                     if (destination.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+                        FunnyModForTesting.LOGGER.error("to oceandim");
+                        syncCurrentAppliedShaderFlag(player, FunnyModForTestingClient.fallbackShader, true);
                         // set prev to currentAppliedShader
-                        FunnyModForTesting.LOGGER.error("curr: {}", entityData.getCurrentAppliedShader());
+                        syncShadersTicks.put(player.getUuid(), 0);
 
-                        FunnyModForTesting.LOGGER.error("before prev set: {}", entityData.getPreviousShader());
-                        entityData.setPreviousShader(entityData.getCurrentAppliedShader());
-                        FunnyModForTesting.LOGGER.error("after prev set: {}", entityData.getPreviousShader());
+                    } else if (origin.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+                        // on from oceandim
 
-                        //set currentAppliedShader to oceandim shader
-                        FunnyModForTesting.LOGGER.error("curr before set to oceandim: {}", entityData.getCurrentAppliedShader());
-                        entityData.setCurrentAppliedShader(FunnyModForTestingClient.oceandimShader);
-                        FunnyModForTesting.LOGGER.error("curr after set to oceandim: {}", entityData.getCurrentAppliedShader());
-                    }
-
-                    // on from oceandim
-                    if (origin.getDimensionKey().equals(ModDimensions.OCEANDIM_TYPE)) {
+                        FunnyModForTesting.LOGGER.error("from oceandim");
                         //set currentAppliedShader to previous shader
-                        FunnyModForTesting.LOGGER.error("prev: {}", entityData.getPreviousShader());
-
-                        FunnyModForTesting.LOGGER.error("curr before set to prev: {}", entityData.getCurrentAppliedShader());
-                        entityData.setCurrentAppliedShader(entityData.getPreviousShader());
-                        FunnyModForTesting.LOGGER.error("curr after set to prev: {}", entityData.getCurrentAppliedShader());
+                        syncCurrentAppliedShaderFlag(player, entityData.getPreviousShader(), false);
                     }
 
 
@@ -341,26 +350,13 @@ public class ModSync {
     }
 
     public static void syncCurrentAppliedShaderFlag(Entity entity, String currentAppliedShader, boolean onlyUpdate) {
-
-        if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeVarInt(entity.getId());
-        buf.writeBoolean(onlyUpdate);
-        FunnyModForTesting.LOGGER.error("ou in scasf: {}", onlyUpdate);
-
-        if (currentAppliedShader != null) {
-            buf.writeString(currentAppliedShader);
-        } else {
-            buf.writeString(FunnyModForTestingClient.fallbackShader);
-        }
-
-        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(ModNetworking.CURRENT_APPLIED_SHADER_SYNC, buf);
-        List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
-        playerEntities.forEach(player -> player.networkHandler.sendPacket(packet));
+        FunnyModForTesting.LOGGER.error("sync curr called (should be second) and ou = {} and currentAppliedShader = {}", onlyUpdate, currentAppliedShader);
+        handleSimpleString(entity, currentAppliedShader, onlyUpdate, ModNetworking.CURRENT_APPLIED_SHADER_SYNC);
     }
 
-    public static void syncPreviousShaderFlag(Entity entity, String previousShader) {
-        handleSimpleString(entity, previousShader, ModNetworking.PREVIOUS_SHADER_SYNC);
+    public static void syncPreviousShaderFlag(Entity entity, String previousShader, boolean onlyUpdate) {
+        FunnyModForTesting.LOGGER.error("sync prev called (should be first) and ou = {} and previousShader = {}", onlyUpdate, previousShader);
+        handleSimpleString(entity, previousShader, onlyUpdate, ModNetworking.PREVIOUS_SHADER_SYNC);
     }
 
 
@@ -436,12 +432,28 @@ public class ModSync {
 
     private static void handleSimpleString(Entity entity, String data, Identifier key) {
         if (data != null) {
+            //FunnyModForTesting.LOGGER.error("data not null");
             if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
+            //FunnyModForTesting.LOGGER.error("doing some stuff");
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeVarInt(entity.getId());
             buf.writeString(data);
             CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(key, buf);
 
+            List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
+            playerEntities.forEach(player -> player.networkHandler.sendPacket(packet));
+        }
+    }
+
+    private static void handleSimpleString(Entity entity, String data, boolean onlyUpdate, Identifier key) {
+        if (data != null) {
+            if (!(entity.getWorld() instanceof ServerWorld serverWorld)) return;
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeVarInt(entity.getId());
+            buf.writeBoolean(onlyUpdate);
+            buf.writeString(data);
+
+            CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(key, buf);
             List<ServerPlayerEntity> playerEntities = serverWorld.getPlayers();
             playerEntities.forEach(player -> player.networkHandler.sendPacket(packet));
         }
